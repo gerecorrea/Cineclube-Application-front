@@ -8,6 +8,7 @@
 
 <script>
 import 'vue-good-table/dist/vue-good-table.css'
+import MovieService from '@/services/movieService'
 
 export default {
 	middleware: "authenticated",
@@ -201,6 +202,7 @@ export default {
 			this.appMounted = true;
 			console.log(this);
 		}, 200);
+		this.findAllMovies();
 	},
 	methods: {
 		showDetails (object){
@@ -220,8 +222,20 @@ export default {
 		},
 		setColorBillingTimeFrame (color){
 			return "color: " + color;
-		}
-        
+		},
+		findAllMovies (){
+			MovieService.findAll().then
+			MovieService.findAll()
+				.then(response => {
+					console.log(response.data)
+				})
+				.catch(e => {
+					var message = "Houve um erro inesperado.";
+					if (e.response && e.response.status === 400) {
+						message = e.response.data.message;
+					}
+				});
+		}        
 	}
 }
 </script>
