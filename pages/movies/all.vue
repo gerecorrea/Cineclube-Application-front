@@ -3,7 +3,7 @@
 		<div id="sc-page-top-bar" class="sc-top-bar">
 			<div class="sc-top-bar-content uk-flex uk-flex-1">
 				<h1 class="sc-top-bar-title uk-flex-1">
-					<Title title="FILMES - TODOS"></Title>
+					<Title title="FILMES"></Title>
 				</h1>
 			</div>
 		</div>
@@ -14,7 +14,7 @@
 					<div>
 						<div data-uk-margin class="uk-text-right">
 							<nuxt-link :to=" '/userpages/bill/manual'">
-								<button class="sc-button sc-button-primary" data-uk-tooltip="Incluir nova cobrança">
+								<button class="sc-button sc-button-primary" data-uk-tooltip="Cadastrar novo filme">
 									<i class="mdi mdi-plus"></i>
 									Inserir filme
 								</button>

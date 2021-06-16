@@ -3,7 +3,7 @@
 		<div id="sc-page-top-bar" class="sc-top-bar">
 			<div class="sc-top-bar-content uk-flex uk-flex-1">
 				<div class="sc-top-bar-title uk-flex-1">
-					<Title title="Usuários"></Title>
+					<Title title="USUÁRIOS"></Title>
 				</div>
 			</div>
 		</div>
