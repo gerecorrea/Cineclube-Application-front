@@ -8,6 +8,15 @@ switch (applicationProfile) {
 case 'development':
 	backendHost = "http://localhost:8081/";
 	break;
+case 'homolog':
+	backendHost = "https://cineclube-app-back.herokuapp.com/";
+	break;
+case 'production':
+	backendHost = "https://cineclube-app-back.herokuapp.com/";
+	break;
+case 'heroku':
+	backendHost = "https://cineclube-app-back.herokuapp.com/";
+	break;
 }
 
 const pkg = require('./package');
