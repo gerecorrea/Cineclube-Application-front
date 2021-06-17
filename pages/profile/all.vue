@@ -31,196 +31,124 @@
 								:columns="columns"
 								:rows="rows"
 								style-class="uk-table uk-table-divider scutum-vgt"
-								:select-options="{
-									enabled: true,
-									clearSelectionText: 'Limpar',
-									selectionText: 'Linhas selecionadas',
-									selectOnCheckboxOnly: true
-								}"
 								:search-options="{
 									enabled: true
 								}"
 								:pagination-options="pagination"
 								:total-rows="totalElements"
 								:sort-options="sort"
-								@on-selected-rows-change="selectionChanged"
 								@on-page-change="onPageChange"
 								@on-per-page-change="onPerPageChange"
 								@on-sort-change="onSortChange"
 							>
 								<template slot="table-row" slot-scope="props">
 									<span v-if="props.column.field == 'login.admin'">
-										<span v-if="props.row.login.admin" class="mdi mdi-check-circle-outline md-color-green-700" title="É administrador"></span>
+										<span v-if="props.row.login.admin" class="mdi mdi-checkbox-marked-circle-outline md-color-green-700" title="É administrador"></span>
 										<span v-if="!props.row.login.admin" class="mdi mdi-checkbox-blank-circle-outline md-color-red-700" title="Não é administrador"></span>
 									</span>
 									<span v-else-if="props.column.field == 'login.active'">
-										<span v-if="props.row.login.active" class="mdi mdi-check-circle-outline md-color-green-700" title="Ativo"></span>
+										<span v-if="props.row.login.active" class="mdi mdi-checkbox-marked-circle-outline md-color-green-700" title="Ativo"></span>
 										<span v-if="!props.row.login.active" class="mdi mdi-checkbox-blank-circle-outline md-color-red-700" title="Não ativo"></span>
+									</span>
+									<span v-else-if="props.column.field == 'action'">
+										<v-row style="padding-top: 12px">
+											<button v-if="props.row.login.admin"
+												class="sc-button sc-button-danger sc-button-small mdi mdi-key-minus"
+												uk-tooltip="Diminuir privilégio do usuário"
+												@click="confirmChangeAdminUser(props.row)"
+											></button>
+											<button v-else
+												class="mdi mdi-key-plus sc-button sc-button-small sc-button-success"
+												uk-tooltip="Aumentar privilégio do usuário"
+												@click="confirmChangeAdminUser(props.row)"
+											></button>
+											<v-spacer></v-spacer>
+											<button v-if="props.row.login.active"
+												class="mdi mdi-account-off sc-button sc-button-small sc-button-danger"
+												uk-tooltip="Inativar usuário no sistema"
+												@click="confirmChangeActivateInactivateUser(props.row)"
+											></button>
+											<button v-else
+												class="mdi mdi-account-check sc-button sc-button-small sc-button-success"
+												uk-tooltip="Ativar usuário no sistema"
+												@click="confirmChangeActivateInactivateUser(props.row)"
+											></button>
+											<v-spacer></v-spacer>
+											<button 
+												class="mdi mdi-pen sc-button sc-button-small sc-button-primary" 
+												uk-tooltip="Editar" 
+												@click="editUser(props.row)"
+											>
+											</button>
+										</v-row>
 									</span>
 									<span v-else>
 										{{ props.formattedRow[props.column.field] }}
 									</span>
 								</template>
-								<template
-									v-slot:selected-row-actions
-									class="btn-group"
-								>
-									<button
-										v-if="$refs['Table-User'].selectedRows.length == 1 && !$refs['Table-User'].selectedRows[0].login.admin" 
-										class="sc-button sc-button-success"
-										data-uk-tooltip="Aumentar o privilégio do usuário para admin"
-										type="button"
-										@click="canChangeAdminUser"
-									>
-										<span class="mdi mdi-key-plus"></span>
-										Admin
-									</button>
-									<div v-show="showConfirmChangeAdmin" data-uk-drop="mode: click">
-										<ScCard>
-											<ScCardBody>
-												<div>
-													<p>Tem certeza que deseja ativar o privilégio de admin para este usuário?</p>
-													<div class="uk-inline">
-														<button
-															class="sc-button sc-button-outline"
-															@click="showConfirmChangeAdmin = false"  
-														>
-															Não
-														</button>
-													</div>
-													<div class="uk-inline">
-														<button
-															class="sc-button sc-button-primary"
-															@click="changeAdminUser($refs['Table-User'].selectedRows[0])"  
-														>
-															Sim
-														</button>
-													</div>
-												</div>
-											</ScCardBody>
-										</ScCard>
-									</div>
-									<button
-										v-if="$refs['Table-User'].selectedRows.length == 1 && $refs['Table-User'].selectedRows[0].login.admin" 
-										class="sc-button sc-button-danger"
-										data-uk-tooltip="Diminuir o privilégio do usuário para normal"
-										type="button"
-										@click="canChangeAdminUser"
-									>
-										<i class="mdi mdi-key-minus"></i>
-										Admin
-									</button>
-									<div v-show="showConfirmChangeAdmin" data-uk-drop="mode: click">
-										<ScCard>
-											<ScCardBody>
-												<div>
-													<p>Tem certeza que deseja retirar o privilégio de admin deste usuário?</p>
-													<div class="uk-inline">
-														<button
-															class="sc-button sc-button-outline"
-															@click="showConfirmChangeAdmin = false"  
-														>
-															Não
-														</button>
-													</div>
-													<div class="uk-inline">
-														<button
-															class="sc-button sc-button-primary"
-															@click="changeAdminUser($refs['Table-User'].selectedRows[0])"  
-														>
-															Sim
-														</button>
-													</div>
-												</div>
-											</ScCardBody>
-										</ScCard>
-									</div>
-
-									<button
-										v-if="$refs['Table-User'].selectedRows.length == 1 && $refs['Table-User'].selectedRows[0].login.active" 
-										class="sc-button sc-button-danger"
-										data-uk-tooltip="Inativar o usuário selecionado"
-										type="button"
-										@click="canInactivateUser"
-									>
-										<i class="mdi mdi-account-off"></i>
-										Inativar
-									</button>
-									<div v-show="showConfirm" data-uk-drop="mode: click">
-										<ScCard>
-											<ScCardBody>
-												<div>
-													<p>Tem certeza que deseja inativar este registro ?</p>
-													<div class="uk-inline">
-														<button
-															class="sc-button sc-button-outline"
-															@click="showConfirm = false"  
-														>
-															Não
-														</button>
-													</div>
-													<div class="uk-inline">
-														<button
-															class="sc-button sc-button-primary"
-															@click="inactivateUser"  
-														>
-															Sim
-														</button>
-													</div>
-												</div>
-											</ScCardBody>
-										</ScCard>
-									</div>
-									<button v-if="$refs['Table-User'].selectedRows.length == 1 && !$refs['Table-User'].selectedRows[0].login.active" 
-										class="sc-button sc-button-success"
-										data-uk-tooltip="Ativar o usuário selecionado"
-										type="button"
-										@click="canActivateUser"
-									>
-										<i class="mdi mdi-account-check"></i>
-										Ativar
-									</button>
-									<div v-show="showConfirmActivate" data-uk-drop="mode: click">
-										<ScCard>
-											<ScCardBody>
-												<div>
-													<p>Tem certeza que deseja ativar este registro ?</p>
-													<div class="uk-inline">
-														<button
-															class="sc-button sc-button-outline"
-															@click="showConfirmActivate = false"  
-														>
-															Não
-														</button>
-													</div>
-													<div class="uk-inline">
-														<button
-															class="sc-button sc-button-primary"
-															@click="activateUser"  
-														>
-															Sim
-														</button>
-													</div>
-												</div>
-											</ScCardBody>
-										</ScCard>
-									</div>
-								
-									<button 
-										v-if="$refs['Table-User'].selectedRows.length == 1" 
-										class="sc-button sc-button-primary"
-										data-uk-tooltip="Editar o usuário selecionado" 
-										@click="editUser($refs['Table-User'].selectedRows[0])"
-									>
-										<i class="mdi mdi-pencil-plus"></i>
-										Editar
-									</button>
-								</template>
 								<div slot="emptystate" class="uk-text-center uk-text-large">
-									<span>Não há usuários cadastrados.</span>
+									<span>Não há usuários para a busca realizada.</span>
 								</div>
 							</VueGoodTable>
 						</fieldset>
+
+						<v-dialog v-model="showConfirmChangeAdmin"
+							width="50%"
+							persistent
+						>
+							<v-card>
+								<v-card-title v-if="!user.login.admin">
+									Tem certeza que deseja ativar o privilégio de admin para este usuário?
+								</v-card-title>
+								<v-card-title v-else>
+									Tem certeza que deseja desativar o privilégio de admin para este usuário?
+								</v-card-title>
+								<v-card-actions>
+									<v-spacer></v-spacer>
+									<button class="sc-button sc-button-flat sc-button-flat-danger" type="button" @click="showConfirmChangeAdmin = false">
+										Não
+									</button>
+									<div class="uk-text-right">
+										<button id="sc-js-card-add"
+											class="sc-button uk-modal-close"
+											type="button"
+											@click="showConfirmChangeAdmin = false, changeAdminUser(user)"
+										>
+											Sim
+										</button>
+									</div>
+								</v-card-actions>
+							</v-card>
+						</v-dialog>
+
+						<v-dialog v-model="showConfirmChangeActivate"
+							width="50%"
+							persistent
+						>
+							<v-card>
+								<v-card-title v-if="!user.login.active">
+									Tem certeza que deseja ativar este usuário?
+								</v-card-title>
+								<v-card-title v-else>
+									Tem certeza que deseja inativar este usuário?
+								</v-card-title>
+								<v-card-actions>
+									<v-spacer></v-spacer>
+									<button class="sc-button sc-button-flat sc-button-flat-danger" type="button" @click="showConfirmChangeActivate = false">
+										Não
+									</button>
+									<div class="uk-text-right">
+										<button id="sc-js-card-add"
+											class="sc-button uk-modal-close"
+											type="button"
+											@click="showConfirmChangeActivate = false, activateInactivateUser(user)"
+										>
+											Sim
+										</button>
+									</div>
+								</v-card-actions>
+							</v-card>
+						</v-dialog>
 					</ScCardBody>	
 				</ScCard>
 			</div>
@@ -296,21 +224,26 @@ export default {
 					tdClass: 'text-center',
 					thClass: 'text-center',
 					type: 'boolean',
-
 				},
+				{
+					label: "",
+					field: "action",
+					hidden: false,
+					tdClass: 'text-center',
+					thClass: 'text-center',
+					width: '125px',
+				},
+
 			],
 			rows: [],
-			tenants: [],
 			waitingUsersList: false,
 			users: [],
 			notification: {
 				title: '',
 				description: ''
 			},
-			selectedItems: [],
-			showConfirm: false,
-			showConfirmActivate: false,
 			showConfirmChangeAdmin: false,
+			showConfirmChangeActivate: false,
 			pagination:{
 				enabled: true,
 				//mode: 'remote',
@@ -372,47 +305,19 @@ export default {
 					this.showNotification(message, 'bottom-right', 'danger')
 				});
 		},
-		inactivateUser () {
-			var deleteProcess = [];
-			this.selectedItems.forEach(user => {
-				if (user.login.active){
-					deleteProcess.push(UserService.inactivate(user.uuid));
-				}
-			});
-
-			Promise.all(deleteProcess)
-				.then(results => {
-					this.list();
+		activateInactivateUser (user) {
+			UserService.activateInactivate(user.uuid)
+				.then(response => {
+					this.cleanAll();
 					this.notification.title = "O usuário foi inativado com sucesso";
 					this.showNotification(this.notification.title, 'bottom-right', 'success')
 				})
 				.catch(e => {
-					var message = "Houve um erro inesperado.";
+					var message = "Não foi possível realizar a ação sobre o usuário.";
 					if (e.response && e.response.status === 400) {
 						message = e.response.data.message;
 					}
-					this.showNotification(message, 'bottom-right', 'danger')
-				});
-		},
-		activateUser () {
-			var activateProcess = [];
-			this.selectedItems.forEach(user => {
-				if (!user.login.active){
-				    activateProcess.push(UserService.activate(user.uuid));
-				}
-			});
-
-			Promise.all(activateProcess)
-				.then(results => {
-					this.list();
-					this.notification.title = "O usuário foi ativado com sucesso";
-					this.showNotification(this.notification.title, 'bottom-right', 'success')
-				})
-				.catch(e => {
-					var message = "Houve um erro inesperado.";
-					if (e.response && e.response.status === 400) {
-						message = e.response.data.message;
-					}
+					this.waitingUsersList = false ; 
 					this.showNotification(message, 'bottom-right', 'danger')
 				});
 		},
@@ -440,29 +345,12 @@ export default {
 			}
 		},
 		editUser (selectedUserObj){
+			console.log(selectedUserObj)
 			if (this.loggedUserObject.uuid == selectedUserObj.login.uuid || this.loggedUserObject.admin){
-				this.redirectPage('/profile/' + selectedUserObj.login.uuid)
+				this.redirectPage('/profile/' + selectedUserObj.uuid)
 			}
 			else{
 				var message = "Somente usuários administradores podem editar registros de outros usuários."; 
-				this.showNotification(message, 'bottom-right', 'danger')
-			}
-		},
-		canInactivateUser (){
-			if (this.loggedUserObject.admin){
-				this.showConfirm = true;
-			}
-			else{
-				var message = "Somente usuários administradores podem inativar usuários."; 
-				this.showNotification(message, 'bottom-right', 'danger')
-			}
-		},
-		canActivateUser (){
-			if (this.loggedUserObject.admin){
-				this.showConfirmActivate = true;
-			}
-			else{
-				var message = "Somente usuários administradores podem ativar usuários."; 
 				this.showNotification(message, 'bottom-right', 'danger')
 			}
 		},
@@ -477,15 +365,6 @@ export default {
 				return true
 			}
 			return false
-		},
-		canChangeAdminUser (){
-			if (this.loggedUserObject.admin){
-				this.showConfirmChangeAdmin = true;
-			}
-			else{
-				var message = "Somente usuários administradores podem alterar privilégios."; 
-				this.showNotification(message, 'bottom-right', 'danger')
-			}
 		},
 		changeAdminUser (user) {
 			UserService.changeAdmin(user.uuid)
@@ -506,14 +385,40 @@ export default {
 					this.showNotification(message, 'bottom-right', 'danger')
 				});
 		},
+		confirmChangeAdminUser (user){
+			if (this.loggedUserObject.admin){
+				this.user = user;
+				this.showConfirmChangeAdmin = true;
+			}
+			else{
+				var message = "Somente usuários administradores podem alterar privilégios."; 
+				this.showNotification(message, 'bottom-right', 'danger')
+			}
+		},
+		confirmChangeActivateInactivateUser (user){
+			if (this.loggedUserObject.admin){
+				this.user = user;
+				this.showConfirmChangeActivate = true;
+			}
+			else{
+				var message = "Somente usuários administradores podem ativar usuários."; 
+				this.showNotification(message, 'bottom-right', 'danger')
+			}
+		},
 		cleanFilters (){
 			this.filterData.name = '';
 		},
+		cleanAll (){
+			this.userEditDialog = false;
+			this.user= {};
+			this.user.login = {};
+			this.user.tenant = {};
+			this.showConfirmChangeAdmin = false;
+			this.showConfirmChangeActivate = false;
+			this.list();
+		},
 		redirectPage (page) {
 			this.$router.push({ path: page });
-		},
-		selectionChanged (params) {
-			this.selectedItems = (params.selectedRows);
 		},
 		onPageChange (params){
 			this.pagination.setCurrentPage = params.currentPage

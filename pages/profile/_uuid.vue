@@ -143,7 +143,7 @@
 							</div>
 						</fieldset>
 						<div class="uk-margin-top uk-text-right">
-							<nuxt-link to="/profile/listAllUsers">
+							<nuxt-link to="/profile/all">
 								<button 
 									class="sc-button sc-button-custom md-bg-red-600" 
 									type="button"
@@ -200,6 +200,8 @@ export default {
 	data () {
 		return {
 			user: {
+				name: '',
+				email: '',
 				uuid: null,
 				login: {
 					username: null,

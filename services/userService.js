@@ -20,15 +20,14 @@ export default {
 	},
 
 	findByUuid: (uuid) => {
-		return client.get('user/' + uuid);
+		return client.get('user/findByUuid/' + uuid);
 	},
 
 	findByLoginUuid: (uuid) => {
 		return client.get('user/login/' + uuid);
 	},
 
-
-	activate: (uuid) => {
+	activateInactivate: (uuid) => {
 		return client.put('user/activateInactivate/' + uuid)
 	},
 
