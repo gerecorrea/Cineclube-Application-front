@@ -10,13 +10,26 @@
 					<i v-if="sidebarMainExpanded" class="mdi mdi-backburger" />
 					<i v-if="!sidebarMainExpanded" class="mdi mdi-menu" />
 				</a>
-				<div class="sc-brand uk-visible@m" style="display: block;margin-left: auto;margin-right: auto;">
+				<!-- <div class="sc-brand uk-visible@m" style="display: block;margin-left: auto;margin-right: auto;">
 					<nuxt-link to="/">
 						<img :src="appLogo" width="40px">
 					</nuxt-link>
-				</div>
+				</div> -->
 			</div>
-			<div class="nav-overlay nav-overlay-small uk-navbar-right uk-flex-1" hidden>
+			<div class="uk-navbar-item uk-width-expand md-color-grey-50 uk-text-large"
+				style="font-family: Trebuchet MS"
+			>
+				<nuxt-link to="/" class="md-color-grey-50">
+					<img src="~/assets/img/movie.png" width="60px" class="sc-padding-right">
+					CINECLUBE APP
+					<img src="~/assets/img/movie.png" width="60px" class="sc-padding-left">
+					<!-- require('~/assets/img/trophy.png') -->
+				</nuxt-link>
+				
+				<nuxt-link to="/" class="sc-padding-left">
+				</nuxt-link>
+			</div>
+			<!-- <div class="nav-overlay nav-overlay-small uk-navbar-right uk-flex-1" hidden>
 				<a class="uk-navbar-toggle uk-visible@l" data-uk-toggle="target: .nav-overlay; animation: uk-animation-slide-top" href="javascript:void(0)">
 					<i class="mdi mdi-close sc-icon-24"></i>
 				</a>
@@ -35,7 +48,7 @@
 						</button>
 					</form>
 				</div>
-			</div>
+			</div> -->
 			<div class="nav-overlay nav-overlay-small uk-navbar-right">
 				<ul class="uk-navbar-nav">
 					<li style="visibility: hidden">
@@ -50,19 +63,20 @@
 							<i class="mdi mdi-magnify" />
 						</a>
 					</li>
-					<li class="uk-visible@l" title="Tela">
+					<li class="uk-visible@l" title="Tela cheia">
 						<ScFullscreen id="sc-js-fullscreen-toggle" />
 					</li>
 					 
 					<li title="Perfil">
-						<nuxt-link v-if="userLoaded" :to="'/userpages/users/manual/' + loggedUserObject.uuid">
+						<!-- <button
+							v-if="userLoaded"
+							class="mdi mdi-account-circle md-color-grey-50"
+							uk-tooltip="Perfil"
+							@click="redirectPage('/profile/' + loggedUserObject.uuid)"
+						>
+						</button> -->
+						<nuxt-link v-if="userLoaded" :to="'/profile/' + loggedUserObject.uuid">
 							<span class="mdi mdi-account-circle">
-							</span>
-						</nuxt-link>
-					</li>
-					<li title="Empresa">
-						<nuxt-link v-if="userExists" :to="'/userpages/tenants/' + loggedUserObject.tenant.uuid">
-							<span class="mdi mdi-office-building">
 							</span>
 						</nuxt-link>
 					</li>
@@ -172,7 +186,7 @@ export default {
 		// sticky header
 		var options = scMq.mediumMax() ? { showOnUp: true, animation: "uk-animation-slide-top" } : {};
 		UIkit.sticky(this.$refs.header, options);
-		//this.loggedUser();
+		this.loggedUser();
 	},
 	methods: {
 		logout () {
@@ -221,7 +235,6 @@ export default {
 							if (e.response && e.response.status === 400) {
 								message = e.response.data.message;
 							}
-							this.waitingUsersList = false ;
 							this.showNotification(message, 'bottom-right', 'danger')
 						});
 				})
@@ -230,7 +243,6 @@ export default {
 					if (e.response && e.response.status === 400) {
 						message = e.response.data.message;
 					}
-					this.waitingUsersList = false ;
 					this.showNotification(message, 'bottom-right', 'danger')
 				});
 		},
