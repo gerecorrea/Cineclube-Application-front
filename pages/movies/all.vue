@@ -13,7 +13,7 @@
 				<ScCardBody>
 					<div>
 						<div data-uk-margin class="uk-text-right">
-							<nuxt-link :to=" '/userpages/bill/manual'">
+							<nuxt-link :to=" '/movies/'">
 								<button class="sc-button sc-button-primary" data-uk-tooltip="Cadastrar novo filme">
 									<i class="mdi mdi-plus"></i>
 									Inserir filme
@@ -21,7 +21,7 @@
 							</nuxt-link>
 						</div>
 					</div>
-					<fieldset class="uk-fieldset md-bg-grey-100 sc-padding uk-margin-top">
+					<fieldset class="uk-fieldset md-bg-blue-grey-50 sc-padding uk-margin-top">
 						<VueGoodTable
 							v-if="rows !== null"
 							:is-loading="waitingMoviesList"
@@ -34,11 +34,23 @@
 							:pagination-options="pagination"
 							:total-rows="totalElements"
 							:sort-options="sort"
-							@on-selected-rows-change="selectionChanged"
 							@on-page-change="onPageChange"
 							@on-per-page-change="onPerPageChange"
 							@on-sort-change="onSortChange"
 						>
+							<template slot="table-row" slot-scope="props">
+								<span v-if="props.column.field == 'genres'">
+									<div v-for="index in props.row.genresArray"
+										:key="index"
+										class="uk-label uk-label-warning"
+									>
+										{{ index }}
+									</div>
+								</span>
+								<span v-else>
+									{{ props.formattedRow[props.column.field] }}
+								</span>
+							</template>
 							<div slot="emptystate" class="uk-text-center uk-text-large">
 								<span>Não há filmes cadastrados ou para esta busca.</span>
 							</div>	
@@ -90,6 +102,8 @@ export default {
 					label: "Duração",
 					field: "runtime",
 					hidden: false,
+					tdClass: 'uk-text-center',
+					thClass: 'uk-text-center'
 				},
 				{
 					label: "Ano",
@@ -102,16 +116,22 @@ export default {
 					label: "Gênero",
 					field: "genres",
 					hidden: false,
+					tdClass: 'uk-text-center',
+					thClass: 'uk-text-center'
 				},
 				{
 					label: "Qtd votos",
 					field: "numVotes",
 					hidden: false,
+					tdClass: 'uk-text-right',
+					thClass: 'uk-text-right'
 				},
 				{
 					label: "Média",
 					field: "avgRating",
 					hidden: false,
+					tdClass: 'uk-text-right',
+					thClass: 'uk-text-right'
 				},
 			],
 			rows: [],
