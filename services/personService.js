@@ -4,6 +4,18 @@ export default {
 		client = newClient;
 	},
 
+	save: (person) => {
+		return client.post('person', person);
+	},
+
+	update: (uuid, person) => {
+		return client.put('person/' + uuid, person);
+	},
+
+	remove: (uuid) => {
+		return client.delete('person/' + uuid)
+	},
+
 	findAll: () => {
 		return client.get('person/findAll');
 	},
