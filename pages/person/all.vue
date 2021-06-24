@@ -34,7 +34,6 @@
 							:pagination-options="pagination"
 							:total-rows="totalElements"
 							:sort-options="sort"
-							@on-selected-rows-change="selectionChanged"
 							@on-page-change="onPageChange"
 							@on-per-page-change="onPerPageChange"
 							@on-sort-change="onSortChange"
@@ -217,6 +216,9 @@ export default {
 			this.pagination.setCurrentPage = 1;
 			this.list();
 		},
+		nothing (){
+			return '';
+		}
 	}
 }
 </script>
