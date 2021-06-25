@@ -4,14 +4,14 @@
 			<ScCard>
 				<ScCardBody>
 					<div class="sc-login-page-logo">
-						<img v-rjs="require('~/assets/img/logoCine.png')"
+						<img
 							:src="appLogo"
 							alt=""
 							width="250px"
 						>
 					</div>
 					<div class="sc-login-page-logo sc-login-page-logo-light">
-						<img v-rjs="require('~/assets/img/logoCine.png')" :src="appLogoLight" alt="">
+						<img :src="appLogoLight" alt="">
 					</div>
 					<div id="sc-login-form" class="sc-toggle-login-register sc-toggle-login-password sc-toggle-login-create">
 						<div class="sc-login-page-inner">
@@ -40,13 +40,21 @@
 								</v-row>
 								<div class="uk-margin-medium">
 									<div class="uk-margin-small-top uk-text-small uk-text-right@s">
-										<a href="javascript:void(0)" class="sc-link" data-uk-toggle="target: .sc-toggle-login-password; animation: uk-animation-scale-up">
+										<a href="javascript:void(0)"
+											class="sc-link md-color-blue-grey-600"
+											data-uk-toggle="target: .sc-toggle-login-password; animation: uk-animation-scale-up"
+											style="font-weight: 600"
+										>
 											Esqueceu sua senha?
 										</a>
 									</div>
 									<div class="uk-margin-medium">
 										<div class="uk-margin-small-top uk-text-small uk-text-right@s">
-											<a href="javascript:void(0)" class="sc-link" data-uk-toggle="target: .sc-toggle-login-create; animation: uk-animation-scale-up">
+											<a href="javascript:void(0)"
+												class="sc-link md-color-blue-grey-600"
+												data-uk-toggle="target: .sc-toggle-login-create; animation: uk-animation-scale-up"
+												style="font-weight: 600"
+											>
 												Não possui cadastro? Cadastre-se!
 											</a>
 										</div>
@@ -54,7 +62,8 @@
 								</div>
 								<div class="uk-margin-large-top">
 									<button
-										class="sc-button sc-button-custom md-bg-blue-grey-600 waves-effect waves-button waves-light sc-button-large sc-button-block"
+										class="sc-button sc-button-warning md-bg-blue-grey-900 md-color-yellow-700 waves-effect waves-button waves-light sc-button-large sc-button-block "
+										
 										@click="login"
 									>
 										Entrar
@@ -78,11 +87,11 @@
 								</ScInput>
 							</div>
 							<div class="uk-margin-large-top">
-								<button class="sc-button sc-button-large sc-button-block sc-button-primary">
+								<button class="sc-button sc-button-large sc-button-block sc-button-flat-custom">
 									Alterar Senha
 								</button>
-								<div class="uk-margin-large-top uk-flex uk-flex-middle uk-flex-center">
-									<a href="javascript:void(0)" class="sc-text-semibold" data-uk-toggle="target: .sc-toggle-login-password; animation: uk-animation-scale-up">
+								<div class="uk-margin-large-top uk-flex uk-flex-middle uk-flex-center sc-button sc-button-block sc-button-flag-danger" style="color: black">
+									<a href="javascript:void(0)" class="sc-text-semibold md-color-red-300" data-uk-toggle="target: .sc-toggle-login-password; animation: uk-animation-scale-up">
 										Voltar ao login
 									</a>
 								</div>
@@ -92,186 +101,12 @@
 
 					<div id="sc-password-form" class="sc-toggle-login-create" hidden>
 						<div class="sc-login-page-inner">
-							<div class="uk-margin-medium">
-								CADASTRO DE EMPRESA
-							</div>
-							<p class="sc-text-semibold uk-text-small">
-								* Campos obrigatórios
-								<br>
-								** Ao menos um destes campos deve ser preenchido.
-							</p>
-
-							<h6 class="sc-text-semibold uk-text-small" style="padding-top:15px;">
-								DADOS CADASTRAIS
-							</h6>
-							<div class="uk-form-controls">
-								<ScInput 
-									v-model="tenant.idFederal"
-									v-facade="'##.###.###/####-##'"
-									name="tenantIdFederal"
-									:error-state="$v.tenantIdFederal.$error"
-									:validator="$v.tenantIdFederal"
-									@change="fieldsValidationTenant" 
-								>
-									<label>
-										Identificador Federal*
-									</label>
-								</ScInput>
-								<ul class="sc-vue-errors">
-									<li v-if="!$v.tenantIdFederal.required">
-										Campo obrigatório
-									</li>
-									<li v-if="!$v.tenantIdFederal.minLength">
-										Este campo deve conter 14 caracteres numéricos
-									</li>
-								</ul>	
-							</div>
-							<div class="uk-form-controls">
-								<ScInput 
-									v-model="tenant.name"
-									name="tenantName"
-									:error-state="$v.tenantName.$error"
-									:validator="$v.tenantName"
-									@change="fieldsValidationTenant"
-								>
-									<label>
-										Nome/Razão Social*
-									</label>
-								</ScInput>
-								<ul class="sc-vue-errors">
-									<li v-if="!$v.tenantName.required">
-										Campo obrigatório
-									</li>
-									<li v-if="!$v.tenantName.minLength">
-										Este campo deve conter pelo menos 3 caracteres
-									</li>
-								</ul>	
-							</div>
-							<div class="uk-form-controls" style="padding-top:13px;">
-								<Select2
-									v-model="tenant.tenantType"
-									:settings="{ 'width': '100%', 'placeholder': 'Tipo da empresa*', allowClear: true }"
-									:options="loadTypes"
-									name="tenantType"
-									:error-state="$v.tenantType.$error"
-									:validator="$v.tenantType"
-									@change="fieldsValidationTenant"
-								>
-								</Select2>
-								<ul class="sc-vue-errors">
-									<li v-if="!$v.tenantType.required">
-										Campo obrigatório
-									</li>
-								</ul>
-							</div>
-							<h6 class="sc-text-semibold uk-text-small" style="padding-top:25px;">
-								CONTATO
-							</h6>
-							<div class="uk-form-controls">
-								<ScInput 
-									v-model="tenant.contactName"
-									name="tenantContactName"
-									:error-state="$v.contactName.$error"
-									:validator="$v.contactName"
-									@change="fieldsValidationContact"
-								>
-									<label>
-										Nome de contato*
-									</label>
-								</ScInput>
-								<ul class="sc-vue-errors">
-									<li v-if="!$v.contactName.required">
-										Campo obrigatório
-									</li>
-									<li v-if="!$v.contactName.minLength">
-										Este campo deve conter pelo menos 3 caracteres
-									</li>
-								</ul>	
-							</div>
-							<div class="uk-form-controls">
-								<ScInput
-									v-model="tenant.contactPhone"
-									v-facade="['+## (##) ####-####', '+## (##) #####-####']"
-									name="tenantContactPhone"
-									@change="fieldsValidationContact"
-								>
-									<label>
-										Telefone de contato**
-									</label>
-								</ScInput>
-							</div>
-							<div class="uk-form-controls">
-								<ScInput 
-									v-model="tenant.contactSite"
-									name="tenantContactWebsite"
-								>
-									<label>
-										Website
-									</label>
-								</ScInput>
-							</div>
-							<div class="uk-form-controls">
-								<ScInput 
-									v-model="tenant.contactEmail"
-									v-input-mask="{ 'alias': 'email' }"
-									name="tenantContactEmail"
-									@change="fieldsValidationContact"
-								>
-									<label>
-										E-mail contato**
-									</label>
-								</ScInput>
-							</div>
-
 							<div class="uk-margin-medium" style="padding-top:35px;">
 								CADASTRO DE USUÁRIO DA EMPRESA
 							</div>
 							<p class="sc-text-semibold uk-text-small">
 								* Campos obrigatórios
 							</p>
-							<div class="uk-form-controls">
-								<ScInput 
-									v-model="user.name"
-									name="Username"
-									:error-state="$v.userName.$error"
-									:validator="$v.userName"
-									@change="fieldsValidationUser"
-								>
-									<label>
-										Nome completo*
-									</label>
-								</ScInput>
-								<ul class="sc-vue-errors">
-									<li v-if="!$v.userName.required">
-										Campo obrigatório
-									</li>
-									<li v-if="!$v.userName.minLength">
-										Este campo deve conter pelo menos 3 caracteres..
-									</li>
-								</ul>
-							</div>
-							<div class="uk-form-controls">
-								<ScInput 
-									v-model="user.numberDoc"
-									v-mask="[ '###.###.###-##' ]"
-									name="numberDoc"
-									:error-state="$v.userNumberDoc.$error"
-									:validator="$v.userNumberDoc"
-									@change="fieldsValidationUser"
-								>
-									<label>
-										Número de CPF*
-									</label>
-								</ScInput>
-								<ul class="sc-vue-errors">
-									<li v-if="!$v.userNumberDoc.required">
-										Campo obrigatório
-									</li>
-									<li v-if="!$v.userNumberDoc.minLength">
-										Este campo deve deve conter 11 caracteres numéricos.
-									</li>
-								</ul>
-							</div>
 							<div class="uk-form-controls">
 								<ScInput 
 									v-model="user.email"
@@ -291,6 +126,27 @@
 									</li>
 									<li v-if="!$v.userEmail.minLength">
 										Este campo deve conter pelo menos 15 caracteres.
+									</li>
+								</ul>
+							</div>
+							<div class="uk-form-controls">
+								<ScInput 
+									v-model="user.name"
+									name="Username"
+									:error-state="$v.userName.$error"
+									:validator="$v.userName"
+									@change="fieldsValidationUser"
+								>
+									<label>
+										Nome de usuário*
+									</label>
+								</ScInput>
+								<ul class="sc-vue-errors">
+									<li v-if="!$v.userName.required">
+										Campo obrigatório
+									</li>
+									<li v-if="!$v.userName.minLength">
+										Este campo deve conter pelo menos 3 caracteres..
 									</li>
 								</ul>
 							</div>
@@ -350,16 +206,19 @@
 							
 							<div class="uk-margin-large-top">
 								<button 
-									class="sc-button sc-button-large sc-button-block sc-button-primary"
+									class="sc-button sc-button-large sc-button-block md-bg-blue-grey-800 md-color-yellow-700 waves-effect waves-button waves-light"
 									:disabled="enableSave === false" 
-									@click="saveTenant"
+									@click="saveUser"
 								>
-									<a href="javascript:void(0)" style="color:white" data-uk-toggle="target: .sc-toggle-login-create; animation: uk-animation-scale-up">
+									<a href="javascript:void(0)"
+										style="color:white"
+										data-uk-toggle="target: .sc-toggle-login-create; animation: uk-animation-scale-up"
+									>
 										Cadastrar
 									</a>
 								</button>
-								<div class="uk-margin-large-top uk-flex uk-flex-middle uk-flex-center">
-									<a href="javascript:void(0)" class="sc-text-semibold" data-uk-toggle="target: .sc-toggle-login-create; animation: uk-animation-scale-up">
+								<div class="uk-margin-large-top uk-flex uk-flex-middle uk-flex-center sc-button sc-button-block sc-button-flag-danger">
+									<a href="javascript:void(0)" class="sc-text-semibold md-color-red-300" data-uk-toggle="target: .sc-toggle-login-create; animation: uk-animation-scale-up">
 										Voltar ao login
 									</a>
 								</div>
@@ -376,15 +235,12 @@
 const Cookie = process.client ? require("js-cookie") : undefined;
 import ScInput from '~/components/Input'
 import UserService from "@/services/userService";
-import TenantService from "@/services/tenantService";
 import LoginService from "@/services/loginService";
-import Select2 from "~/components/Select2";
 
 import { validationMixin } from 'vuelidate';
 import { required, minLength, email, sameAs } from 'vuelidate/lib/validators';
 
 import {mask} from 'vue-the-mask'
-import {facade} from 'vue-input-facade';
 
 if(process.client) {
 	require('~/plugins/inputmask')
@@ -396,24 +252,15 @@ export default {
 	layout: 'login_page',
 	components: {
 		ScInput,
-		Select2,
 	},
-	directives: {mask, facade},
+	directives: {mask},
 	mixins: [validationMixin],
 	data () {
 		return {
-			tenantIdFederal: '',
-			tenantName: '',
-			tenantType: '',
-			contactName: '',
-			contactPhone: '',
 			userName: '',
-			userNumberDoc: '',
 			userEmail: '',
 			userLoginUserName: '',
 			userLoginPassword: '',
-			existsTenant: false,
-			existsContact: false,
 			existsUser: false,
 			enableSave: false,
 			loginData: {
@@ -428,57 +275,22 @@ export default {
 			status: 'not sent',
 			passwordFieldType: 'password',
 			showPasswordIcon: true,
-			tenant: {
-				uuid: null,
-				idFederal: null,
-				name: null,
-				tenantType: "",
-				contactName: "",
-				contactPhone: "",
-				contactEmail: "",
-				contactSite: ""
-			},
 			user:{
 				name: '',
-			    numberDoc: '',
-			    version: '',
 			    email: '',
 				login:{
 					username: '',
 					password: '',
 					active: true,
-					admin: true,
+					admin: false,
 				},
-			    tenant:{
-					uuid: ''
-				}
 			},
-			loadTypes: ["EMPRESA_CREDORA", "ASSESSORIA_DE_COBRANÇA"],
 		}
 	},
 	validations: {
-		tenantIdFederal: {
-			required,
-			minLength: minLength(18)
-		},
-		tenantName: {
-			required,
-			minLength: minLength(3)
-		},
-		tenantType: {
-			required
-		},
-		contactName: {
-			required,
-			minLength: minLength(3)
-		},
 		userName: {
 			required,
 			minLength: minLength(3)
-		},
-		userNumberDoc: {
-			required,
-			minLength: minLength(14)
 		},
 		userEmail: {
 			required,
@@ -499,9 +311,7 @@ export default {
 				);
 			}
 		},
-		validationGroupTenant: ["tenantIdFederal", "tenantName", "tenantType"],
-		validationGroupContact: ["contactName"],
-		validationGroupUser: ['userName', 'userNumberDoc', 'userEmail', 'userLoginUserName', 'userLoginPassword'],
+		validationGroupUser: ['userName', 'userEmail', 'userLoginUserName', 'userLoginPassword'],
 	},
 	computed: {
 		appLogo () {
@@ -513,9 +323,9 @@ export default {
 	},
 	mounted () {
 		let status = document.URL.slice(-3);
-		if (status == 401 || status == 403) {
-			this.loginNotification(status, 'bottom-right', 'warning')
-		}
+		// if (status == 401 || status == 403) {
+		// 	this.loginNotification(status, 'bottom-right', 'primary')
+		// }
 	},
 	methods: {
 	    setFocusOnPassword () {
@@ -581,62 +391,20 @@ export default {
 			this.loginData.username = '',
 			this.loginData.password = ''
 		},
-		saveTenant (){
-			let unregisteredTenant = {}
-			unregisteredTenant.tenant = this.tenant;
-			unregisteredTenant.user = this.user;
-			TenantService.saveUnauthenticated(unregisteredTenant)
-				.then(response => {
-					this.notification.title = "Empresa cadastrada!";
+		saveUser (){
+			UserService.saveUnauthenticated(this.user)
+				.then(resp => {
+					this.notification.title = "Usuário cadastrado!";
 					this.showNotification(this.notification.title, 'top-center', 'success')
-					this.user.tenant.uuid = response.data.uuid;
-					//this.saveUser();
+					this.cleanFields();
 				})
 				.catch(err => {
-					console.log(err)
-					this.notification.title = "Erro. Não foi possível realizar o cadastro da empresa!";
+					this.notification.title = "Erro. Não foi possível realizar o cadastro do usuário!";
 					this.showNotification(this.notification.title, 'top-center', 'danger')
 				});
 		},
-		saveUser (){
-			if(this.user.tenant.uuid){
-				UserService.saveUnauthenticated(this.user)
-					.then(resp => {
-						this.notification.title = "Usuário cadastrado na empresa " +this.tenant.name +"!";
-						this.showNotification(this.notification.title, 'top-center', 'success')
-						this.cleanFields();
-					})
-					.catch(err => {
-						this.notification.title = "Erro. Não foi possível realizar o cadastro do usuário!";
-						this.showNotification(this.notification.title, 'top-center', 'danger')
-					});
-			}
-		},
-		fieldsValidationTenant (){
-			this.tenantName = this.tenant.name;
-			this.tenantIdFederal = this.tenant.idFederal;
-			this.tenantType = this.tenant.tenantType;
-
-			if(this.$v.validationGroupTenant.$invalid == false){ 
-				this.existsTenant = true;
-			} else {
-				this.existsTenant = false;
-			}
-			this.validationToSave();
-		},
-		fieldsValidationContact (){
-			this.contactName = this.tenant.contactName;
-
-			if(this.$v.validationGroupContact.$invalid == false && (this.tenant.contactPhone || this.tenant.contactEmail)){ 
-				this.existsContact = true;
-			} else {
-				this.existsContact = false;
-			}
-			this.validationToSave();
-		},
 		fieldsValidationUser (){
 			this.userName = this.user.name;
-			this.userNumberDoc = this.user.numberDoc;
 			this.userEmail = this.user.email;
 			this.userLoginUserName = this.user.login.username;
 			this.userLoginPassword = this.user.login.password;
@@ -649,28 +417,17 @@ export default {
 			this.validationToSave();
 		},
 		validationToSave (){	
-			if (this.existsTenant == true && this.existsContact == true && this.existsUser) {
+			if (this.existsUser) {
 				this.enableSave = true;
 			}else{
 				this.enableSave = false;
 			}
 		},
 		cleanFields (){
-			this.tenant.uuid=null,
-			this.tenant.idFederal=null,
-			this.tenant.name=null,
-			this.tenant.tenantType="",
-			this.tenant.contactName="",
-			this.tenant.contactPhone="",
-			this.tenant.contactEmail="",
-			this.tenant.contactSite="",
-			this.user.name='',
-			this.user.numberDoc='',
-			this.user.version='',
-			this.user.email='',
-			this.user.login.username='',
-			this.user.login.password='',
-			this.user.tenant.uuid=null
+			this.user.name='';
+			this.user.email='';
+			this.user.login.username='';
+			this.user.login.password='';
 		},
 	},
 	head () {
