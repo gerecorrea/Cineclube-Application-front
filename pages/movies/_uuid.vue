@@ -380,9 +380,23 @@ export default {
 	},
 	mounted () {
 		this.uuidMovie = this.$route.params.uuid;
+		this.findMovieByUuid(this.uuidMovie);
 		this.loggedUser();
 	},
 	methods: {
+		findMovieByUuid (uuid){
+			MovieService.findByUuid(uuid)
+				.then(response => {
+					this.movie = response.data;
+				})
+				.catch(e => {
+					var message = "Houve um erro inesperado.";
+					if (e.response && e.response.status === 400) {
+						message = e.response.data.message;
+					}
+					this.showNotification(message, 'bottom-right', 'danger')
+				});
+		},
 		save (movie){
 			if (this.validationToSave(movie)){
 				let todayDate = new Date().toLocaleString().slice(0, 10);
