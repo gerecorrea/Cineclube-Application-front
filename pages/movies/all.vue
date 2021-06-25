@@ -14,8 +14,8 @@
 					<div>
 						<div data-uk-margin class="uk-text-right">
 							<nuxt-link :to=" '/movies/'">
-								<button class="sc-button sc-button-primary" data-uk-tooltip="Cadastrar novo filme">
-									<i class="mdi mdi-plus"></i>
+								<button class="sc-button " data-uk-tooltip="Cadastrar novo filme">
+									<img src="~/assets/img/movie-add.png" width="35px" alt="">
 									Inserir filme
 								</button>
 							</nuxt-link>
@@ -42,9 +42,17 @@
 								<span v-if="props.column.field == 'genres'">
 									<div v-for="index in props.row.genresArray"
 										:key="index"
-										class="uk-label uk-label-warning"
+										class="uk-label uk-label-warning md-color-black"
 									>
 										{{ index }}
+									</div>
+								</span>
+								<span v-if="props.column.field == 'action'">
+									<button class="mdi mdi-pen sc-button sc-button-primary sc-button-small" uk-tooltip="Editar" @click="redirectPage(props.row.uuid)"></button>
+								</span>
+								<span v-if="props.column.field == 'image'">
+									<div style="border-style: solid; background-color: black">
+										<img :src="props.row.imageLink" width="85px" alt="">
 									</div>
 								</span>
 								<span v-else>
@@ -83,6 +91,14 @@ export default {
 	data () {
 		return {			
 			columns: [
+				{
+					label: "",
+					field: "image",
+					hiden: false,
+					tdClass: 'uk-text-center',
+					thClass: 'uk-text-center'
+
+				},
 				{
 					label: "Título",
 					field: "title",
@@ -132,6 +148,13 @@ export default {
 					hidden: false,
 					tdClass: 'uk-text-right',
 					thClass: 'uk-text-right'
+				},
+				{
+					label: "",
+					field: "action",
+					hidden: false,
+					tdClass: 'uk-text-center',
+					thClass: 'uk-text-center'
 				},
 			],
 			rows: [],
