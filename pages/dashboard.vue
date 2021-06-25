@@ -2,6 +2,44 @@
 	<div id="sc-page-wrapper">
 		<div id="sc-page-content">
 			HEYYYYY
+
+			<div class="uk-child-width-1-2@m uk-grid sc-padding" data-uk-grid>
+				<v-card 
+					width="50vh" 
+					height="100px" 
+					class="uk-text-large uk-text-warning uk-text-uppercase uk-text-center sc-padding"
+					color="#2AAFC3"
+					@click="redirectPage('/movies/all')"
+				>
+					Listar filmes poarrrr!
+				</v-card>
+				<v-spacer />
+
+				<v-card 
+					width="50vh" 
+					height="100px" 
+					class="uk-text-large uk-text-warning uk-text-uppercase uk-text-center sc-padding"
+					color="#385F73"
+					@click="redirectPage('/profile/all')"
+				>
+					Listar usuários poarrrr!
+				</v-card>
+				<v-spacer />
+
+				<v-card 
+					width="50vh" 
+					height="100px" 
+					class="uk-text-large uk-text-warning uk-text-uppercase uk-text-center sc-padding"
+					color="green darken-2"
+					@click="redirectPage('/person/all')"
+				>
+					Listar estrelas poarrrr!
+				</v-card>
+				<v-spacer />
+			</div>
+
+			<div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -15,185 +53,7 @@ export default {
 	components: {
 	},
 	data: () => ({
-		dashboardData: null,
-		schedulerQuantityTotal: 0,
-		emailsQuantity: 0,
-		smsQuantity: 0,
-		callQuantity: 0,
-		billingWorkflowsArray: [],
-		schedulersArrayChart: [],
-		chartColors: [],
-		schedulersArrayTable: [],
-		schedulers: [],
-		countBillingWorkflows: 0,
-		indexBillingWorkflow: 0,
-		sumBillsChart: null,
-		sumBillsChartLoaded: false,
-		schedulersGeneratedChartLoaded: false,
-		arraySchedulersChart: [],
-		arraySchedulersTable: [],
-		dialogShowDetails: false,
-		showObjectDetails: {},
-		days: [],
-		dataDays: [0, 0, 0, 0, 0, 0, 0],
-		notification: {
-			title: '',
-			description: ''
-		},
-		dataByDayFiltered: [0, 0, 0, 0, 0, 0, 0],
-		dataByMonthFiltered: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-		dataByYearFiltered: [0, 0, 0, 0, 0],
-		appMounted: false,
-		activePeriod: 'days',
-		data: [
-			{
-				uuid: 549731,
-				sendDate: '25/03/2021',
-				debtorName: 'Exemplo 1',
-				directedTo: 'pontosistemas@example.com',
-				title: 'Exemplo de envio',
-				subject: 'blá blá',
-				isSended: true,
-				isReaded: false,
-				isRejected: false
-			},
-			{
-				uuid: 549731,
-				sendDate: '29/03/2021',
-				debtorName: 'Exemplo 2',
-				directedTo: 'pontosistemas@example.com',
-				title: 'Exemplo de envio 2',
-				subject: 'blá blá',
-				isSended: true,
-				isReaded: true,
-				isRejected: true
-			},
-			{
-				uuid: 549731,
-				sendDate: '29/03/2021',
-				debtorName: 'Exemplo 3',
-				directedTo: 'pontosistemas@example.com',
-				title: 'Exemplo de envio 3',
-				subject: 'blá blá',
-				isSended: true,
-				isReaded: true,
-				isRejected: false
-			},
-			{
-				uuid: 549731,
-				sendDate: '26/03/2021',
-				debtorName: 'Exemplo 4',
-				directedTo: 'pontosistemas@example.com',
-				title: 'Exemplo de envio 4',
-				subject: 'blá blá',
-				isSended: false,
-				isReaded: false,
-				isRejected: false
-			},
-			{
-				uuid: 549731,
-				sendDate: '24/03/2021',
-				debtorName: 'Exemplo 5',
-				directedTo: 'pontosistemas@example.com',
-				title: 'Exemplo de envio 5',
-				subject: 'blá blá',
-				isSended: false,
-				isReaded: false,
-				isRejected: false
-			},
-			{
-				uuid: 549731,
-				sendDate: '21/03/2021',
-				debtorName: 'Exemplo 6',
-				directedTo: 'pontosistemas@example.com',
-				title: 'Exemplo de envio 6',
-				subject: 'blá blá',
-				isSended: false,
-				isReaded: false,
-				isRejected: false
-			},
-			{
-				uuid: 549731,
-				sendDate: '29/03/2021',
-				debtorName: 'Exemplo 7',
-				directedTo: 'pontosistemas@example.com',
-				title: 'Exemplo de envio 7',
-				subject: 'blá blá',
-				isSended: true,
-				isReaded: false,
-				isRejected: true
-			},
-			{
-				uuid: 549731,
-				sendDate: '29/03/2021',
-				debtorName: 'Exemplo 8',
-				directedTo: 'pontosistemas@example.com',
-				title: 'Exemplo de envio 8',
-				subject: 'blá blá',
-				isSended: true,
-				isReaded: false,
-				isRejected: false
-			},
-			
-		],
-		theme: {
-			name: 'striped',
-			value: {
-				grid: {
-					text: '#222'
-				},
-				cell: {
-					normal: {
-						border: '#e0e0e0',
-						showVerticalBorder: true
-					},
-					disabled: {
-						text: '#999'
-					},
-					head: {
-						border: '#bdbdbd',
-						background: '#eeeeee'
-					},
-					selectedHead: {
-						background: '#e0e0e0'
-					},
-					focused: {
-						border: "#1565C0"
-					}
-				},
-				area: {
-					summary: {
-						border: '#bdbdbd'
-					}
-				}
-			}
-		},
-		columnsStageCode: [
-			{
-				label: 'Estágio',
-				field: 'name',
-				hidden: false,
-				type: 'String'
-			},
-			{
-				label: 'Quantidade',
-				field: 'quantity',
-				hidden: false,
-				type: 'number',
-				tdClass: 'text-center',
-				thClass: 'text-center'
-			}
-		],
-		sort:{
-			enabled: true,
-			initialSortBy: {field: 'quantity', type: 'desc'}
-		},
-		sortEmails:{
-			enabled: true,
-			initialSortBy: {field: 'sendDate', type: 'desc'}
-		},
-		buttonLoadingStageCodes: false,
-		quantityStagesTotalWorkflowSetted: 0,
+	
 	}),
 	computed: {
 	},
@@ -220,9 +80,6 @@ export default {
 			}
 			UIkit.notification(text, config);
 		},
-		setColorBillingTimeFrame (color){
-			return "color: " + color;
-		},
 		findAllMovies (){
 			MovieService.findAll().then
 			MovieService.findAll()
@@ -235,7 +92,11 @@ export default {
 						message = e.response.data.message;
 					}
 				});
-		}        
+		},
+		redirectPage (page) {
+			console.log(page)
+			this.$router.push({ path: page });
+		},
 	}
 }
 </script>
