@@ -8,6 +8,10 @@ export default {
 		return client.post('movie', movie);
 	},
 
+	findByUuid: (uuid) => {
+		return client.get('movie/findByUuid/' +uuid);
+	},
+
 	update: (uuid, movir) => {
 		return client.put('movie/' + uuid, movie);
 	},
