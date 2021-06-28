@@ -263,37 +263,6 @@
 				</ScCard>
 			</div>
 		</div>
-
-		<v-dialog
-			v-model="dialogConfirmSave"
-			max-width="450"
-			persistent
-		>
-			<v-card>
-				<v-card-title class="uk-modal-title">
-					Aviso
-				</v-card-title>
-				<v-card-text>
-					O e-mail padrão está vazio. Caso o campo não seja preenchido, o e-mail genérico do Pontocob (cobranca@pontocob.com.br) será atribuído, 
-					porém este não recebe respostas. Tem certeza desta ação?
-				</v-card-text>
-
-				<v-card-actions>
-					<v-spacer></v-spacer>
-					<div class="uk-margin-top uk-text-right">
-						<button class="sc-button uk-modal-close md-color-grey-700" type="button" @click="dialogConfirmSave = false">
-							Cancelar
-						</button>
-						<button id="sc-js-card-add"
-							class="sc-button sc-button-primary"
-							type="button"
-						>
-							Salvar
-						</button>
-					</div>
-				</v-card-actions>
-			</v-card>
-		</v-dialog>
 	</div>
 </template>
 
@@ -385,17 +354,19 @@ export default {
 	},
 	methods: {
 		findMovieByUuid (uuid){
-			MovieService.findByUuid(uuid)
-				.then(response => {
-					this.movie = response.data;
-				})
-				.catch(e => {
-					var message = "Houve um erro inesperado.";
-					if (e.response && e.response.status === 400) {
-						message = e.response.data.message;
-					}
-					this.showNotification(message, 'bottom-right', 'danger')
-				});
+			if (uuid) {
+				MovieService.findByUuid(uuid)
+					.then(response => {
+						this.movie = response.data;
+					})
+					.catch(e => {
+						var message = "Houve um erro inesperado.";
+						if (e.response && e.response.status === 400) {
+							message = e.response.data.message;
+						}
+						this.showNotification(message, 'bottom-right', 'danger')
+					});
+			}
 		},
 		save (movie){
 			if (this.validationToSave(movie)){
