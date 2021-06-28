@@ -13,10 +13,10 @@
 				<ScCardBody>
 					<div>
 						<div data-uk-margin class="uk-text-right">
-							<nuxt-link :to=" '/userpages/bill/manual'">
+							<nuxt-link :to=" '/person/'">
 								<button class="sc-button sc-button-primary" data-uk-tooltip="Cadastrar nova estrela de cinema">
 									<i class="mdi mdi-plus"></i>
-									Inserir estrela
+									Inserir artista
 								</button>
 							</nuxt-link>
 						</div>
@@ -38,6 +38,19 @@
 							@on-per-page-change="onPerPageChange"
 							@on-sort-change="onSortChange"
 						>
+							<template slot="table-row" slot-scope="props">
+								<span v-if="props.column.field == 'action'">
+									<button class="mdi mdi-pen sc-button sc-button-primary sc-button-small" uk-tooltip="Editar" @click="redirectPage(props.row.uuid)"></button>
+								</span>
+								<span v-if="props.column.field == 'image'">
+									<div style="border-style: solid; background-color: black">
+										<img :src="props.row.imageLink" width="85px" alt="">
+									</div>
+								</span>
+								<span v-else>
+									{{ props.formattedRow[props.column.field] }}
+								</span>
+							</template>
 							<div slot="emptystate" class="uk-text-center uk-text-large">
 								<span>Não há estrelas cadastradas para esta busca.</span>
 							</div>	
@@ -71,6 +84,14 @@ export default {
 		return {			
 			columns: [
 				{
+					label: "",
+					field: "image",
+					hiden: false,
+					tdClass: 'uk-text-center',
+					thClass: 'uk-text-center'
+
+				},
+				{
 					label: "Nome",
 					field: "name",
 					hidden: false,
@@ -84,7 +105,7 @@ export default {
 				},
 				{
 					label: "Nascimento",
-					field: "birthDate",
+					field: "birth",
 					hidden: false,
 				},
 				{
@@ -96,6 +117,13 @@ export default {
 					label: "Tipos de trabalho",
 					field: "jobRoles",
 					hidden: false,
+				},
+				{
+					label: "",
+					field: "action",
+					hidden: false,
+					tdClass: 'uk-text-center',
+					thClass: 'uk-text-center'
 				},
 			],
 			rows: [],
@@ -155,6 +183,9 @@ export default {
 				.then(response => {
 					//this.rows = response.data.content; 
 					this.rows = response.data; 
+					this.rows.forEach(k => {
+						k.birthYear = new Date(k.birth).getFullYear();
+					});
 					//this.totalElements = response.data.totalElements;
 					this.waitingPersonsList = false ; 
 				})
