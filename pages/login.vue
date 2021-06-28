@@ -102,7 +102,7 @@
 					<div id="sc-password-form" class="sc-toggle-login-create" hidden>
 						<div class="sc-login-page-inner">
 							<div class="uk-margin-medium" style="padding-top:35px;">
-								CADASTRO DE USUÁRIO DA EMPRESA
+								CADASTRO DE USUÁRIO
 							</div>
 							<p class="sc-text-semibold uk-text-small">
 								* Campos obrigatórios
