@@ -47,6 +47,14 @@
 										<img :src="props.row.imageLink" width="85px" alt="">
 									</div>
 								</span>
+								<span v-if="props.column.field == 'jobTypes'">
+									<div v-for="index in props.row.jobTypes"
+										:key="index"
+										class="uk-label uk-label-warning md-color-black"
+									>
+										{{ index }}
+									</div>
+								</span>
 								<span v-else>
 									{{ props.formattedRow[props.column.field] }}
 								</span>
@@ -101,11 +109,7 @@ export default {
 					field: "birthYear",
 					thClass: 'text-center',
 					tdClass: 'text-center',
-					hidden: false,
-				},
-				{
-					label: "Nascimento",
-					field: "birth",
+					sortable: false,
 					hidden: false,
 				},
 				{
@@ -115,8 +119,9 @@ export default {
 				},
 				{
 					label: "Tipos de trabalho",
-					field: "jobRoles",
+					field: "jobTypes",
 					hidden: false,
+					sortable: false,
 				},
 				{
 					label: "",
@@ -181,12 +186,10 @@ export default {
 			this.waitingPersonsList = true ; 
 			PersonService.findAll()
 				.then(response => {
-					//this.rows = response.data.content; 
 					this.rows = response.data; 
-					this.rows.forEach(k => {
-						k.birthYear = new Date(k.birth).getFullYear();
-					});
-					//this.totalElements = response.data.totalElements;
+					// this.rows.forEach(k => {
+					// 	k.birthYear = new Date(k.birth).getFullYear();
+					// });
 					this.waitingPersonsList = false ; 
 				})
 				.catch(e => {

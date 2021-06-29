@@ -78,8 +78,8 @@
 										<div class="uk-form-controls">
 											<div class="uk-form-controls">
 												<v-autocomplete
-													v-model="person.jobRolesArray"
-													:items="jobTypes"
+													v-model="person.jobTypes"
+													:items="jobTypess"
 													name="personJobTypes"
 													item-value="value"
 													item-text="text"
@@ -183,7 +183,7 @@ export default {
 				title: '',
 				description: ''
 			},
-			jobTypes: [
+			jobTypess: [
 				{value: "DIRECTOR", text: "Diretor(a)"},
 				{value: "WRITER", text: "Escritor(a)"},
 				{value: "PRODUCER", text: "Produtor(a)"},
@@ -202,10 +202,10 @@ export default {
 	methods: {
 		findPersonByUuid (uuid){
 			if (uuid){
-				PersonService.findByUuid(uuid)
+				PersonService.findById(uuid)
 					.then(response => {
-						console.log(response.data);
 						this.person = response.data;
+						this.person.birthUnformatted = new Date(response.data.birth).toLocaleString().slice(0, 10);
 					})
 					.catch(e => {
 						var message = "Houve um erro inesperado.";
@@ -219,7 +219,7 @@ export default {
 		save (person){
 			if (this.validationToSave(person)){
 				person.birth = this.formatDate(person.birthUnformatted);
-				console.log(person);
+				person.birthYear = parseInt(person.birth.slice(0, 4), 10);
 				PersonService.save(person)
 					.then(response => {
 				    	this.notification.title = "Sucesso ao salvar artista!";

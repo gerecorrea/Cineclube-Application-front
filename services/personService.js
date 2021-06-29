@@ -23,4 +23,8 @@ export default {
 	findByUuid: (uuid) => {
 		return client.get('person/findByUuid/' +uuid);
 	},
+
+	findById: (uuid) => {
+		return client.get('person/findById/' +uuid);
+	},
 }
