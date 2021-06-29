@@ -358,6 +358,7 @@ export default {
 				MovieService.findByUuid(uuid)
 					.then(response => {
 						this.movie = response.data;
+						this.movie.dateReleasedUnformatted = new Date(response.data.dateReleased).toLocaleString().slice(0, 10);
 					})
 					.catch(e => {
 						var message = "Houve um erro inesperado.";
@@ -371,9 +372,7 @@ export default {
 		save (movie){
 			if (this.validationToSave(movie)){
 				let todayDate = new Date().toLocaleString().slice(0, 10);
-				movie.dateReleased = this.formatDate(movie.dateReleasedUnformatted)
-				movie.year = movie.dateReleased[0] + movie.dateReleased[1] + movie.dateReleased[2] + movie.dateReleased[3];
-				//movie.isReleased = this.alreadyRelased(this.formatDate(todayDate), movie.dateReleased);
+				movie.dateReleased = this.formatDate(movie.dateReleasedUnformatted);
 				movie.year = parseInt(movie.dateReleased.slice(0, 4), 10);
 				//movie.genres = movie.genresArray.split("")
 				MovieService.save(movie)

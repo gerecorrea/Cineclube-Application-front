@@ -119,7 +119,8 @@ export default {
 					field: "runtime",
 					hidden: false,
 					tdClass: 'uk-text-center',
-					thClass: 'uk-text-center'
+					thClass: 'uk-text-center',
+					sortable: false,
 				},
 				{
 					label: "Ano",
@@ -133,28 +134,32 @@ export default {
 					field: "genres",
 					hidden: false,
 					tdClass: 'uk-text-center',
-					thClass: 'uk-text-center'
+					thClass: 'uk-text-center',
+					sortable: false,
 				},
 				{
 					label: "Qtd votos",
 					field: "numVotes",
 					hidden: false,
 					tdClass: 'uk-text-right',
-					thClass: 'uk-text-right'
+					thClass: 'uk-text-right',
+					sortable: false,
 				},
 				{
 					label: "Média",
 					field: "avgRating",
 					hidden: false,
 					tdClass: 'uk-text-right',
-					thClass: 'uk-text-right'
+					thClass: 'uk-text-right',
+					sortable: false,
 				},
 				{
 					label: "",
 					field: "action",
 					hidden: false,
 					tdClass: 'uk-text-center',
-					thClass: 'uk-text-center'
+					thClass: 'uk-text-center',
+					sortable: false,
 				},
 			],
 			rows: [],
