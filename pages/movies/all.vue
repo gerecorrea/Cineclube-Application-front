@@ -39,18 +39,22 @@
 							@on-sort-change="onSortChange"
 						>
 							<template slot="table-row" slot-scope="props">
-								<span v-if="props.column.field == 'genres'">
+								<nuxt-link v-if="props.column.field === 'title'" :to="'/movies/view/' + props.row.uuid">
+									{{ props.row.title }}
+								</nuxt-link>
+								<span v-else-if="props.column.field == 'genres'">
 									<div v-for="index in props.row.genresArray"
 										:key="index"
 										class="uk-label uk-label-warning md-color-black"
+										style="margin-right: 5px;"
 									>
 										{{ index }}
 									</div>
 								</span>
-								<span v-if="props.column.field == 'action'">
+								<span v-else-if="props.column.field == 'action'">
 									<button class="mdi mdi-pen sc-button sc-button-primary sc-button-small" uk-tooltip="Editar" @click="redirectPage(props.row.uuid)"></button>
 								</span>
-								<span v-if="props.column.field == 'image'">
+								<span v-else-if="props.column.field == 'image'">
 									<div style="border-style: solid; background-color: black">
 										<img :src="props.row.imageLink" width="85px" alt="">
 									</div>
