@@ -13,80 +13,96 @@
 		</div>
         
 		<div id="sc-page-content">
-			<div>
-				<div>
-					<div v-if="movie.imageLink" style="border-style: solid; background-color: black">
+			<div data-uk-grid>
+				<div class="uk-text-center">
+					<div v-if="movie.imageLink" class="uk-width-1" style="border-style: solid; background-color: black">
 						<img :src="movie.imageLink"
 							class="img-custom"
 							height="100px"
 							alt=""
 						>
 					</div>
-					<div>
-						<div class="sc-padding md-color-white-0 title-custom sc-padding-remove-bottom uk-text-left">
-							{{ movie.title }}
-							<span style="float: right">
-								<button v-if="true"
-									class="sc-padding-remove uk-button md-color-yellow-700 mdi mdi-bookmark-check md-color-black-0"
-									style="margin-right: 0px"
-									uk-tooltip="Retirar da watchlist"
-								>
-								</button>
-								<button v-else
-									class="uk-button md-color-white-0 mdi mdi-bookmark-plus md-color-black-0"
-									style="margin-right: 0px"
-									uk-tooltip="Adicionar à watchlist"
-								></button>
-								<button v-if="false"
-									class="uk-button md-color-red-700 mdi mdi-heart md-color-black-0"
-									style="margin-right: 5px"
-									uk-tooltip="Desfavoritar"
-								>
-								</button>
-								<button v-if="true"
-									class="uk-button md-color-white-0 mdi mdi-heart-outline md-color-black-0"
-									style="margin-right: 5px"
-									uk-tooltip="Favoritar"
-								>
-								</button>
-								<button class="uk-button md-bg-yellow-800 mdi mdi-star-outline md-color-black-0" style="margin-right: 25px">
-									<span class="md-color-black-0" style="padding-left: 10px; float: right">Avaliar</span>
-								</button>
-								<span class="uk-text-right">
-									{{ movie.avgRating }} / 10
-								</span>
-							</span>
-						</div>
+				</div>
+
+			
+				<div class="uk-width-auto uk-text-left md-color-white-0 title-custom sc-padding">
+					<div class="uk-width-1-1">
+						{{ movie.title }}
 					</div>
 				</div>
-				<div>
-					<span class="sc-padding-left md-color-grey-400 subtitle-custom uk-text-left">
+				<v-spacer />
+				<div class="uk-width-auto uk-text-right sc-padding sc-padding-remove-right" style="padding-top: 30px">
+					<div>
+						<button v-if="movieUser.watchlist"
+							class="sc-padding-remove uk-button md-color-yellow-700 mdi mdi-bookmark-check md-color-black-0"
+							style="margin-right: 0px"
+							uk-tooltip="Retirar da watchlist"
+							@click="movieUser.watchlist = false"
+						>
+						</button>
+						<button v-else
+							class="sc-padding-remove uk-button md-color-white-0 mdi mdi-bookmark-plus md-color-black-0"
+							style="margin-right: 0px"
+							uk-tooltip="Adicionar à watchlist"
+							@click="movieUser.watchlist = true"
+						></button>
+						<button v-if="movieUser.favorite"
+							class="sc-padding-remove uk-button md-color-red-700 mdi mdi-heart md-color-black-0"
+							uk-tooltip="Desfavoritar"
+							@click="movieUser.favorite = false"
+						>
+						</button>
+						<button v-if="!movieUser.favorite"
+							class="sc-padding-remove uk-button md-color-white-0 mdi mdi-heart-outline md-color-black-0"
+							uk-tooltip="Favoritar"
+							@click="movieUser.favorite = true"
+						>
+						</button>
+					</div>
+				</div>
+				
+				<div class="uk-width-auto sc-padding md-color-white-0 title-custom4-5 uk-text-right">
+					<button class="uk-button md-bg-yellow-800  md-color-black-0" style="margin-right: 15px">
+						<span v-if="!movieUser.rating"
+							class="mdi mdi-star-outline title-custom3"
+							@click="dialogAvaliate = true"
+						>Avaliar</span>
+						<span v-if="movieUser.rating"
+							class="mdi mdi-star md-color-black-0 title-custom3-5"
+							@click="dialogAvaliate = true"
+						> {{ movieUser.rating }}</span>
+					</button>
+					<span class="uk-text-right">
+						{{ movie.avgRating }} / 10
+					</span>
+					<span class="md-color-grey-400 subtitle-custom">
+						({{ movie.numVotes }})
+					</span>
+				</div>
+
+				<div class="uk-width-1-1">
+					<span class="md-color-grey-400 subtitle-custom uk-text-left" style="margin-right: 30px">
 						{{ movie.year }} - {{ movie.runtime }} minutos - {{ movie.country }}
 					</span>
-					<span class="sc-padding-right md-color-grey-50 subtitle-custom uk-text-center" style="float: right">
-						{{ movie.numVotes }} votos
-					</span>
+					<div v-for="index in movie.genresArray"
+						:key="index"
+						class="uk-label uk-label-warning md-color-black"
+						style="margin-right: 5px;"
+					>
+						{{ index }}
+					</div>
 				</div>
-				<div>
-					<span class="sc-padding">
-						<div v-for="index in movie.genresArray"
-							:key="index"
-							class="uk-label uk-label-warning md-color-black"
-							style="margin-right: 5px;"
-						>
-							{{ index }}
-						</div>
-					</span>
-				</div>
-				<div class="sc-padding">
+
+				<div class="uk-width-1-1 sc-padding uk-height-small">
 					<span class="md-color-grey-50 subtitle-custom uk-text-left">
 						{{ movie.synopsis }}
 					</span>
 				</div>
-				<div class="sc-padding md-color-white-0">
-					<div>
+
+				<div class="uk-width-1-1 sc-padding md-color-white-0">
+					<div class="uk-width-1-1">
 						<span>Direção: </span>
-						<!-- <span v-for="(index, i) in movie.genresArray"
+					<!-- <span v-for="(index, i) in movie.genresArray"
 							:key="index"
 							class="md-color-white-0"
 							style="margin-right: 5px;"
@@ -99,18 +115,67 @@
 							</span>
 						</span> -->
 					</div>
-					<div>
+					<div class="uk-width-1-1">
 						<span>Roteiristas: </span>
 					</div>
-					<div>
+					<div class="uk-width-1-1">
 						<span>Atores e atrizes: </span>
 					</div>
-					<div>
+					<div class="uk-width-1-1">
 						<span>Direção: </span>
 					</div>
 				</div>
 			</div>
 		</div>
+
+		<v-dialog
+			v-model="dialogAvaliate"
+			width="45%"
+			persistent
+			scrollable
+			style="z-index: 1500"
+		>
+			<v-card>
+				<v-card-title class="uk-modal-title">
+					Avalie o filme e contribua!
+				</v-card-title>
+				<v-spacer />
+				<v-card-subtitle>
+					{{ movie.title }}
+				</v-card-subtitle>
+
+				<v-card-text class="text--primary">
+					<div>
+						<StarRating v-model="movieUser.rating" :settings="{ number: 10 }"></StarRating>
+					</div>
+					<div v-if="movieUser.rating" class="sc-padding-top md-color-blue-grey-600" style="font-size: 28px; padding-top: 25px">
+						{{ movieUser.rating }}/10
+					</div>
+				</v-card-text>
+                
+				<v-card-actions class="sc-padding-top">
+					<v-spacer></v-spacer>
+					<div>
+						<button class="sc-button sc-button-light sc-button-flat-danger" type="button" @click="dialogAvaliate = false">
+							Voltar
+						</button>
+					</div>
+					<div>
+						<button class="sc-button sc-button-light sc-button-flat-primary" type="button" @click="movieUser.rating = null, dialogAvaliate = false">
+							Remover avaliação
+						</button>
+					</div>
+					<div class="" style="padding-left: 3px">
+						<button class="sc-button sc-button-light sc-button-flat-success"
+							type="button"
+							@click="dialogAvaliate = false"
+						>
+							Salvar nota
+						</button>
+					</div>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
 	</div>
 </template>
 
@@ -128,7 +193,8 @@ import Vue from 'vue';
 export default {
 	middleware: "authenticated",
 	components: {
-		Title
+		Title,
+		StarRating: process.client ? () => import('~/components/Raty') : null
 	},
 	directives: {facade},
 	data () {
@@ -193,6 +259,12 @@ export default {
 				{value: "DOCUMENTARY", text: "Documentário"},
 				{value: "VIDEO", text: "Vídeo"},
 			],
+			dialogAvaliate: false,
+			movieUser: {
+				rating: null,
+				favorite: false,
+				watchlist: false,
+			}
 		}
 	},
 	mounted () {
@@ -336,10 +408,22 @@ export default {
     }
 
     .title-custom{
-        font-size: 8vh;
+        font-size: 6.5vh;
     }
 
-    .subtitle-custom{
+	.title-custom4-5{
+        font-size: 4.5vh;
+    }
+
+	.title-custom3-5{
+        font-size: 3.5vh;
+    }
+
+	.title-custom3{
+        font-size: 3.0vh;
+    }
+
+    .subtitle-custom2-5{
         font-size: 2.5vh;
     }
 </style>
