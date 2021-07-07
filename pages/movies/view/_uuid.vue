@@ -37,25 +37,25 @@
 							class="sc-padding-remove uk-button md-color-yellow-700 mdi mdi-bookmark-check md-color-black-0"
 							style="margin-right: 0px"
 							uk-tooltip="Retirar da watchlist"
-							@click="movieUser.watchlist = false"
+							@click="movieUser.watchlist = false, saveUserMovie()"
 						>
 						</button>
 						<button v-else
 							class="sc-padding-remove uk-button md-color-white-0 mdi mdi-bookmark-plus md-color-black-0"
 							style="margin-right: 0px"
 							uk-tooltip="Adicionar à watchlist"
-							@click="movieUser.watchlist = true"
+							@click="movieUser.watchlist = true, saveUserMovie()"
 						></button>
 						<button v-if="movieUser.favorite"
 							class="sc-padding-remove uk-button md-color-red-700 mdi mdi-heart md-color-black-0"
 							uk-tooltip="Desfavoritar"
-							@click="movieUser.favorite = false"
+							@click="movieUser.favorite = false, saveUserMovie()"
 						>
 						</button>
 						<button v-if="!movieUser.favorite"
 							class="sc-padding-remove uk-button md-color-white-0 mdi mdi-heart-outline md-color-black-0"
 							uk-tooltip="Favoritar"
-							@click="movieUser.favorite = true"
+							@click="movieUser.favorite = true, saveUserMovie()"
 						>
 						</button>
 					</div>
@@ -161,14 +161,14 @@
 						</button>
 					</div>
 					<div>
-						<button class="sc-button sc-button-light sc-button-flat-primary" type="button" @click="movieUser.rating = null, dialogAvaliate = false">
+						<button class="sc-button sc-button-light sc-button-flat-primary" type="button" @click="movieUser.rating = null, saveUserMovie()">
 							Remover avaliação
 						</button>
 					</div>
 					<div class="" style="padding-left: 3px">
 						<button class="sc-button sc-button-light sc-button-flat-success"
 							type="button"
-							@click="dialogAvaliate = false"
+							@click="movieUser.rated = true, saveUserMovie()"
 						>
 							Salvar nota
 						</button>
@@ -185,6 +185,7 @@ import Title from '~/components/Title';
 import LoginService from "@/services/loginService";
 import UserService from "@/services/userService";
 import MovieService from "@/services/movieService"
+import UserMovieRelationService from "@/services/userMovieRelationService"
 
 import {facade} from 'vue-input-facade'
 
@@ -261,16 +262,19 @@ export default {
 			],
 			dialogAvaliate: false,
 			movieUser: {
+				uuid: '',
+				movieUuid: '',
+				userUuid: '',
 				rating: null,
 				favorite: false,
 				watchlist: false,
+				isRated: false,
 			}
 		}
 	},
 	mounted () {
 		this.uuidMovie = this.$route.params.uuid;
 		this.findMovieByUuid(this.uuidMovie);
-		this.loggedUser();
 	},
 	methods: {
 		findMovieByUuid (uuid){
@@ -279,6 +283,10 @@ export default {
 					.then(response => {
 						this.movie = response.data;
 						this.movie.dateReleasedUnformatted = new Date(response.data.dateReleased).toLocaleString().slice(0, 10);
+						this.movieUser.movieUuid = this.movie.uuid;
+
+						// Após pegar o filme, verifica o usuário logado.
+						this.loggedUser();
 					})
 					.catch(e => {
 						var message = "Houve um erro inesperado.";
@@ -311,8 +319,6 @@ export default {
 			}
 		},
 		validationToSave (movie){
-			console.log(this.movie)
-			console.log(movie)
 			if (movie.title.length == 0) this.notification.title = "Você deve preencher o título.";
 			else if (movie.runtime.length == 0) this.notification.title = "Você deve preencher a duração.";
 			else if (movie.dateReleasedUnformatted.length != 10) this.notification.title = "Você deve preencher a data de lançamento.";
@@ -327,6 +333,10 @@ export default {
 					UserService.findByLoginUuid(response.data.uuid)
 						.then(response => {
 							this.loggedUserObject = response.data;
+							this.movieUser.userUuid = this.loggedUserObject.uuid;
+
+							// Após obter o filme e usuário, então identifica a relação.
+							this.findMovieUserRelation(); 
 						})
 						.catch(e => {
 							var message = "Não foi possível buscar o usuário logado.";
@@ -370,13 +380,11 @@ export default {
 			todayArr[0] = todayDate.slice(0, 4);
 			todayArr[1] = todayDate.slice(5, 7);
 			todayArr[2] = todayDate.slice(8, 10);
-			console.log(todayArr)
 			
 			let releasedArr = new Array;
 			releasedArr[0] = dataReleased.slice(0, 4);
 			releasedArr[1] = dataReleased.slice(5, 7);
 			releasedArr[2] = dataReleased.slice(8, 10);
-			console.log(releasedArr)
 
 			if (parseInt(todayArr[0], 10) >= parseInt(releasedArr[0], 10)){
 				if (parseInt(todayArr[0], 10) > parseInt(releasedArr[0], 10)) return true;
@@ -390,6 +398,38 @@ export default {
 		redirectPage (page) {
 			this.$router.push({ path: page });
 		},
+		findMovieUserRelation (){
+			UserMovieRelationService.findByUserUuidAndMovieUuid(this.movieUser.userUuid, this.movieUser.movieUuid)
+				.then(response => {
+					if (response.data != null){
+						this.movieUser = response.data; //a princípio
+						//this.movieUser.rating = 
+						//this.movieUser.favorite = 
+						//this.movieUser.watchlist = 
+					}
+				})
+				.catch(e => {
+					var message = "Não foi possível obter a relação do usuário com este filme.";
+					if (e.response && e.response.status === 400) {
+						message = e.response.data.message;
+					}
+					this.showNotification(message, 'bottom-right', 'danger')
+				});
+		},
+		saveUserMovie (){
+			UserMovieRelationService.save(this.movieUser)
+				.then(response => {
+					this.dialogAvaliate = false;
+					this.movieUser = response.data;
+				})
+				.catch(e => {
+					var message = "Não foi possível salvar os dados do filme para este usuário.";
+					if (e.response && e.response.status === 400) {
+						message = e.response.data.message;
+					}
+					this.showNotification(message, 'bottom-right', 'danger')
+				});
+		}
 	}
 }
 
