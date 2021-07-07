@@ -3,6 +3,7 @@ import TenantService from '@/services/tenantService'
 import LoginService from '@/services/loginService'
 import movieService from '@/services/movieService'
 import personService from '@/services/personService'
+import userMovieRelationService from '@/services/userMovieRelationService'
 
 export default ({ app, store }) => {
 	UserService.setClient(app.$axios)
@@ -10,4 +11,5 @@ export default ({ app, store }) => {
 	LoginService.setClient(app.$axios)
 	movieService.setClient(app.$axios)
 	personService.setClient(app.$axios)
+	userMovieRelationService.setClient(app.$axios)
 }
