@@ -8,6 +8,18 @@ export default {
 		return client.post('userMovie', userMovie);
 	},
 
+	changeRating: (uuid, rating) => {
+		return client.put('userMovie/changeFavorite/' + uuid + "/" + rating);
+	}, 
+
+	changeFavorite: (uuid) => {
+		return client.put('userMovie/changeFavorite/' + uuid);
+	}, 
+
+	changeWatchlist: (uuid) => {
+		return client.put('userMovie/changeWatchlist/' + uuid);
+	}, 
+
 	remove: (uuid) => {
 		return client.delete('userMovie/' + uuid)
 	},
