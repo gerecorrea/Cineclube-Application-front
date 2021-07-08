@@ -37,25 +37,25 @@
 							class="sc-padding-remove uk-button md-color-yellow-700 mdi mdi-bookmark-check md-color-black-0"
 							style="margin-right: 0px"
 							uk-tooltip="Retirar da watchlist"
-							@click="movieUser.watchlist = false, saveUserMovie()"
+							@click="movieUser.watchlist = false, changeWatchlist()"
 						>
 						</button>
 						<button v-else
 							class="sc-padding-remove uk-button md-color-white-0 mdi mdi-bookmark-plus md-color-black-0"
 							style="margin-right: 0px"
 							uk-tooltip="Adicionar à watchlist"
-							@click="movieUser.watchlist = true, saveUserMovie()"
+							@click="movieUser.watchlist = true, changeWatchlist()"
 						></button>
 						<button v-if="movieUser.favorite"
 							class="sc-padding-remove uk-button md-color-red-700 mdi mdi-heart md-color-black-0"
 							uk-tooltip="Desfavoritar"
-							@click="movieUser.favorite = false, saveUserMovie()"
+							@click="movieUser.favorite = false, changeFavorite()"
 						>
 						</button>
 						<button v-if="!movieUser.favorite"
 							class="sc-padding-remove uk-button md-color-white-0 mdi mdi-heart-outline md-color-black-0"
 							uk-tooltip="Favoritar"
-							@click="movieUser.favorite = true, saveUserMovie()"
+							@click="movieUser.favorite = true, changeFavorite()"
 						>
 						</button>
 					</div>
@@ -63,11 +63,11 @@
 				
 				<div class="uk-width-auto sc-padding md-color-white-0 title-custom4-5 uk-text-right">
 					<button class="uk-button md-bg-yellow-800  md-color-black-0" style="margin-right: 15px">
-						<span v-if="!movieUser.rating"
+						<span v-if="movieUser.rating == 0"
 							class="mdi mdi-star-outline title-custom3"
 							@click="dialogAvaliate = true"
 						>Avaliar</span>
-						<span v-if="movieUser.rating"
+						<span v-if="movieUser.rating != 0"
 							class="mdi mdi-star md-color-black-0 title-custom3-5"
 							@click="dialogAvaliate = true"
 						> {{ movieUser.rating }}</span>
@@ -146,10 +146,10 @@
 
 				<v-card-text class="text--primary">
 					<div>
-						<StarRating v-model="movieUser.rating" :settings="{ number: 10 }"></StarRating>
+						<StarRating v-model="ratingAux" :settings="{ number: 10 }"></StarRating>
 					</div>
-					<div v-if="movieUser.rating" class="sc-padding-top md-color-blue-grey-600" style="font-size: 28px; padding-top: 25px">
-						{{ movieUser.rating }}/10
+					<div v-if="ratingAux != 0" class="sc-padding-top md-color-blue-grey-600" style="font-size: 28px; padding-top: 25px">
+						{{ ratingAux }}/10
 					</div>
 				</v-card-text>
                 
@@ -161,14 +161,18 @@
 						</button>
 					</div>
 					<div>
-						<button class="sc-button sc-button-light sc-button-flat-primary" type="button" @click="movieUser.rating = null, saveUserMovie()">
+						<button :disabled="!movieUser.uuid || movieUser.rating == 0"
+							class="sc-button sc-button-light sc-button-flat-primary"
+							type="button"
+							@click="ratingAux = 0, movieUser.isRated = false, checkRemoveRating()"
+						>
 							Remover avaliação
 						</button>
 					</div>
 					<div class="" style="padding-left: 3px">
 						<button class="sc-button sc-button-light sc-button-flat-success"
 							type="button"
-							@click="movieUser.rated = true, saveUserMovie()"
+							@click="movieUser.rated = true, movieUser.rating = ratingAux, saveUserMovie()"
 						>
 							Salvar nota
 						</button>
@@ -201,6 +205,7 @@ export default {
 	data () {
 		return {
 			uuidMovie: '',
+			ratingAux: 0,
 			movie: {
 				uuid: '',
 				title: '', // OK
@@ -265,7 +270,7 @@ export default {
 				uuid: '',
 				movieUuid: '',
 				userUuid: '',
-				rating: null,
+				rating: 0,
 				favorite: false,
 				watchlist: false,
 				isRated: false,
@@ -402,10 +407,7 @@ export default {
 			UserMovieRelationService.findByUserUuidAndMovieUuid(this.movieUser.userUuid, this.movieUser.movieUuid)
 				.then(response => {
 					if (response.data != null){
-						this.movieUser = response.data; //a princípio
-						//this.movieUser.rating = 
-						//this.movieUser.favorite = 
-						//this.movieUser.watchlist = 
+						this.movieUser = response.data;
 					}
 				})
 				.catch(e => {
@@ -421,6 +423,10 @@ export default {
 				.then(response => {
 					this.dialogAvaliate = false;
 					this.movieUser = response.data;
+					this.ratingAux = this.movieUser.rating;
+					if (this.movieUser.rating != 0) this.showNotification("Nota atribuída!", 'bottom-right', 'success');
+					else if (this.movieUser.rating == 0) this.showNotification("Nota retirada!", 'bottom-right', 'success');
+					this.findMovieByUuid(this.uuidMovie);
 				})
 				.catch(e => {
 					var message = "Não foi possível salvar os dados do filme para este usuário.";
@@ -429,6 +435,79 @@ export default {
 					}
 					this.showNotification(message, 'bottom-right', 'danger')
 				});
+		},
+		changeFavorite (){
+			if (this.movieUser.uuid){
+				UserMovieRelationService.changeFavorite(this.movieUser.uuid)
+					.then(response => {
+						let message;
+						if (response.data == false) message = "Ocorreu um erro na operação!";
+						else if (this.movieUser.favorite) message = "Filme adicionado aos favoritos!";
+						else if (!this.movieUser.favorite) message = "Filme retirado dos favoritos!";
+						this.showNotification(message, 'bottom-right', 'success');
+						this.findMovieByUuid(this.uuidMovie);
+					})
+					.catch(e => {
+						var message = "Não foi possível realizar a operação.";
+						if (e.response && e.response.status === 400) {
+							message = e.response.data.message;
+						}
+						this.showNotification(message, 'bottom-right', 'danger')
+					});
+			}else{
+				this.saveUserMovie();
+			}
+		},
+		changeWatchlist (){
+			if (this.movieUser.uuid){
+				UserMovieRelationService.changeWatchlist(this.movieUser.uuid)
+					.then(response => {
+						let message;
+						if (response.data == false) message = "Ocorreu um erro na operação.";
+						else if (this.movieUser.watchlist) message = "Filme adicionado à watchlist!";
+						else if (!this.movieUser.watchlist) message = "Filme retirado da watchlist!";
+						this.showNotification(message, 'bottom-right', 'success');
+						this.findMovieByUuid(this.uuidMovie);
+					})
+					.catch(e => {
+						var message = "Não foi possível realizar a operação.";
+						if (e.response && e.response.status === 400) {
+							message = e.response.data.message;
+						}
+						this.showNotification(message, 'bottom-right', 'danger')
+					});
+			}else{
+				this.saveUserMovie();
+			}
+		},
+		changeRating (rating){
+			if (this.movieUser.uuid){
+				UserMovieRelationService.changeRating(this.movieUser.uuid, rating)
+					.then(response => {
+						this.dialogAvaliate = false;
+						let message;
+						if (response.data == false) message = "Ocorreu um erro na operação.";
+						else if (this.movieUser.rating != 0) message = "Nota Atribuída!";
+						else if (this.movieUser.rating == 0) message = "Nota retirada!";
+						this.showNotification(message, 'bottom-right', 'success')
+						this.findMovieByUuid(this.uuidMovie);
+					})
+					.catch(e => {
+						var message = "Não foi possível realizar a operação.";
+						if (e.response && e.response.status === 400) {
+							message = e.response.data.message;
+						}
+						this.showNotification(message, 'bottom-right', 'danger')
+					});
+			}else{
+				this.saveUserMovie();
+			}
+		},
+		checkRemoveRating (){
+			if (this.movieUser.rating != 0 && this.ratingAux == 0){
+				this.movieUser.rating = this.ratingAux;
+				this.saveUserMovie();
+			}
 		}
 	}
 }
