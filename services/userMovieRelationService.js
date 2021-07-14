@@ -34,6 +34,9 @@ export default {
 
 	findByUserUuidAndMovieUuid: (userUuid, movieUuid) => {
 		return client.get('userMovie/findByUserAndMovie/' + userUuid + '/' + movieUuid)
+	},
+	findFavoritesUser: (userUuid) => {
+		return client.get('userMovie/findFavorites/' + userUuid);
 	}
 }
 
