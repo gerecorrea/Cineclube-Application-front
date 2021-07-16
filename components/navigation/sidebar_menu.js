@@ -34,6 +34,12 @@ export const menuEntries = [
 	},
 	{
 		id: uniqueID(),
+		title: "Watchlist",
+		page: "/profile/watchlist",
+		icon: "mdi mdi-bookmark-plus-outline md-color-yellow-800"
+	},
+	{
+		id: uniqueID(),
 		title: "Top 10",
 		icon: "mdi mdi-certificate md-color-red-700",
 	},
@@ -41,11 +47,6 @@ export const menuEntries = [
 		id: uniqueID(),
 		title: "My ratings",
 		icon: "mdi mdi-script md-color-blue-800"
-	},
-	{
-		id: uniqueID(),
-		title: "Watchlist",
-		icon: "mdi mdi-bookmark-plus md-color-yellow-800"
 	},
 	{
 		id: uniqueID(),
