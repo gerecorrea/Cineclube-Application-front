@@ -88,12 +88,15 @@
 									</div>
 								</span>
 								<span v-else-if="props.column.field == 'watchlist'">
-									<div v-if="props.row.watchlist" class="mdi mdi-checkbox-marked-circle-outline md-color-green-800">
+									<div v-if="props.row.watchlist" class="mdi mdi-checkbox-marked-circle-outline md-color-green-800" uk-tooltip="Não adicionado à watchlist">
 									</div>
-									<div v-else class="mdi mdi-close-circle-outline md-color-red-800" uk-tooltip="Não adiciona à watchlist">
+									<div v-else class="mdi mdi-close-circle-outline md-color-red-800" uk-tooltip="Não adicionado à watchlist">
 									</div>
 								</span>
-								<span v-else>
+								<span v-else-if="props.column.field == 'action'">
+									<button class="mdi mdi-heart-broken md-color-red-700" uk-tooltip="Desfavoritar" @click="changeFavorite(props.row.uuid)"></button>
+								</span>
+								<span v-else style="font-weight: 500">
 									{{ props.formattedRow[props.column.field] }}
 								</span>
 							</template>
@@ -349,6 +352,14 @@ export default {
 					thClass: 'uk-text-center',
 					sortable: false,
 				},
+				{
+					label: "",
+					field: "action",
+					hidden: false,
+					tdClass: 'uk-text-center',
+					thClass: 'uk-text-center',
+					sortable: false,
+				},
 			],
 			rows: [],
 			notification: {
@@ -522,6 +533,21 @@ export default {
 		callList (){
 			this.pagination.setCurrentPage = 1;
 			this.listFavorites();
+		},
+		changeFavorite (uuid){
+			UserMovieRelation.changeFavorite(uuid)
+				.then(response => {
+					let message = "Filme retirado dos favoritos!";
+					this.showNotification(message, 'bottom-right', 'success');
+					this.listFavorites();
+				})
+				.catch(e => {
+					var message = "Não foi possível realizar a operação.";
+					if (e.response && e.response.status === 400) {
+						message = e.response.data.message;
+					}
+					this.showNotification(message, 'bottom-right', 'danger')
+				});
 		},
 	}
 }
