@@ -68,7 +68,21 @@
 										<img :src="props.row.imageLink" width="85px" alt="">
 									</div>
 								</span>
-								<span v-else>
+								<span v-else-if="props.column.field == 'avgRating'">
+									<div v-if="props.row.avgRating && props.row.avgRating >= 8" class="uk-label uk-label-success uk-text-medium">
+										{{ props.row.avgRating }}
+									</div>
+									<div v-else-if="props.row.avgRating && props.row.avgRating >= 6" class="uk-label uk-text-medium">
+										{{ props.row.avgRating }}
+									</div>
+									<div v-else-if="props.row.avgRating && props.row.avgRating >= 4" class="uk-label uk-label-warning uk-text-medium">
+										{{ props.row.avgRating }}
+									</div>
+									<div v-else-if="props.row.avgRating && props.row.avgRating >= 0" class="uk-label uk-label-danger uk-text-medium">
+										{{ props.row.avgRating }}
+									</div>
+								</span>
+								<span v-else style="font-weight: 500">
 									{{ props.formattedRow[props.column.field] }}
 								</span>
 							</template>
