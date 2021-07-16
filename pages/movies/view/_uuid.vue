@@ -41,7 +41,7 @@
 						>
 						</button>
 						<button v-else
-							class="sc-padding-remove uk-button md-color-white-0 mdi mdi-bookmark-plus md-color-black-0"
+							class="sc-padding-remove uk-button md-color-white-0 mdi mdi-bookmark-plus-outline md-color-black-0"
 							style="margin-right: 0px"
 							uk-tooltip="Adicionar à watchlist"
 							@click="movieUser.watchlist = true, changeWatchlist()"
