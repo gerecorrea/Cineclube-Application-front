@@ -32,7 +32,8 @@
 								:rows="rows"
 								style-class="uk-table uk-table-divider scutum-vgt"
 								:search-options="{
-									enabled: true
+									enabled: true,
+									placeholder: 'Digite para buscar'
 								}"
 								:pagination-options="pagination"
 								:total-rows="totalElements"
@@ -249,7 +250,7 @@ export default {
 				//mode: 'remote',
 				mode: 'pages',
 				perPage: 10,
-				position: 'bottom',
+				position: 'top',
 				perPageDropdown: [10, 15, 20, 50, 100],
 				dropdownAllowAll: true,
 				setCurrentPage: 1,

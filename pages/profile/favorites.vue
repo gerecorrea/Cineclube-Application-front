@@ -30,7 +30,8 @@
 							:rows="rows"
 							style-class="uk-table uk-table-divider scutum-vgt"
 							:search-options="{
-								enabled: true
+								enabled: true,
+								placeholder: 'Digite para buscar'
 							}"
 							:pagination-options="pagination"
 							:total-rows="totalElements"
