@@ -9,7 +9,7 @@ export default {
 	},
 
 	changeRating: (uuid, rating) => {
-		return client.put('userMovie/changeFavorite/' + uuid + "/" + rating);
+		return client.put('userMovie/changeRating/' + uuid + "/" + rating);
 	}, 
 
 	changeFavorite: (uuid) => {
@@ -40,6 +40,9 @@ export default {
 	},
 	findWatchlistUser: (userUuid) => {
 		return client.get('userMovie/findWatchlist/' + userUuid);
+	},
+	findRatingsUser: (userUuid) => {
+		return client.get('userMovie/findRatings/' + userUuid);
 	}
 }
 
