@@ -28,6 +28,12 @@ export const menuEntries = [
 	},
 	{
 		id: uniqueID(),
+		title: "Avaliações do usuário",
+		page: "/profile/ratings",
+		icon: "mdi mdi-star-half md-color-purple-600"
+	},
+	{
+		id: uniqueID(),
 		title: "Favoritos do usuário",
 		page: "/profile/favorites",
 		icon: "mdi mdi-heart-half-full md-color-red-700"
