@@ -20,7 +20,19 @@ export default {
 		return client.delete('movie/' + uuid)
 	},
 
-	findAll: () => {
-		return client.get('movie/findAll');
-	}
+	findAllMovie: () => {
+		return client.get('movie/findAllMovies');
+	},
+
+	findTop10: () => {
+		return client.get('movie/findTop10');
+	},
+
+	findAllDocumentary: () => {
+		return client.get('movie/findAllDocumentary');
+	},
+
+	findAllShort: () => {
+		return client.get('movie/findAllShort');
+	},
 }
