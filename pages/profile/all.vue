@@ -247,8 +247,8 @@ export default {
 			showConfirmChangeActivate: false,
 			pagination:{
 				enabled: true,
-				//mode: 'remote',
-				mode: 'pages',
+				mode: 'remote',
+				//mode: 'pages',
 				perPage: 10,
 				position: 'top',
 				perPageDropdown: [10, 15, 20, 50, 100],

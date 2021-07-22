@@ -106,8 +106,8 @@
 										@click="props.row.watchlist = !props.row.watchlist, changeWatchlist(props.row.uuid)"
 									></button>
 									<button v-else-if="!props.row.watchlist"
-										class="mdi mdi-bookmark-plus md-color-yellow-800"
-										uk-tooltip="Retirar da watchlist"
+										class="mdi mdi-bookmark-plus-outline md-color-yellow-800"
+										uk-tooltip="Adicionar à watchlist"
 										@click="props.row.watchlist = !props.row.watchlist, changeWatchlist(props.row.uuid)"
 									></button>
 								</span>
@@ -393,8 +393,8 @@ export default {
 			showConfirm: true,
 			pagination: {
 				enabled: true,
-				mode: 'pages',
-				//mode: 'remote',
+				//mode: 'pages',
+				mode: 'remote',
 				perPage: 10,
 				position: 'top',
 				perPageDropdown: [10, 15, 20, 50, 100],
