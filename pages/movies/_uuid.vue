@@ -161,7 +161,7 @@
 										</div>
 										<div class="uk-form-controls">
 											<v-autocomplete
-												v-model="movie.movieTypeArray"
+												v-model="movie.movieType"
 												:items="movieTypes"
 												name="movieType"
 												item-value="value"
