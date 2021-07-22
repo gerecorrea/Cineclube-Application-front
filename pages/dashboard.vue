@@ -123,8 +123,7 @@ export default {
 			UIkit.notification(text, config);
 		},
 		findAllMovies (){
-			MovieService.findAll().then
-			MovieService.findAll()
+			MovieService.findAllMovie()
 				.then(response => {
 					console.log(response.data)
 				})
