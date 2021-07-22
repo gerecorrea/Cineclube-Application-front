@@ -62,7 +62,7 @@
 									</div>
 								</span>
 								<span v-else-if="props.column.field == 'action'">
-									<button class="mdi mdi-pen sc-button sc-button-primary sc-button-small" uk-tooltip="Editar" @click="redirectPage(props.row.uuid)"></button>
+									<button class="mdi mdi-pen sc-button sc-button-primary sc-button-small" uk-tooltip="Editar" @click="editMovie(props.row)"></button>
 								</span>
 								<span v-else-if="props.column.field == 'image'">
 									<div style="border-style: solid; background-color: black">
@@ -234,6 +234,7 @@ import { VueGoodTable } from 'vue-good-table';
 import push from 'push.js'
 
 import MovieService from "@/services/movieService";
+import LoginService from '@/services/loginService';
 import Title from "~/components/Title"
 
 if(process.client) {
@@ -248,6 +249,72 @@ export default {
 	},
 	data () {
 		return {			
+			rows: [],
+			notification: {
+				title: '',
+				description: ''
+			},
+			waitingMoviesList: false,
+			removeItems: [],
+			showConfirm: true,
+			pagination: {
+				enabled: true,
+				//mode: 'pages',
+				mode: 'remote',
+				perPage: 10,
+				position: 'top',
+				perPageDropdown: [10, 15, 20, 50, 100],
+				dropdownAllowAll: false,
+				setCurrentPage: 1,
+				nextLabel: 'Próxima',
+				prevLabel: 'Anterior',
+				rowsPerPageLabel: 'Linhas por página',
+				ofLabel: 'of',
+				//pageLabel: 'page', // for 'pages' mode
+				allLabel: 'Todos'
+			},
+			sort:{
+				enabled: true,
+				initialSortBy: {field: 'title', type: 'asc'}
+			},
+			totalElements: 10,
+			filterData: {
+				title: '',
+				genre: '',
+				year: '',
+				country: '',
+				yearMin: null,
+				yearMax: null,
+				durationMin: null,
+				durationMax: null,
+				numVotesMin: null,
+				numVotesMax: null,
+				avgRatingMin: null,
+				avgRatingMax: null,
+			},
+			dialogFilter: false,
+			genreTypes: [
+				{value: "COMEDY", text: "Comédia"},
+				{value: "SCI_FI", text: "Ficção Científica"},
+				{value: "HORROR", text: "Terror"},
+				{value: "ROMANCE", text: "Romance"},
+				{value: "ACTION", text: "Ação"},
+				{value: "THRILLER", text: "Thriller"},
+				{value: "DRAMA", text: "Drama"},
+				{value: "MYSTERY", text: "Mistério"},
+				{value: "CRIME", text: "Crime"},
+				{value: "ANIMATION", text: "Animação"},
+				{value: "ADVENTURE", text: "Aventura"},
+				{value: "FANTASY", text: "Fantasia"},
+				{value: "SUPERHERO", text: "Super-herói"},
+			],
+			movieTypes: [
+				{value: "MOVIE", text: "Filme"},
+				{value: "SHORT", text: "Curta"},
+				{value: "DOCUMENTARY", text: "Documentário"},
+				{value: "VIDEO", text: "Vídeo"},
+			],
+			loggedUserObject: null,
 			columns: [
 				{
 					label: "",
@@ -329,74 +396,11 @@ export default {
 					sortable: false,
 				},
 			],
-			rows: [],
-			notification: {
-				title: '',
-				description: ''
-			},
-			waitingMoviesList: false,
-			removeItems: [],
-			showConfirm: true,
-			pagination: {
-				enabled: true,
-				mode: 'pages',
-				//mode: 'remote',
-				perPage: 10,
-				position: 'top',
-				perPageDropdown: [10, 15, 20, 50, 100],
-				dropdownAllowAll: false,
-				setCurrentPage: 1,
-				nextLabel: 'Próxima',
-				prevLabel: 'Anterior',
-				rowsPerPageLabel: 'Linhas por página',
-				ofLabel: 'of',
-				//pageLabel: 'page', // for 'pages' mode
-				allLabel: 'Todos'
-			},
-			sort:{
-				enabled: true
-			},
-			totalElements: 10,
-			filterData: {
-				title: '',
-				genre: '',
-				year: '',
-				country: '',
-				yearMin: null,
-				yearMax: null,
-				durationMin: null,
-				durationMax: null,
-				numVotesMin: null,
-				numVotesMax: null,
-				avgRatingMin: null,
-				avgRatingMax: null,
-			},
-			dialogFilter: false,
-			genreTypes: [
-				{value: "COMEDY", text: "Comédia"},
-				{value: "SCI_FI", text: "Ficção Científica"},
-				{value: "HORROR", text: "Terror"},
-				{value: "ROMANCE", text: "Romance"},
-				{value: "ACTION", text: "Ação"},
-				{value: "THRILLER", text: "Thriller"},
-				{value: "DRAMA", text: "Drama"},
-				{value: "MYSTERY", text: "Mistério"},
-				{value: "CRIME", text: "Crime"},
-				{value: "ANIMATION", text: "Animação"},
-				{value: "ADVENTURE", text: "Aventura"},
-				{value: "FANTASY", text: "Fantasia"},
-				{value: "SUPERHERO", text: "Super-herói"},
-			],
-			movieTypes: [
-				{value: "MOVIE", text: "Filme"},
-				{value: "SHORT", text: "Curta"},
-				{value: "DOCUMENTARY", text: "Documentário"},
-				{value: "VIDEO", text: "Vídeo"},
-			],
 		}
 	},
 	mounted () {
 		this.list();
+		this.loggedUser();
 	},
 	methods: {
 		showNotification (text, pos, status, persistent) {
@@ -412,7 +416,7 @@ export default {
 		},
 		list () {
 			this.waitingMoviesList = true ; 
-			MovieService.findAll()
+			MovieService.findAllMovie()
 				.then(response => {
 					//this.rows = response.data.content; 
 					this.rows = response.data; 
@@ -449,6 +453,19 @@ export default {
 					this.showNotification(message, 'bottom-right', 'danger')
 				});
 		},
+		loggedUser (){
+			LoginService.getActualLogin()
+				.then(response => {
+					this.loggedUserObject = response.data;
+				})
+				.catch(e => {
+					var message = "Não foi possível buscar o usuário logado.";
+					if (e.response && e.response.status === 400) {
+						message = e.response.data.message;
+					} 
+					this.showNotification(message, 'bottom-right', 'danger')
+				});
+		},
 		redirectPage (page) {
 			this.$router.push({ path: page });
 		},
@@ -477,6 +494,16 @@ export default {
 			this.pagination.setCurrentPage = 1;
 			this.list();
 		},
+		editMovie (obj){
+			if (this.loggedUserObject.admin){
+				this.redirectPage('/movies/' + obj.uuid)
+			}
+			else{
+				var message = "Somente usuários administradores podem editar filmes."; 
+				this.showNotification(message, 'bottom-right', 'danger')
+			}
+		},
+		
 	}
 }
 </script>
