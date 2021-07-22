@@ -18,7 +18,7 @@
 					<div v-if="movie.imageLink" class="uk-width-1" style="border-style: solid; background-color: black">
 						<img :src="movie.imageLink"
 							class="img-custom"
-							height="100px"
+							width="250px"
 							alt=""
 						>
 					</div>
