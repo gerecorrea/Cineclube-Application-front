@@ -18,7 +18,6 @@
 					<div v-if="movie.imageLink" class="uk-width-1" style="border-style: solid; background-color: black">
 						<img :src="movie.imageLink"
 							class="img-custom"
-							width="250px"
 							alt=""
 						>
 					</div>
@@ -49,13 +48,13 @@
 						<button v-if="movieUser.favorite"
 							class="sc-padding-remove uk-button md-color-red-700 mdi mdi-heart md-color-black-0"
 							uk-tooltip="Desfavoritar"
-							@click="movieUser.favorite = false, changeFavorite()"
+							@click="movieUser.favorite = false, saveUserMovie()"
 						>
 						</button>
 						<button v-if="!movieUser.favorite"
 							class="sc-padding-remove uk-button md-color-white-0 mdi mdi-heart-outline md-color-black-0"
 							uk-tooltip="Favoritar"
-							@click="movieUser.favorite = true, changeFavorite()"
+							@click="movieUser.favorite = true, saveUserMovie()"
 						>
 						</button>
 					</div>
@@ -63,25 +62,31 @@
 				
 				<div class="uk-width-auto sc-padding md-color-white-0 title-custom4-5 uk-text-right">
 					<button class="uk-button md-bg-yellow-800  md-color-black-0" style="margin-right: 15px">
-						<span v-if="movieUser.rating == 0"
+						<button v-if="movieUser.rating == 0"
 							class="mdi mdi-star-outline title-custom3"
+							uk-tooltip="Sua avaliação"
 							@click="dialogAvaliate = true"
-						>Avaliar</span>
-						<span v-if="movieUser.rating != 0"
+						>
+							Avaliar
+						</button>
+						<button v-if="movieUser.rating != 0"
 							class="mdi mdi-star md-color-black-0 title-custom3-5"
+							uk-tooltip="Sua avaliação"
 							@click="dialogAvaliate = true"
-						> {{ movieUser.rating }}</span>
+						>
+							{{ movieUser.rating }}
+						</button>
 					</button>
-					<span class="uk-text-right">
+					<span class="uk-text-right" uk-tooltip="Nota média dos usuários">
 						{{ movie.avgRating }} / 10
 					</span>
-					<span class="md-color-grey-400 subtitle-custom">
+					<span class="md-color-grey-400 subtitle-custom" uk-tooltip="Total de votos">
 						({{ movie.numVotes }})
 					</span>
 				</div>
 
 				<div class="uk-width-1-1">
-					<span class="md-color-grey-400 subtitle-custom uk-text-left" style="margin-right: 30px">
+					<span class="md-color-grey-400 subtitle-custom uk-text-left" style="margin-right: 30px" uk-tooltip="Ano - Duração - País">
 						{{ movie.year }} - {{ movie.runtime }} minutos - {{ movie.country }}
 					</span>
 					<div v-for="index in movie.genresArray"
@@ -94,7 +99,7 @@
 				</div>
 
 				<div class="uk-width-1-1 sc-padding uk-height-small">
-					<span class="md-color-grey-50 subtitle-custom uk-text-left">
+					<span class="md-color-grey-50 subtitle-custom uk-text-left" uk-tooltip="Sinopse">
 						{{ movie.synopsis }}
 					</span>
 				</div>
@@ -408,6 +413,7 @@ export default {
 				.then(response => {
 					if (response.data != null){
 						this.movieUser = response.data;
+						this.ratingAux = this.movieUser.rating;
 					}
 				})
 				.catch(e => {
@@ -424,8 +430,7 @@ export default {
 					this.dialogAvaliate = false;
 					this.movieUser = response.data;
 					this.ratingAux = this.movieUser.rating;
-					if (this.movieUser.rating != 0) this.showNotification("Nota atribuída!", 'bottom-right', 'success');
-					else if (this.movieUser.rating == 0) this.showNotification("Nota retirada!", 'bottom-right', 'success');
+					this.showNotification("Salvo com sucesso!", 'bottom-right', 'success');
 					this.findMovieByUuid(this.uuidMovie);
 				})
 				.catch(e => {
@@ -485,6 +490,7 @@ export default {
 				UserMovieRelationService.changeRating(this.movieUser.uuid, rating)
 					.then(response => {
 						this.dialogAvaliate = false;
+						this.ratingAux = rating;
 						let message;
 						if (response.data == false) message = "Ocorreu um erro na operação.";
 						else if (this.movieUser.rating != 0) message = "Nota Atribuída!";
