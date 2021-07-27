@@ -43,7 +43,7 @@
 										class="uk-label uk-label-warning md-color-black"
 										style="margin-right: 5px;"
 									>
-										{{ index }}
+										{{ genreTypesMap.get(index) }}
 									</div>
 								</span>
 								<span v-else-if="props.column.field == 'image'">
@@ -64,6 +64,13 @@
 									<div v-else-if="props.row.avgRating && props.row.avgRating >= 0" class="uk-label uk-label-danger uk-text-medium">
 										{{ props.row.avgRating }}
 									</div>
+									<div v-else class="uk-label md-bg-grey-500 uk-text-medium">
+										N/A
+									</div>
+								</span>
+								<span v-else-if="props.column.field == 'numFavorites'" style="font-weight: 500">
+									<div v-if="props.row.numFavorites == null"> 0 </div>
+									<div v-else> {{ props.formattedRow[props.column.field] }} </div>
 								</span>
 								<span v-else style="font-weight: 500">
 									{{ props.formattedRow[props.column.field] }}
@@ -115,18 +122,24 @@ export default {
 					hidden: false,
 				},
 				{
-					label: "País",
-					field: "country",
+					label: "Média",
+					field: "avgRating",
 					hidden: false,
+					tdClass: 'uk-text-right',
+					thClass: 'uk-text-right',
+					type: 'number',
 				},
 				{
-					label: "idioma",
-					field: "language",
+					label: "Votos",
+					field: "numVotes",
 					hidden: false,
+					tdClass: 'uk-text-right',
+					thClass: 'uk-text-right',
+					type: 'number',
 				},
 				{
-					label: "Duração",
-					field: "runtime",
+					label: "Favoritos",
+					field: "numFavorites",
 					hidden: false,
 					tdClass: 'uk-text-center',
 					thClass: 'uk-text-center',
@@ -141,6 +154,14 @@ export default {
 					tdClass: 'text-center',
 				},
 				{
+					label: "Duração",
+					field: "runtime",
+					hidden: false,
+					tdClass: 'uk-text-center',
+					thClass: 'uk-text-center',
+					type: 'number',
+				},
+				{
 					label: "Gênero",
 					field: "genres",
 					hidden: false,
@@ -149,28 +170,15 @@ export default {
 					sortable: false,
 				},
 				{
-					label: "Favoritos",
-					field: "numFavorites",
+					label: "País",
+					field: "country",
 					hidden: false,
-					tdClass: 'uk-text-center',
-					thClass: 'uk-text-center',
-					type: 'number',
 				},
 				{
-					label: "Qtd votos",
-					field: "numVotes",
+					label: "idioma",
+					field: "language",
 					hidden: false,
-					tdClass: 'uk-text-right',
-					thClass: 'uk-text-right',
-					type: 'number',
-				},
-				{
-					label: "Média",
-					field: "avgRating",
-					hidden: false,
-					tdClass: 'uk-text-right',
-					thClass: 'uk-text-right',
-					type: 'number',
+				
 				},
 				{
 					label: "",
@@ -239,6 +247,7 @@ export default {
 				{value: "FANTASY", text: "Fantasia"},
 				{value: "SUPERHERO", text: "Super-herói"},
 			],
+			genreTypesMap: new Map(),
 			movieTypes: [
 				{value: "MOVIE", text: "Filme"},
 				{value: "SHORT", text: "Curta"},
@@ -248,6 +257,7 @@ export default {
 		}
 	},
 	mounted () {
+		this.genresTypesMap();
 		this.list();
 	},
 	methods: {
@@ -328,6 +338,21 @@ export default {
 		callList (){
 			this.pagination.setCurrentPage = 1;
 			this.list();
+		},
+		genresTypesMap (){
+			this.genreTypesMap.set("COMEDY", "Comédia");
+			this.genreTypesMap.set("SCI_FI", "Ficção Científica");
+			this.genreTypesMap.set("HORROR", "Terror");
+			this.genreTypesMap.set("ROMANCE", "Romance");
+			this.genreTypesMap.set("ACTION", "Ação");
+			this.genreTypesMap.set("THRILLER", "Thriller");
+			this.genreTypesMap.set("DRAMA", "Drama");
+			this.genreTypesMap.set("MYSTERY", "Mistério");
+			this.genreTypesMap.set("CRIME", "Crime");
+			this.genreTypesMap.set("ANIMATION", "Animação");
+			this.genreTypesMap.set("ADVENTURE", "Aventura");
+			this.genreTypesMap.set("FANTASY", "Fantasia");
+			this.genreTypesMap.set("SUPERHERO", "Super-herói");
 		},
 	}
 }
