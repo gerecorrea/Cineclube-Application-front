@@ -113,13 +113,15 @@ export default {
 					field: "image",
 					hiden: false,
 					tdClass: 'uk-text-center',
-					thClass: 'uk-text-center'
+					thClass: 'uk-text-center',
+					sortable: false,
 
 				},
 				{
 					label: "Título",
 					field: "title",
 					hidden: false,
+					sortable: false,
 				},
 				{
 					label: "Média",
@@ -128,6 +130,7 @@ export default {
 					tdClass: 'uk-text-right',
 					thClass: 'uk-text-right',
 					type: 'number',
+					sortable: false,
 				},
 				{
 					label: "Votos",
@@ -136,6 +139,7 @@ export default {
 					tdClass: 'uk-text-right',
 					thClass: 'uk-text-right',
 					type: 'number',
+					sortable: false,
 				},
 				{
 					label: "Favoritos",
@@ -144,6 +148,7 @@ export default {
 					tdClass: 'uk-text-center',
 					thClass: 'uk-text-center',
 					type: 'number',
+					sortable: false,
 				},
 				{
 					label: "Ano",
@@ -152,6 +157,7 @@ export default {
 					hidden: false,
 					thClass: 'text-center',
 					tdClass: 'text-center',
+					sortable: false,
 				},
 				{
 					label: "Duração",
@@ -160,6 +166,7 @@ export default {
 					tdClass: 'uk-text-center',
 					thClass: 'uk-text-center',
 					type: 'number',
+					sortable: false,
 				},
 				{
 					label: "Gênero",
@@ -173,11 +180,13 @@ export default {
 					label: "País",
 					field: "country",
 					hidden: false,
+					sortable: false,
 				},
 				{
 					label: "idioma",
 					field: "language",
 					hidden: false,
+					sortable: false,
 				
 				},
 				{
