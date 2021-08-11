@@ -427,24 +427,6 @@ export default {
 			}
 			UIkit.notification(text, config);
 		},
-		// list () {
-		// 	this.waitingMoviesList = true ; 
-		// 	MovieService.findAllMovie()
-		// 		.then(response => {
-		// 			//this.rows = response.data.content; 
-		// 			this.rows = response.data; 
-		// 			//this.totalElements = response.data.totalElements;
-		// 			this.waitingMoviesList = false ; 
-		// 		})
-		// 		.catch(e => {
-		// 			var message = "Não foi possível listar os filmes cadastrados.";
-		// 			if (e.response && e.response.status === 400) {
-		// 				message = e.response.data.message;
-		// 			}
-		// 			this.waitingMoviesList = false ; 
-		// 			this.showNotification(message, 'bottom-right', 'danger')
-		// 		});
-		// },
 		list (filterData) {
 			this.waitingMoviesList = true ; 
 			let f = filterData;
