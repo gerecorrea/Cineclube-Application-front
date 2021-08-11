@@ -24,6 +24,15 @@ export default {
 		return client.get('movie/findAllMovies');
 	},
 
+	findAllMovieByFilter: (title, country,
+		yearMin, yearMax, durationMin, durationMax, 
+		numVotesMin, numVotesMax, avgRatingMin, avgRatingMax
+	) => {
+		return client.get('movie/findAllByFilter?title=' + title + "&country=" + country
+		+ "&yearMin=" + yearMin + "&yearMax=" + yearMax + "&durationMin=" + durationMin + "&durationMax=" + durationMax
+		+ "&numVotesMin=" + numVotesMin + "&numVotesMax=" + numVotesMax + "&avgRatingMin=" + avgRatingMin + "&avgRatingMax=" + avgRatingMax);
+	},
+
 	findTop10: () => {
 		return client.get('movie/findTop10');
 	},

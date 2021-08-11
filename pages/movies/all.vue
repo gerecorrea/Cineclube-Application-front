@@ -122,7 +122,7 @@
 						class="md-color-blue-grey-100"
 					>
 						<div class="uk-flex uk-flex-bottom uk-grid" data-uk-grid>
-							<div class="uk-width-1-1@m">
+							<div class="uk-width-1-2@m">
 								<v-text-field
 									v-model="filterData.title"
 									hint="Digite o nome do filme"
@@ -136,7 +136,7 @@
 									label="País"
 								></v-text-field>
 							</div>
-							<div class="uk-width-1-2@m">
+							<!-- <div class="uk-width-1-2@m">
 								<v-autocomplete
 									v-model="filterData.genre"
 									:items="genreTypes"									
@@ -144,7 +144,7 @@
 									chips
 									label="Gênero"
 								></v-autocomplete>
-							</div>
+							</div> -->
 							<div class="uk-width-1-4@m">
 								<v-text-field
 									v-model="filterData.yearMin"
@@ -221,14 +221,14 @@
 						</button>
 					</div>
 					<div>
-						<button class="sc-button sc-button sc-button-danger" type="button" @click="dialogFilter = false">
+						<button class="sc-button sc-button sc-button-danger" type="button" @click="cleanFilters">
 							Limpar filtros
 						</button>
 					</div>
 					<div class="" style="padding-left: 3px">
 						<button class="sc-button sc-button-light sc-button-primary"
 							type="button"
-							@click="dialogFilter = false"
+							@click="list(filterData)"
 						>
 							Filtrar
 						</button>
@@ -292,16 +292,15 @@ export default {
 			filterData: {
 				title: '',
 				genre: '',
-				year: '',
 				country: '',
-				yearMin: null,
-				yearMax: null,
-				durationMin: null,
-				durationMax: null,
-				numVotesMin: null,
-				numVotesMax: null,
-				avgRatingMin: null,
-				avgRatingMax: null,
+				yearMin: '',
+				yearMax: '',
+				durationMin: '',
+				durationMax: '',
+				numVotesMin: '',
+				numVotesMax: '',
+				avgRatingMin: '',
+				avgRatingMax: '',
 			},
 			dialogFilter: false,
 			genreTypes: [
@@ -413,7 +412,7 @@ export default {
 	},
 	mounted () {
 		this.genresTypesMap();
-		this.list();
+		this.list(this.filterData);
 		this.loggedUser();
 	},
 	methods: {
@@ -428,13 +427,42 @@ export default {
 			}
 			UIkit.notification(text, config);
 		},
-		list () {
+		// list () {
+		// 	this.waitingMoviesList = true ; 
+		// 	MovieService.findAllMovie()
+		// 		.then(response => {
+		// 			//this.rows = response.data.content; 
+		// 			this.rows = response.data; 
+		// 			//this.totalElements = response.data.totalElements;
+		// 			this.waitingMoviesList = false ; 
+		// 		})
+		// 		.catch(e => {
+		// 			var message = "Não foi possível listar os filmes cadastrados.";
+		// 			if (e.response && e.response.status === 400) {
+		// 				message = e.response.data.message;
+		// 			}
+		// 			this.waitingMoviesList = false ; 
+		// 			this.showNotification(message, 'bottom-right', 'danger')
+		// 		});
+		// },
+		list (filterData) {
 			this.waitingMoviesList = true ; 
-			MovieService.findAllMovie()
+			let f = filterData;
+			if (f.yearMin == null || f.yearMin == "") f.yearMin = 0;
+			if (f.yearMax == null || f.yearMax == "") f.yearMax = 3000;
+			if (f.durationMin == null || f.durationMin == "") f.durationMin = 0;
+			if (f.durationMax == null || f.durationMax == "") f.durationMax = 500;
+			if (f.numVotesMin == null || f.numVotesMin == "") f.numVotesMin = 0;
+			if (f.numVotesMin == null || f.numVotesMin == "") f.numVotesMax = 1000000;
+			if (f.avgRatingMin == null || f.avgRatingMin == "") f.avgRatingMin = 0;
+			if (f.avgRatingMax == null || f.avgRatingMax == "") f.avgRatingMax = 10;
+			MovieService.findAllMovieByFilter(f.title, f.country,
+				f.yearMin, f.yearMax, f.durationMin, f.durationMax, f.numVotesMin, 
+				f.numVotesMax, f.avgRatingMin, f.avgRatingMax
+			)
 				.then(response => {
-					//this.rows = response.data.content; 
 					this.rows = response.data; 
-					//this.totalElements = response.data.totalElements;
+					this.dialogFilter = false;
 					this.waitingMoviesList = false ; 
 				})
 				.catch(e => {
@@ -456,7 +484,7 @@ export default {
 				.then(results => {
 					this.notification.title = "Registro deletado com sucesso";
 					this.showNotification(this.notification.title, 'bottom-right', 'success') 
-					this.list();
+					this.list(this.filterData);
 				})
 				.catch(e => {
 					var message = "Houve um erro inesperado.";
@@ -485,28 +513,35 @@ export default {
 		},
 		onPageChange (params){
 			this.pagination.setCurrentPage = params.currentPage
-			this.list()
+			this.list(this.filterData)
 		},
 		onPerPageChange (params){
 			this.pagination.setCurrentPage = 1
 			this.pagination.perPage = params.currentPerPage
-			this.list()
+			this.list(this.filterData)
 		},
 		onSortChange (params){
 			this.sort.type = params[0].type;
 			this.sort.field = params[0].field
 			this.pagination.setCurrentPage = 1;
-			this.list()
+			this.list(this.filterData)
 		},
 		cleanFilters (){
 			this.filterData.title = '';
-			this.filterData.genre = '';
-			this.filterData.year = '';
 			this.filterData.country = '';
+			this.filterData.genre = '';
+			this.filterData.yearMin= '';
+			this.filterData.yearMax= '';
+			this.filterData.durationMin= '';
+			this.filterData.durationMax= '';
+			this.filterData.numVotesMin= '';
+			this.filterData.numVotesMax= '';
+			this.filterData.avgRatingMin= '';
+			this.filterData.avgRatingMax= '';
 		},
 		callList (){
 			this.pagination.setCurrentPage = 1;
-			this.list();
+			this.list(this.filterData);
 		},
 		editMovie (obj){
 			if (this.loggedUserObject.admin){
