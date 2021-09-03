@@ -78,7 +78,7 @@
 										<div class="uk-form-controls">
 											<div class="uk-form-controls">
 												<v-autocomplete
-													v-model="person.jobTypes"
+													v-model="jobTypesSelected"
 													:items="jobTypess"
 													name="personJobTypes"
 													item-value="value"
@@ -168,10 +168,14 @@ export default {
 				birth: '',
 				birthYear: 0,
 				birthDate: '',
-				jobRoles: '',
-				jobTypes: [],
+				director: false,
+				actor: false,
+				writer: false,
+				producer: false,
+				self: false,
 				imageLink: '',
 			},
+			jobTypesSelected: [],
 			uuidPerson: '',
 			okPrincipal: false,
 			okSecundary: false,
@@ -187,7 +191,7 @@ export default {
 				{value: "DIRECTOR", text: "Diretor(a)"},
 				{value: "WRITER", text: "Escritor(a)"},
 				{value: "PRODUCER", text: "Produtor(a)"},
-				{value: "SELF", text: "Self"},
+				{value: "SELF", text: "Próprio"},
 				{value: "ACTOR", text: "Ator/Atriz"},
 			],
 		}
@@ -205,7 +209,15 @@ export default {
 				PersonService.findById(uuid)
 					.then(response => {
 						this.person = response.data;
-						this.person.birthUnformatted = new Date(response.data.birth).toLocaleString().slice(0, 10);
+						if (this.person){
+							this.person.birthUnformatted = new Date(response.data.birth).toLocaleString().slice(0, 10);
+							if (this.person.director) this.jobTypesSelected.push("DIRECTOR");
+							if (this.person.actor) this.jobTypesSelected.push("ACTOR");
+							if (this.person.producer) this.jobTypesSelected.push("PRODUCER");
+							if (this.person.writer) this.jobTypesSelected.push("WRITER");
+							if (this.person.self) this.jobTypesSelected.push("SELF");
+						}
+						
 					})
 					.catch(e => {
 						var message = "Houve um erro inesperado.";
@@ -220,6 +232,12 @@ export default {
 			if (this.validationToSave(person)){
 				person.birth = this.formatDate(person.birthUnformatted);
 				person.birthYear = parseInt(person.birth.slice(0, 4), 10);
+				this.jobTypesSelected.join(",");
+				person.director = this.jobTypesSelected.includes("DIRECTOR") ? true : false;
+				person.actor = this.jobTypesSelected.includes("ACTOR") ? true : false;
+				person.producer = this.jobTypesSelected.includes("PRODUCER") ? true : false;
+				person.writer = this.jobTypesSelected.includes("WRITER") ? true : false;
+				person.self = this.jobTypesSelected.includes("SELF") ? true : false;
 				PersonService.save(person)
 					.then(response => {
 				    	this.notification.title = "Sucesso ao salvar artista!";
