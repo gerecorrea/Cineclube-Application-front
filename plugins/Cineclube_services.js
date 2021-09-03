@@ -4,6 +4,7 @@ import LoginService from '@/services/loginService'
 import movieService from '@/services/movieService'
 import personService from '@/services/personService'
 import userMovieRelationService from '@/services/userMovieRelationService'
+import moviePersonService from '@/services/moviePersonService';
 
 export default ({ app, store }) => {
 	UserService.setClient(app.$axios)
@@ -12,4 +13,5 @@ export default ({ app, store }) => {
 	movieService.setClient(app.$axios)
 	personService.setClient(app.$axios)
 	userMovieRelationService.setClient(app.$axios)
+	moviePersonService.setClient(app.$axios)
 }
