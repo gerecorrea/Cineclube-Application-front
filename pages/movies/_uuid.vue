@@ -219,6 +219,96 @@
 										</p>
 									</div>
 									<div class="uk-child-width-1-2@m uk-grid" data-uk-grid>
+										<div class="uk-form-controls">
+											<v-autocomplete
+												v-model="movie.directors"
+												:items="directors"
+												name="directors"
+												item-value="id"
+												item-text="text"
+												label="Selecione os responsáveis pela direção"
+												style="z-index:11;"
+												multiple
+												chips
+												deletable-chips
+												clearable
+												filled
+												@change="printtt(movie.directors)"
+											>
+											</v-autocomplete>
+										</div>
+										<div class="uk-form-controls">
+											<v-autocomplete
+												v-model="movie.actors"
+												:items="actors"
+												name="actors"
+												item-value="id"
+												item-text="text"
+												label="Selecione atores e/ou atrizes"
+												style="z-index:11;"
+												multiple
+												chips
+												deletable-chips
+												clearable
+												filled
+												@change="printtt(movie.actors)"
+											>
+											</v-autocomplete>
+										</div>
+										<div class="uk-form-controls">
+											<v-autocomplete
+												v-model="movie.writers"
+												:items="writers"
+												name="writers"
+												item-value="id"
+												item-text="text"
+												label="Selecione os escritores e/ou escritoras"
+												style="z-index:11;"
+												multiple
+												chips
+												deletable-chips
+												clearable
+												filled
+												@change="printtt(movie.writers)"
+											>
+											</v-autocomplete>
+										</div>
+										<div class="uk-form-controls">
+											<v-autocomplete
+												v-model="movie.producers"
+												:items="producers"
+												name="producers"
+												item-value="id"
+												item-text="text"
+												label="Selecione os produtores e/ou produtoras"
+												style="z-index:11;"
+												multiple
+												chips
+												deletable-chips
+												clearable
+												filled
+												@change="printtt(movie.producers)"
+											>
+											</v-autocomplete>
+										</div>
+										<div class="uk-form-controls">
+											<v-autocomplete
+												v-model="movie.selfs"
+												:items="selfs"
+												name="selfs"
+												item-value="id"
+												item-text="text"
+												label="Selecione os atores e atrizes que interpretam eles próprios"
+												style="z-index:11;"
+												multiple
+												chips
+												deletable-chips
+												clearable
+												filled
+												@change="printtt(movie.selfs)"
+											>
+											</v-autocomplete>
+										</div>
 									</div>
 									<div class="uk-margin-top  uk-text-right">
 										<button 
@@ -271,7 +361,9 @@ import Title from '~/components/Title';
 
 import LoginService from "@/services/loginService";
 import UserService from "@/services/userService";
-import MovieService from "@/services/movieService"
+import MovieService from "@/services/movieService";
+import PersonService from "@/services/personService";
+import MoviePersonService from "@/services/moviePersonService";
 
 import {facade} from 'vue-input-facade'
 
@@ -288,31 +380,26 @@ export default {
 			uuidMovie: '',
 			movie: {
 				uuid: '',
-				title: '', // OK
-				runtime: 0, //OK
-				year: 0, //OK por tabela
-				genres: '', //OK
-				genresArray: [], //OK
-				movieTypeArray: [], //OK
-				movieType: '', //OK
-				country: '', //OK
-				language: '', //OK
-				isReleased: '', //OK por tabela
-				synopsis: '', //OK
-				dateReleasedUnformatted: '', //OK
-				dateReleased: '', //OK
-				imageLink: '', // OK
-				// Aqui na equipe de produção será um array de objetos com cada uma das inserções, tendo movie_uuid, person_uuid e cargo.
-				actors: '',
-				actorsNames: '',
-				directors: '',
-				directorsNames: '',
-				writes: '',
-				writersNames: '',
-				producers: '',
-				producersNames: '',
+				title: '', 
+				runtime: 0, 
+				year: 0,
+				genres: '', 
+				genresArray: [], 
+				movieType: '', 
+				country: '', 
+				language: '', 
+				isReleased: '',
+				synopsis: '', 
+				dateReleasedUnformatted: '', 
+				dateReleased: '', 
+				imageLink: '',
 				numVotes: 0,
 				avgRating: 0,
+				directors: [],
+				actors: [],
+				producers: [],
+				writers: [],
+				selfs: [],
 			},
 			okPrincipal: false,
 			okSecundary: false,
@@ -345,11 +432,17 @@ export default {
 				{value: "DOCUMENTARY", text: "Documentário"},
 				{value: "VIDEO", text: "Vídeo"},
 			],
+			actors: [],
+			directors: [],
+			producers: [],
+			writers: [],
+			selfs: [],
 		}
 	},
 	mounted () {
 		this.uuidMovie = this.$route.params.uuid;
 		this.findMovieByUuid(this.uuidMovie);
+		this.findAllArtistsAndCatalogEachOne();
 		this.loggedUser();
 	},
 	methods: {
@@ -358,16 +451,64 @@ export default {
 				MovieService.findByUuid(uuid)
 					.then(response => {
 						this.movie = response.data;
-						this.movie.dateReleasedUnformatted = new Date(response.data.dateReleased).toLocaleString().slice(0, 10);
+						if (this.movie){
+							this.movie.dateReleasedUnformatted = new Date(response.data.dateReleased).toLocaleString().slice(0, 10);
+							this.findAllArtistsRelatedToMovie(this.movie.uuid);
+						}
 					})
 					.catch(e => {
-						var message = "Houve um erro inesperado.";
+						var message = "Ocorreu um erro na busca pelo filme cadastrado.";
 						if (e.response && e.response.status === 400) {
 							message = e.response.data.message;
 						}
 						this.showNotification(message, 'bottom-right', 'danger')
 					});
 			}
+		},
+		findAllArtistsAndCatalogEachOne (){
+			PersonService.findAll()
+				.then(response => {
+					if (response.data){
+						response.data.forEach(obj => {
+							let insertObj = {};
+							insertObj.id = obj.uuid;
+							insertObj.text = obj.name;
+							if (obj.director) this.directors.push(insertObj);
+							if (obj.actor) this.actors.push(insertObj);
+							if (obj.producer) this.producers.push(insertObj);
+							if (obj.writer) this.writers.push(insertObj);
+							if (obj.self) this.selfs.push(insertObj);
+						});
+					}
+				})
+				.catch(e => {
+					var message = "Ocorreu um erro. Não foi possível obter a listagem dos artistas..";
+					if (e.response && e.response.status === 400) {
+						message = e.response.data.message;
+					}
+					this.showNotification(message, 'bottom-right', 'danger')
+				});
+		},
+		findAllArtistsRelatedToMovie (movieUuid){
+			MoviePersonService.findByMovieUuid(movieUuid)
+				.then(response => {
+					if (response.data){
+						response.data.forEach(obj => {
+							if (obj.job == "DIRECTOR") this.movie.directors.push(obj.personUuid);
+							else if (obj.job == "ACTOR") this.movie.actors.push(obj.personUuid);
+							else if (obj.job == "PRODUCER") this.movie.producers.push(obj.personUuid);
+							else if (obj.job == "WRITER") this.movie.writers.push(obj.personUuid);
+							else if (obj.job == "SELF") this.movie.selfs.push(obj.personUuid);
+						})
+					}
+				})
+				.catch(e => {
+					var message = "Ocorreu um erro na busca dos artistas relacionados ao filme.";
+					if (e.response && e.response.status === 400) {
+						message = e.response.data.message;
+					}
+					this.showNotification(message, 'bottom-right', 'danger')
+				});
 		},
 		save (movie){
 			if (this.validationToSave(movie)){
@@ -391,8 +532,6 @@ export default {
 			}
 		},
 		validationToSave (movie){
-			console.log(this.movie)
-			console.log(movie)
 			if (movie.title.length == 0) this.notification.title = "Você deve preencher o título.";
 			else if (movie.runtime.length == 0) this.notification.title = "Você deve preencher a duração.";
 			else if (movie.dateReleasedUnformatted.length != 10) this.notification.title = "Você deve preencher a data de lançamento.";
@@ -470,6 +609,9 @@ export default {
 		redirectPage (page) {
 			this.$router.push({ path: page });
 		},
+		printtt (print){
+			console.log(print);
+		}
 	}
 }
 
