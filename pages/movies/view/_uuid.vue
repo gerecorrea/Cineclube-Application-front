@@ -106,28 +106,56 @@
 
 				<div class="uk-width-1-1 sc-padding md-color-white-0">
 					<div class="uk-width-1-1">
-						<span>Direção: </span>
-					<!-- <span v-for="(index, i) in movie.genresArray"
-							:key="index"
-							class="md-color-white-0"
-							style="margin-right: 5px;"
-						>
-							<span v-if="i != movie.genresArray.length">
-								{{ index }},
+						<span>Direção: 
+							<span v-for="i in directors"
+								:key="i"
+								class="md-color-blue-200"
+								style="margin-right: 5px;"
+							>
+								<button @click="redirectPage('/person/view/' + i.personUuid)">
+									{{ i.personName }}
+								</button>
 							</span>
-							<span v-else>
-								{{ index }}
+						</span>
+					</div>
+					<div class="uk-width-1-1">
+						<span>Roteiristas: 
+							<span v-for="i in writers"
+								:key="i"
+								class="md-color-blue-200"
+								style="margin-right: 5px;"
+							>
+								<button @click="redirectPage('/person/view/' + i.personUuid)">
+									{{ i.personName }};
+								</button>
 							</span>
-						</span> -->
+						</span>
 					</div>
 					<div class="uk-width-1-1">
-						<span>Roteiristas: </span>
+						<span>Elenco: 
+							<span v-for="i in actors"
+								:key="i"
+								class="md-color-blue-200"
+								style="margin-right: 5px;"
+							>
+								<button @click="redirectPage('/person/view/' + i.personUuid)">
+									{{ i.personName }};
+								</button>
+							</span>
+						</span>
 					</div>
 					<div class="uk-width-1-1">
-						<span>Atores e atrizes: </span>
-					</div>
-					<div class="uk-width-1-1">
-						<span>Direção: </span>
+						<span>Produtores: 
+							<span v-for="i in producers"
+								:key="i"
+								class="md-color-blue-200"
+								style="margin-right: 5px;"
+							>
+								<button @click="redirectPage('/person/view/' + i.personUuid)">
+									{{ i.personName }};
+								</button>
+							</span>
+						</span>
 					</div>
 				</div>
 			</div>
@@ -193,8 +221,9 @@ import Title from '~/components/Title';
 
 import LoginService from "@/services/loginService";
 import UserService from "@/services/userService";
-import MovieService from "@/services/movieService"
-import UserMovieRelationService from "@/services/userMovieRelationService"
+import MovieService from "@/services/movieService";
+import UserMovieRelationService from "@/services/userMovieRelationService";
+import MoviePersonRelationService from "@/services/moviePersonService";
 
 import {facade} from 'vue-input-facade'
 
@@ -249,6 +278,11 @@ export default {
 				title: '',
 				description: ''
 			},
+			directors: [],
+			actors: [],
+			writers: [],
+			producers: [],
+			selfs: [],
 			genreTypes: [
 				{value: "COMEDY", text: "Comédia"},
 				{value: "SCI_FI", text: "Ficção Científica"},
@@ -294,8 +328,7 @@ export default {
 						this.movie = response.data;
 						this.movie.dateReleasedUnformatted = new Date(response.data.dateReleased).toLocaleString().slice(0, 10);
 						this.movieUser.movieUuid = this.movie.uuid;
-
-						// Após pegar o filme, verifica o usuário logado.
+						this.findMovieArtistsRelations(this.movie.uuid);
 						this.loggedUser();
 					})
 					.catch(e => {
@@ -307,35 +340,34 @@ export default {
 					});
 			}
 		},
-		save (movie){
-			if (this.validationToSave(movie)){
-				let todayDate = new Date().toLocaleString().slice(0, 10);
-				movie.dateReleased = this.formatDate(movie.dateReleasedUnformatted);
-				movie.year = parseInt(movie.dateReleased.slice(0, 4), 10);
-				//movie.genres = movie.genresArray.split("")
-				MovieService.save(movie)
-					.then(response => {
-				    	this.notification.title = "Sucesso ao salvar filme!";
-						this.showNotification(this.notification.title, 'bottom-right', 'success');
-						this.$router.push("/movies/all");
-					})
-					.catch(e => {
-						var message = "Houve um erro inesperado.";
-						if (e.response && e.response.status === 400) {
-							message = e.response.data.message;
-						}
-						this.showNotification(message, 'bottom-right', 'danger')
-					});
-			}
-		},
-		validationToSave (movie){
-			if (movie.title.length == 0) this.notification.title = "Você deve preencher o título.";
-			else if (movie.runtime.length == 0) this.notification.title = "Você deve preencher a duração.";
-			else if (movie.dateReleasedUnformatted.length != 10) this.notification.title = "Você deve preencher a data de lançamento.";
-			else if (movie.country.length == 0) this.notification.title = "Você deve preencher o país de origem.";
-			else if (movie.genresArray.length == 0) this.notification.title = "Você deve selecionar ao menos um gênero.";
-			else return true;
-			this.showNotification(this.notification.title, 'bottom-right', 'danger')
+		findMovieArtistsRelations (uuid){
+			MoviePersonRelationService.findByMovieUuid(uuid)
+				.then(response => {
+					console.log(response.data)
+					if (response.data && response.data.length > 0){
+						response.data.forEach(obj => {
+							if (obj.job == "DIRECTOR")
+								this.directors.push(obj);
+							else if (obj.job == "WRITER")
+								this.writers.push(obj);
+							else if (obj.job == "ACTOR")
+								this.actors.push(obj);
+							else if (obj.job == "PRODUCER")
+								this.producers.push(obj);
+							else if (obj.job == "SELF")
+								this.selfs.push(obj);
+						});
+					}
+					
+				})
+				.catch(e => {
+					var message = "Houve um erro inesperado.";
+					if (e.response && e.response.status === 400) {
+						message = e.response.data.message;
+					}
+					this.showNotification(message, 'bottom-right', 'danger')
+				});
+			
 		},
 		loggedUser (){
 			LoginService.getActualLogin()
@@ -344,8 +376,6 @@ export default {
 						.then(response => {
 							this.loggedUserObject = response.data;
 							this.movieUser.userUuid = this.loggedUserObject.uuid;
-
-							// Após obter o filme e usuário, então identifica a relação.
 							this.findMovieUserRelation(); 
 						})
 						.catch(e => {
@@ -374,9 +404,6 @@ export default {
 				config.pos = pos;
 			}
 			UIkit.notification(text, config);
-		},
-		advanceTab (tabRef){
-			this.$refs[tabRef].click()
 		},
 		formatDate (date){
 			let dateAux = new Array;
