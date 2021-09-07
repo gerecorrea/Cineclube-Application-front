@@ -43,18 +43,28 @@
 								<span v-if="props.column.field == 'action'">
 									<button class="mdi mdi-pen sc-button sc-button-primary sc-button-small" uk-tooltip="Editar" @click="redirectPage(props.row.uuid)"></button>
 								</span>
-								<span v-if="props.column.field == 'image'">
+								<span v-else-if="props.column.field == 'image'">
 									<div style="border-style: solid; background-color: black">
 										<img :src="props.row.imageLink" width="85px" alt="">
 									</div>
 								</span>
-								<span v-if="props.column.field == 'jobTypes'">
-									<div v-for="index in props.row.jobTypes"
-										:key="index"
-										class="uk-label uk-label-warning md-color-black"
-									>
-										{{ index }}
-									</div>
+								<span v-else-if="props.column.field == 'name'">
+									<nuxt-link v-if="props.column.field === 'name'" :to="'/person/view/' + props.row.uuid">
+										{{ props.row.name }}
+									</nuxt-link>
+								</span>
+								<span v-else-if="props.column.field == 'jobTypes'">
+									<span v-if="props.row.director" class="uk-label md-bg-green-500">Diretor</span>
+									<span v-else class="uk-label md-bg-grey-500">Diretor</span>
+
+									<span v-if="props.row.actor" class="uk-label md-bg-green-500">Ator</span>
+									<span v-else class="uk-label md-bg-grey-500">Ator</span>
+
+									<span v-if="props.row.writer" class="uk-label md-bg-green-500">Escritor</span>
+									<span v-else class="uk-label md-bg-grey-500">Escritor</span>
+
+									<span v-if="props.row.producer" class="uk-label md-bg-green-500">Produtor</span>
+									<span v-else class="uk-label md-bg-grey-500">Produtor</span>
 								</span>
 								<span v-else>
 									{{ props.formattedRow[props.column.field] }}
@@ -123,6 +133,8 @@ export default {
 					field: "jobTypes",
 					hidden: false,
 					sortable: false,
+					thClass: 'text-center',
+					tdClass: 'text-center',
 				},
 				{
 					label: "",
