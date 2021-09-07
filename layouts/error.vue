@@ -5,7 +5,7 @@
 				<div v-if="error.statusCode === 404">
 					<h1 class="sc-error-title sc-padding-large">
 						<i class="mdi mdi-alert-outline"></i>
-						ERROR 404
+						Erro 404
 					</h1>
 					<div class="sc-padding-large">
 						<p v-if="!error.message">
@@ -14,36 +14,35 @@
 							</span> was not found on this server.
 						</p>
 						<p v-else>
-							{{ error.message }}
+							Página não encontrada ou sob construção!
 						</p>
 						<nuxt-link to="/">
-							Go to home page
+							Volte para a dashboard
 						</nuxt-link>
 					</div>
 				</div>
 				<div v-else-if="error.statusCode === 500">
 					<h1 class="sc-error-title sc-padding-large">
 						<i class="mdi mdi-alert-outline"></i>
-						ERROR 500
+						Erro 500
 					</h1>
 					<div class="sc-padding-large">
 						<p class="sc-text-semibold">
-							Oops! Something went wrong&hellip;
+							Ocorreu algum erro de servidor. Por favor, contate o suporte!
 						</p>
-						<p>There was an error. Please try again later.</p>
 						<nuxt-link to="/">
-							Go to home page
+							Volte para a dashboard
 						</nuxt-link>
 					</div>
 				</div>
 				<div v-else>
 					<h1 class="sc-error-title sc-padding-large">
 						<i class="mdi mdi-alert-outline"></i>
-						An error occurred
+						Algum erro inesperado ocorreu. Se válido, contate o suporte
 					</h1>
 					<div class="sc-padding-large">
 						<nuxt-link to="/">
-							Go to home page
+							Volte para a dashboard
 						</nuxt-link>
 					</div>
 				</div>
