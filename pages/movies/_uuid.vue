@@ -51,6 +51,8 @@
 												label="Título*"
 												hint="Campo obrigatório."
 												filled
+												:success="movie.title.length > 0"
+												:error="movie.title.length == 0"
 											>
 											</v-text-field>
 										</div>
@@ -61,6 +63,8 @@
 												label="Tempo de duração* (minutos)"
 												hint="Campo obrigatório."
 												filled
+												:success="movie.runtime.length >= 0 && movie.runtime != 0"
+												:error="movie.runtime.length == 0 || movie.runtime == 0"
 											>
 											</v-text-field>
 										</div>
@@ -74,6 +78,8 @@
 														label="Data de lançamento*"
 														hint="Campo obrigatório composto por 8 dígitos."
 														filled
+														:success="movie.dateReleasedUnformatted.length == 10"
+														:error="movie.dateReleasedUnformatted.length != 10"
 													>
 													</v-text-field>
 												</v-col>
@@ -96,6 +102,8 @@
 												label="País*"
 												hint="Campo obrigatório."
 												filled
+												:success="movie.country.length > 0"
+												:error="movie.country.length == 0"
 											>
 											</v-text-field>
 										</div>
@@ -114,7 +122,9 @@
 												name="movieSynopsis"
 												label="Sinopse"
 												filled
-												:hint="movie.synopsis.length +'/1000 caracteres preenchidos.'" 
+												:hint="movie.synopsis.length +'/1000 caracteres preenchidos.'"
+												:success="movie.synopsis.length >= 30 && movie.synopsis.length <= 1000"
+												:error="movie.synopsis.length < 30 || movie.synopsis.length > 1000"
 											>
 											</v-textarea>
 										</div>
@@ -148,7 +158,7 @@
 												name="movieGenres"
 												item-value="value"
 												item-text="text"
-												label="Selecione os gêneros*"
+												label="Selecione os gêneros"
 												hint="Obrigatória seleção de ao menos um gênero."
 												style="z-index:11;"
 												multiple
@@ -179,9 +189,11 @@
 											<v-text-field 
 												v-model="movie.imageLink" 
 												name="movieImageLink"
-												label="Link de imagem"
+												label="Link de imagem*"
 												:hint="movie.imageLink.length +'/1024 caracteres preenchidos.'" 
 												filled
+												:success="movie.imageLink.length > 0"
+												:error="movie.imageLink.length == 0 || movie.imageLink.length > 1024"
 											>
 											</v-text-field>
 										</div>
@@ -536,7 +548,8 @@ export default {
 			else if (movie.runtime.length == 0) this.notification.title = "Você deve preencher a duração.";
 			else if (movie.dateReleasedUnformatted.length != 10) this.notification.title = "Você deve preencher a data de lançamento.";
 			else if (movie.country.length == 0) this.notification.title = "Você deve preencher o país de origem.";
-			else if (movie.genresArray.length == 0) this.notification.title = "Você deve selecionar ao menos um gênero.";
+			else if (movie.synopsis.length < 30 || movie.synopsis.length > 1000) this.notification.title = "o campo sinopse deve possuir entre 30 a 1000 caracteres.";
+			else if (movie.imageLink.length == 0 || movie.imageLink.length > 1024) this.notification.title = "Você deve preencher o link da imagem com até 1024 caracteres.";
 			else return true;
 			this.showNotification(this.notification.title, 'bottom-right', 'danger')
 		},
