@@ -10,6 +10,33 @@ export const menuEntries = [
 	},
 	{
 		id: uniqueID(),
+		title: "USUÁRIO",
+		page: "/pages",
+		isOpen: false,
+		level: 0,
+		submenu: [
+			{
+				id: uniqueID(),
+				title: "Avaliações",
+				page: "/profile/ratings",
+				icon: "mdi mdi-star-half md-color-purple-600"
+			},
+			{
+				id: uniqueID(),
+				title: "Filmes favoritos",
+				page: "/profile/favorites",
+				icon: "mdi mdi-heart-half-full md-color-red-700"
+			},
+			{
+				id: uniqueID(),
+				title: "Watchlist",
+				page: "/profile/watchlist",
+				icon: "mdi mdi-bookmark-plus-outline md-color-yellow-800"
+			},
+		]
+	},
+	{
+		id: uniqueID(),
 		title: "FILMES",
 		page: "/pages",
 		isOpen: false,
@@ -38,33 +65,6 @@ export const menuEntries = [
 				title: "Curta-metragens",
 				page: "/movies/allShort",
 				icon: "mdi mdi-nature-people md-color-green-700",
-			},
-		]
-	},
-	{
-		id: uniqueID(),
-		title: "USUÁRIO",
-		page: "/pages",
-		isOpen: false,
-		level: 0,
-		submenu: [
-			{
-				id: uniqueID(),
-				title: "Suas avaliações",
-				page: "/profile/ratings",
-				icon: "mdi mdi-star-half md-color-purple-600"
-			},
-			{
-				id: uniqueID(),
-				title: "Seus favoritos",
-				page: "/profile/favorites",
-				icon: "mdi mdi-heart-half-full md-color-red-700"
-			},
-			{
-				id: uniqueID(),
-				title: "Sua watchlist",
-				page: "/profile/watchlist",
-				icon: "mdi mdi-bookmark-plus-outline md-color-yellow-800"
 			},
 		]
 	},
