@@ -87,12 +87,19 @@
 							>
 								<button @click="redirectPage('/movies/view/' + i.movieUuid)">
 									<v-card class="sc-padding-top sc-padding-bottom sc-padding-right md-color-blue-200" style="background-color: black; color: white">
-										<v-img v-if="i.imageLinkMovie" width="125px" :src="i.imageLinkMovie">
+										<v-img v-if="i.imageLinkMovie && i.imageLinkMovie.length > 0" width="125px" :src="i.imageLinkMovie">
 										</v-img>
-										<v-img v-else height="100px" src="~/assets/img/movie.png">
+										<v-img v-else
+											height="100px"
+											src="~/assets/img/question.png"
+										>
 										</v-img>
-
-										{{ i.movieName }} 
+										<span v-if="i.movieName.length < 17">
+											{{ i.movieName }} 
+										</span>
+										<span v-else :data-uk-tooltip="i.movieName">
+											{{ i.movieName.slice(0, 17) }}
+										</span>
 									</v-card>
 								</button>
 							</span>
@@ -110,12 +117,19 @@
 							>
 								<button @click="redirectPage('/movies/view/' + i.movieUuid)">
 									<v-card class="sc-padding-top sc-padding-bottom sc-padding-right md-color-blue-200" style="background-color: black; color: white">
-										<v-img v-if="i.imageLinkMovie" width="125px" :src="i.imageLinkMovie">
+										<v-img v-if="i.imageLinkMovie && i.imageLinkMovie.length > 0" width="125px" :src="i.imageLinkMovie">
 										</v-img>
-										<v-img v-else height="100px" src="~/assets/img/movie.png">
+										<v-img v-else
+											height="100px"
+											src="~/assets/img/question.png"
+										>
 										</v-img>
-
-										{{ i.movieName }} 
+										<span v-if="i.movieName.length < 17">
+											{{ i.movieName }} 
+										</span>
+										<span v-else :data-uk-tooltip="i.movieName">
+											{{ i.movieName.slice(0, 17) }}
+										</span>
 									</v-card>
 								</button>
 							</span>
@@ -133,12 +147,19 @@
 							>
 								<button @click="redirectPage('/movies/view/' + i.movieUuid)">
 									<v-card class="sc-padding-top sc-padding-bottom sc-padding-right md-color-blue-200" style="background-color: black; color: white">
-										<v-img v-if="i.imageLinkMovie" width="125px" :src="i.imageLinkMovie">
+										<v-img v-if="i.imageLinkMovie && i.imageLinkMovie.length > 0" width="125px" :src="i.imageLinkMovie">
 										</v-img>
-										<v-img v-else height="100px" src="~/assets/img/movie.png">
+										<v-img v-else
+											height="100px"
+											src="~/assets/img/question.png"
+										>
 										</v-img>
-
-										{{ i.movieName }} 
+										<span v-if="i.movieName.length < 17">
+											{{ i.movieName }} 
+										</span>
+										<span v-else :data-uk-tooltip="i.movieName">
+											{{ i.movieName.slice(0, 17) }}
+										</span>
 									</v-card>
 								</button>
 							</span>
@@ -156,12 +177,19 @@
 							>
 								<button @click="redirectPage('/movies/view/' + i.movieUuid)">
 									<v-card class="sc-padding-top sc-padding-bottom sc-padding-right md-color-blue-200" style="background-color: black; color: white">
-										<v-img v-if="i.imageLinkMovie" width="125px" :src="i.imageLinkMovie">
+										<v-img v-if="i.imageLinkMovie && i.imageLinkMovie.length > 0" width="125px" :src="i.imageLinkMovie">
 										</v-img>
-										<v-img v-else height="100px" src="~/assets/img/movie.png">
+										<v-img v-else
+											height="100px"
+											src="~/assets/img/question.png"
+										>
 										</v-img>
-
-										{{ i.movieName }} 
+										<span v-if="i.movieName.length < 17">
+											{{ i.movieName }} 
+										</span>
+										<span v-else :data-uk-tooltip="i.movieName">
+											{{ i.movieName.slice(0, 17) }}
+										</span>
 									</v-card>
 								</button>
 							</span>
@@ -253,7 +281,6 @@ export default {
 		findByPersonUuid (uuid){
 			MoviePersonRelationService.findByPersonUuid(uuid)
 				.then(response => {
-					console.log(response.data)
 					if (response.data && response.data.length > 0){
 						response.data.forEach(obj => {
 							if (obj.job == "ACTOR") this.actors.push(obj);
