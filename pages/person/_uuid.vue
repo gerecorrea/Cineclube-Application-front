@@ -41,6 +41,8 @@
 												label="Nome*"
 												hint="Campo obrigatório."
 												filled
+												:success="person.name.length > 0"
+												:error="person.name.length == 0"
 											>
 											</v-text-field>
 										</div>
@@ -50,6 +52,28 @@
 												name="personCountry"
 												label="País*"
 												hint="Campo obrigatório."
+												filled
+												:success="person.country.length > 0"
+												:error="person.country.length == 0"
+											>
+											</v-text-field>
+										</div>
+										<div class="uk-form-controls">
+											<v-text-field
+												v-model="person.state" 
+												name="personState"
+												label="Estado"
+												hint="Campo opcional."
+												filled
+											>
+											</v-text-field>
+										</div>
+										<div class="uk-form-controls">
+											<v-text-field
+												v-model="person.city" 
+												name="personCity"
+												label="Cidade"
+												hint="Campo opcional."
 												filled
 											>
 											</v-text-field>
@@ -62,6 +86,8 @@
 												label="Data de Nascimento*"
 												hint="Campo obrigatório com 8 dígitos."
 												filled
+												:success="person.birthUnformatted.length == 10"
+												:error="person.birthUnformatted.length != 10"
 											>
 											</v-text-field>
 										</div>
@@ -69,9 +95,11 @@
 											<v-text-field 
 												v-model="person.imageLink" 
 												name="personImageLink"
-												label="Link de imagem"
+												label="Link de imagem*"
 												:hint="person.imageLink.length +'/1024 caracteres preenchidos.'" 
 												filled
+												:success="person.imageLink.length > 0"
+												:error="person.imageLink.length == 0 || person.imageLink.length > 1024"
 											>
 											</v-text-field>
 										</div>
@@ -93,6 +121,18 @@
 												>
 												</v-autocomplete>
 											</div>
+										</div>
+										<div class="uk-form-controls">
+											<v-textarea 
+												v-model="person.bio" 
+												name="personBio"
+												label="Biografia*"
+												:hint="'Deve ter entre 50 e 1000 caracteres. ' +person.bio.length +'/1000 caracteres preenchidos.'" 
+												filled
+												:success="person.bio.length >= 50 && person.bio.length <= 1000"
+												:error="person.bio.length < 50 || person.bio.length > 1000"
+											>
+											</v-textarea>
 										</div>
 									</div>
 									<div class="uk-margin-top uk-text-right" style="float: right">
@@ -164,6 +204,8 @@ export default {
 				uuid: '',
 				name: '',
 				country: '',
+				state: '',
+				city: '',
 				birthUnformatted: '',
 				birth: '',
 				birthYear: 0,
@@ -174,6 +216,7 @@ export default {
 				producer: false,
 				self: false,
 				imageLink: '',
+				bio: '',
 			},
 			jobTypesSelected: [],
 			uuidPerson: '',
@@ -199,7 +242,6 @@ export default {
 	mounted () {
 		console.log(this.$route.params.uuid)
 		this.uuidPerson = this.$route.params.uuid;
-		//this.findMovieByUuid(this.uuidPerson);
 		this.findPersonByUuid(this.uuidPerson);
 		this.loggedUser();
 	},
@@ -256,7 +298,9 @@ export default {
 		validationToSave (person){
 			if (person.name.length == 0) this.notification.title = "Você deve preencher o nome.";
 			else if (person.country.length == 0) this.notification.title = "Você deve preencher o país de origem.";
-			else if (person.birthUnformatted.length != 10) this.notification.title = "Você deve preencher a data.";
+			else if (person.birthUnformatted.length != 10) this.notification.title = "Você deve preencher a data de forma correta.";
+			else if (person.imageLink.length == 0 || person.imageLink.length > 1024) this.notification.title = "Você deve preencher o link da imagem com até 1024 caracteres.";
+			else if (person.bio.length < 50 || person.bio.length > 1000) this.notification.title = "A biografia deve ter entre 50 e 1000 caracteres.";
 			else return true;
 			this.showNotification(this.notification.title, 'bottom-right', 'danger')
 		},
