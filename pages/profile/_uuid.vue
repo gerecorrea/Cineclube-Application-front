@@ -64,6 +64,7 @@
 											name="email"
 											:error-state="$v.userEmail.$error"
 											:validator="$v.userEmail"
+											:disabled="user.uuid"
 											@change="fieldsValidationUser"
 										>
 										</ScInput>
