@@ -80,6 +80,10 @@
 							</span>
 						</nuxt-link>
 					</li>
+					<li title="Informações de uso" style="padding-top: 5px; padding-left: 10px; padding-right: 10px">
+						<button class="md-color-white mdi mdi-information-outline" @click="dialogTutorial = true">
+						</button>
+					</li>
 					<li title="Sair">
 						<nuxt-link to="" @click.native="logout">
 							<span class="mdi mdi-logout">
@@ -95,6 +99,73 @@
 					<i v-show="!vxOffcanvasExpanded" class="mdi mdi-menu"></i><i v-show="vxOffcanvasExpanded" class="mdi mdi-arrow-right"></i>
 				</a>
 			</div>
+
+			<v-dialog
+				v-if="userExists"
+				v-model="dialogTutorial"
+				width="50%"
+				persistent
+				scrollable
+				style="z-index: 10000"
+			>
+				<v-card>
+					<v-card-title class="uk-modal-title">
+						Informações de uso do Cineclube App
+					</v-card-title>
+					<v-card-subtitle style="padding-top: 5px">
+						* O texto em negrito se refere aos links de navegação para as ações citadas.
+					</v-card-subtitle>
+					<v-spacer />
+
+					
+					<v-card-text class="text--primary" style="text-align: justify;">
+						<div>
+							Você pode e deve dar notas nos 
+							<nuxt-link to="/movies/all" class="md-color-black" style="font-weight: 500">
+								filmes 
+							</nuxt-link> da aplicação. Sua notas ficam disponíveis nas suas
+							<nuxt-link to="/profile/ratings" class="md-color-black" style="font-weight: 500">
+								avaliações
+							</nuxt-link>. Também é possível favoritá-los e adicioná-los à sua watchlist, estando, respectivamente, dispostos em seus
+							<nuxt-link to="/profile/favorites" class="md-color-black" style="font-weight: 500">
+								favoritos
+							</nuxt-link>
+							e sua
+							<nuxt-link to="/profile/watchlist" class="md-color-black" style="font-weight: 500">
+								watchlist
+							</nuxt-link>
+						</div>
+
+						<div class="uk-margin-top">
+							Também é possível
+							<nuxt-link to="/person/all" class="md-color-black" style="font-weight: 500">
+								listar
+							</nuxt-link> os artistas salvos na aplicação, cujo se relacionam com os filmes. Também é possível adicioná-los como artistas favoritos
+						</div>
+
+						<div class="uk-margin-top">
+							Você pode 
+							<nuxt-link :to="'/profile/' + loggedUserObject.uuid" class="md-color-black" style="font-weight: 500">
+								editar suas informações
+							</nuxt-link>, permitindo trocar suas informações pessoais.
+						</div>
+
+						<div class="uk-margin-top">
+							Implementações futuras de dashboard trabalhada, perfis individuais dos usuários, conexão entre perfis, através de poder seguir e visualizar as atividades de outros, 
+							assim como melhorias das funcionalidades com artistas, aplicação de séries no catálogo, etc, serão futuramente implementadas.
+							Sistemas de recomendação com base nos filmes pesquisados e mesmo recentemente assistidos, também deve ser futuramente aplicadas.
+							Também se prevê funcionalidades que aplicam o uso do Cineclube CCT, da UDESC, em conjunto da aplicação.
+						</div>
+					</v-card-text>
+                
+					<v-card-actions>
+						<v-spacer></v-spacer>
+						<button class="sc-button sc-button-flat sc-button-flat-danger" type="button" @click="dialogTutorial = false">
+							Voltar
+						</button>
+					</v-card-actions>
+				</v-card>
+			</v-dialog>
 		</nav>
 	</header>
 </template>
@@ -103,9 +174,7 @@
 import { mapState } from 'vuex'
 import { scMq } from '~/assets/js/utils'
 import ScFullscreen from '~/components/FullScreen.vue';
-//import ScTopMenu from '~/components/topmenu/TopMenu.vue';
 import { scHelpers } from "~/assets/js/utils";
-//import NoteService from "@/services/noteService";
 import LoginService from '@/services/loginService';
 import UserService from "@/services/userService";
 const { uniqueID } = scHelpers;
@@ -153,6 +222,7 @@ export default {
 			{ name: 'Revisar', color: 'purple-400' },
 			{ name: 'Outros', color: 'grey-50' }
 		],
+		dialogTutorial: false,
 	}),
 	computed: {
 		...mapState([
