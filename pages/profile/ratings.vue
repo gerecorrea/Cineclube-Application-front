@@ -299,7 +299,9 @@ export default {
 					field: "movie.imageLink",
 					hiden: false,
 					tdClass: 'uk-text-center',
-					thClass: 'uk-text-center'
+					thClass: 'uk-text-center',
+					width: '150px',
+					sortable: false,
 
 				},
 				{

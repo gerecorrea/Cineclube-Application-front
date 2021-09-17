@@ -195,6 +195,8 @@ export default {
 					label: "Nome",
 					field: "name",
 					hidden: false,
+					width: '150px',
+					sortable: false,
 				},
 				{
 					label: "E-mail",

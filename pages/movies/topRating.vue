@@ -115,6 +115,7 @@ export default {
 					tdClass: 'uk-text-center',
 					thClass: 'uk-text-center',
 					sortable: false,
+					width: '150px',
 
 				},
 				{
