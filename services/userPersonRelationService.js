@@ -4,8 +4,12 @@ export default {
 		client = newClient;
 	},
 
+	save: (userPersonRelation) => {
+		return client.post('userPerson/', userPersonRelation);
+	},
+
 	changeFavorite: (uuid) => {
-		return client.put('userPerson/changeFavorite/' + uuid);
+		return client.post('userPerson/changeFavorite/' + uuid);
 	}, 
 
 	remove: (uuid) => {
