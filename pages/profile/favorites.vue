@@ -3,7 +3,7 @@
 		<div id="sc-page-top-bar" class="sc-top-bar">
 			<div class="sc-top-bar-content uk-flex uk-flex-1">
 				<h1 class="sc-top-bar-title uk-flex-1">
-					<Title title="FAVORITOS DO USUÁRIO"></Title>
+					<Title title="FILMES FAVORITOS DO USUÁRIO"></Title>
 				</h1>
 			</div>
 		</div>
@@ -485,27 +485,6 @@ export default {
 						message = e.response.data.message;
 					}
 					this.waitingMoviesList = false ; 
-					this.showNotification(message, 'bottom-right', 'danger')
-				});
-		},
-		remove () {
-			var deleteProcess = [];
-			this.removeItems.forEach(bill => {
-				deleteProcess.push(Bill.delete(bill.uuid));
-			});
-
-			Promise.all(deleteProcess)
-				.then(results => {
-					this.notification.title = "Registro deletado com sucesso";
-					this.showNotification(this.notification.title, 'bottom-right', 'success') 
-					this.listFavorites();
-				})
-				.catch(e => {
-					var message = "Houve um erro inesperado.";
-					if (e.response && e.response.status === 400) {
-						message = e.response.data.message;
-					}
-
 					this.showNotification(message, 'bottom-right', 'danger')
 				});
 		},
