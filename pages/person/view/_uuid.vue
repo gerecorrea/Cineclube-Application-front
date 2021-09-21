@@ -17,13 +17,30 @@
                     
 					<div class="uk-text-left md-color-white-0 sc-padding normal-write">
 						<span class="md-color-grey-400 subtitle-custom uk-text-left" style="margin-right: 30px" uk-tooltip="Local - Ano">
-							<span v-if="person.city && person.city.length > 0">
-								{{ person.city }},
-							</span>
-							<span v-if="person.state && person.state.length > 0">
-								{{ person.state }},
-							</span>
-							{{ person.country }} - {{ person.birthYear }}
+							<div>
+								<span v-if="person.city && person.city.length > 0">
+									{{ person.city }},
+								</span>
+								<span v-if="person.state && person.state.length > 0">
+									{{ person.state }},
+								</span>
+								{{ person.country }} - {{ person.birthYear }}
+							</div>
+							<div>
+								<button v-if="personUser.favorite"
+									class="sc-padding-remove uk-button md-color-red-700 mdi mdi-heart md-color-black-0"
+									uk-tooltip="Desfavoritar"
+									@click="personUser.favorite = false, saveUserPerson()"
+								>
+								</button>
+								<button v-if="!personUser.uuid || !personUser.favorite"
+									class="sc-padding-remove uk-button md-color-white-0 mdi mdi-heart-outline md-color-black-0"
+									uk-tooltip="Favoritar"
+									@click="personUser.favorite = true, saveUserPerson()"
+								>
+								</button>
+							</div>
+
 						</span>
 						<div class="uk-margin-top">
 							<span v-if="person.director" class="uk-label md-bg-green-500">Diretor</span>
@@ -217,6 +234,7 @@ import LoginService from "@/services/loginService";
 import UserService from "@/services/userService";
 import MoviePersonRelationService from "@/services/moviePersonService";
 import PersonService from "@/services/personService";
+import UserPersonRelationService from "@/services/userPersonRelationService";
 
 import {facade} from 'vue-input-facade'
 
@@ -254,6 +272,14 @@ export default {
 			producers: [],
 			selfs: [],
 			dialogAvaliate: false,
+			personUser: {
+				uuid: null,
+				personUuid: null,
+				userUuid: null,
+				favorite: false,
+				personName: '',
+				imageLink: '',
+			}
 		}
 	},
 	mounted () {
@@ -266,6 +292,11 @@ export default {
 				PersonService.findById(uuid)
 					.then(response => {
 						this.person = response.data;
+						console.log("person")
+						console.log(this.person)
+						this.personUser.personUuid = uuid;
+						this.personUser.personName = this.person.name;
+						this.personUser.imageLink = this.person.imagelink;
 						this.loggedUser();
 						this.findByPersonUuid(this.person.uuid);
 					})
@@ -307,6 +338,11 @@ export default {
 					UserService.findByLoginUuid(response.data.uuid)
 						.then(response => {
 							this.loggedUserObject = response.data;
+							console.log("logged")
+							console.log(this.loggedUserObject);
+							this.personUser.userUuid = this.loggedUserObject.uuid;
+							this.personUser.userName = this.loggedUserObject.name;
+							this.findPersonUserRelation(); 
 						})
 						.catch(e => {
 							var message = "Não foi possível buscar o usuário logado.";
@@ -318,6 +354,47 @@ export default {
 				})
 				.catch(e => {
 					var message = "Não foi possível buscar o usuário logado.";
+					if (e.response && e.response.status === 400) {
+						message = e.response.data.message;
+					}
+					this.showNotification(message, 'bottom-right', 'danger')
+				});
+		},
+		findPersonUserRelation (){
+			UserPersonRelationService.findByUserUuidAndPersonUuid(this.personUser.userUuid, this.personUser.personUuid)
+				.then(response => {
+					console.log(response)
+					console.log(response.data)
+					if (response.data){
+						this.personUser = response.data;
+						console.log(this.personUser)
+					}
+				})
+				.catch(e => {
+					let message;
+					if (e.response && e.response.status === 400) {
+						message = e.response.data.message;
+					}
+					this.showNotification(message, 'bottom-right', 'danger')
+				});
+		},
+		saveUserPerson (){
+			console.log("obj atual")
+			console.log(this.personUser);
+			if (this.personUser.uuid == null) this.personUser.favorite = true;
+
+			console.log("obj atual")
+			console.log(this.personUser);
+			UserPersonRelationService.save(this.personUser)
+				.then(response => {
+					this.personUser = response.data;
+					console.log("retorno:")
+					console.log(this.personUser);
+					this.showNotification("Favorito modificado com sucesso!", 'bottom-right', 'success');
+					//this.findByUuid(this.uuidPerson);
+				})
+				.catch(e => {
+					var message = "Não foi possível salvar os dados do filme para este usuário.";
 					if (e.response && e.response.status === 400) {
 						message = e.response.data.message;
 					}
