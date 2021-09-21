@@ -29,6 +29,12 @@ export const menuEntries = [
 			},
 			{
 				id: uniqueID(),
+				title: "Artistas favoritos",
+				page: "/profile/favoritesPersons",
+				icon: "mdi mdi-heart-half-full md-color-blue-700"
+			},
+			{
+				id: uniqueID(),
 				title: "Watchlist",
 				page: "/profile/watchlist",
 				icon: "mdi mdi-bookmark-plus-outline md-color-yellow-800"
