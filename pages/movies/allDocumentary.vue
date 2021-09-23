@@ -26,7 +26,7 @@
 								@click="redirectPage('/movies/')"
 							>
 								<img src="~/assets/img/movie-add.png" width="35px" alt="">
-								Inserir filme
+								Inserir novo registro
 							</button>
 						</div>
 					</div>
