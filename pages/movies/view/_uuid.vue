@@ -313,6 +313,7 @@ export default {
 				favorite: false,
 				watchlist: false,
 				isRated: false,
+				movieType: '',
 			}
 		}
 	},
@@ -328,6 +329,7 @@ export default {
 						this.movie = response.data;
 						this.movie.dateReleasedUnformatted = new Date(response.data.dateReleased).toLocaleString().slice(0, 10);
 						this.movieUser.movieUuid = this.movie.uuid;
+						this.movieUser.movieType = this.movie.movieType;
 						this.findMovieArtistsRelations(this.movie.uuid);
 						this.loggedUser();
 					})
