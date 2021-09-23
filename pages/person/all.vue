@@ -118,6 +118,14 @@ export default {
 					hidden: false,
 				},
 				{
+					label: "Favoritos",
+					field: "numFavorites",
+					type: "number",
+					thClass: "text-center",
+					tdClass: "text-center",
+					hidden: false,
+				},
+				{
 					label: "Ano de nasc.",
 					field: "birthYear",
 					thClass: 'text-center',
