@@ -17,27 +17,39 @@ export const menuEntries = [
 		submenu: [
 			{
 				id: uniqueID(),
-				title: "Avaliações",
-				page: "/profile/ratings",
-				icon: "mdi mdi-star-half md-color-purple-600"
+				title: "Watchlist",
+				page: "/profile/watchlist",
+				icon: "mdi mdi-bookmark-plus md-color-yellow-900"
 			},
 			{
 				id: uniqueID(),
-				title: "Filmes favoritos",
+				title: "Suas Avaliações",
+				page: "/profile/ratings",
+				icon: "mdi mdi-star-half md-color-yellow-900"
+			},
+			{
+				id: uniqueID(),
+				title: "Filmes Favoritos",
 				page: "/profile/favorites",
 				icon: "mdi mdi-heart-half-full md-color-red-700"
 			},
 			{
 				id: uniqueID(),
-				title: "Artistas favoritos",
-				page: "/profile/favoritesPersons",
-				icon: "mdi mdi-heart-half-full md-color-blue-700"
+				title: "Documentários Favoritos",
+				page: "/profile/favorites",
+				icon: "mdi mdi-heart-half-full md-color-purple-700"
 			},
 			{
 				id: uniqueID(),
-				title: "Watchlist",
-				page: "/profile/watchlist",
-				icon: "mdi mdi-bookmark-plus-outline md-color-yellow-800"
+				title: "Curtas Favoritos",
+				page: "/profile/favorites",
+				icon: "mdi mdi-heart-half-full md-color-green-700"
+			},
+			{
+				id: uniqueID(),
+				title: "Artistas Favoritos",
+				page: "/profile/favoritesPersons",
+				icon: "mdi mdi-heart-half-full md-color-blue-700"
 			},
 		]
 	},
@@ -50,12 +62,6 @@ export const menuEntries = [
 		submenu: [
 			{
 				id: uniqueID(),
-				title: "Top 10 filmes",
-				page: "/movies/topRating",
-				icon: "mdi mdi-movie-roll md-color-teal-400",
-			},
-			{
-				id: uniqueID(),
 				title: "Filmes",
 				page: "/movies/all",
 				icon: "mdi mdi-movie md-color-grey-900",
@@ -64,13 +70,31 @@ export const menuEntries = [
 				id: uniqueID(),
 				title: "Documentários",
 				page: "/movies/allDocumentary",
-				icon: "mdi mdi-camcorder md-color-red-700",
+				icon: "mdi mdi-camcorder md-color-purple-700",
 			},
 			{
 				id: uniqueID(),
-				title: "Curta-metragens",
+				title: "Curta-Metragens",
 				page: "/movies/allShort",
 				icon: "mdi mdi-nature-people md-color-green-700",
+			},
+			{
+				id: uniqueID(),
+				title: "Top 10 Notas Geral",
+				page: "/movies/topRatings",
+				icon: "mdi mdi-filmstrip md-color-yellow-900",
+			},
+			{
+				id: uniqueID(),
+				title: "Top 10 Favoritos Geral",
+				page: "/movies/topFavorites",
+				icon: "mdi mdi-heart-box-outline md-color-yellow-900",
+			},
+			{
+				id: uniqueID(),
+				title: "Top 10 Notas Filmes",
+				page: "/movies/topRatingMovie",
+				icon: "mdi mdi-movie md-color-red-700",
 			},
 		]
 	},
@@ -85,7 +109,13 @@ export const menuEntries = [
 				id: uniqueID(),
 				title: "Listar artistas",
 				page: "/person/all",
-				icon: "mdi mdi-star-circle md-color-yellow-900",
+				icon: "mdi mdi-star-circle md-color-blue-700",
+			},
+			{
+				id: uniqueID(),
+				title: "Top 10 Artistas",
+				page: "/person/topFavorites",
+				icon: "mdi mdi-heart-box md-color-blue-700",
 			},
 		]
 	},
