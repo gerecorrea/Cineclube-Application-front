@@ -37,6 +37,14 @@ export default {
 		return client.get('movie/findTop10');
 	},
 
+	findTopFavoriteAll: () => {
+		return client.get('/movie/findTopFavoriteAll');
+	},
+
+	findTopRatingAll: () => {
+		return client.get('/movie/findTopRatingAll');
+	},
+
 	findAllDocumentary: () => {
 		return client.get('movie/findAllDocumentary');
 	},
