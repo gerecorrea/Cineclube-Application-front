@@ -30,19 +30,19 @@ export const menuEntries = [
 			{
 				id: uniqueID(),
 				title: "Filmes Favoritos",
-				page: "/profile/favorites",
+				page: "/profile/favoritesMovies",
 				icon: "mdi mdi-heart-half-full md-color-red-700"
 			},
 			{
 				id: uniqueID(),
 				title: "Documentários Favoritos",
-				page: "/profile/favorites",
+				page: "/profile/favoritesDocs",
 				icon: "mdi mdi-heart-half-full md-color-purple-700"
 			},
 			{
 				id: uniqueID(),
 				title: "Curtas Favoritos",
-				page: "/profile/favorites",
+				page: "/profile/favoritesShorts",
 				icon: "mdi mdi-heart-half-full md-color-green-700"
 			},
 			{
