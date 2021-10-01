@@ -38,6 +38,9 @@ export default {
 	findFavoritesUser: (userUuid) => {
 		return client.get('userMovie/findFavorites/' + userUuid);
 	},
+	findFavoritesUserByMovieType: (userUuid, movieType) => {
+		return client.get('userMovie/findFavoritesByMovieType/' + movieType + '/' + userUuid);
+	},
 	findWatchlistUser: (userUuid) => {
 		return client.get('userMovie/findWatchlist/' + userUuid);
 	},
