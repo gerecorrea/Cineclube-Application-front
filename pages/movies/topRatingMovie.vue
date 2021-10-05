@@ -224,7 +224,7 @@ export default {
 				mode: 'remote',
 				perPage: 10,
 				position: 'top',
-				perPageDropdown: [10, 15, 20, 50, 100],
+				perPageDropdown: [10],
 				dropdownAllowAll: false,
 				setCurrentPage: 1,
 				nextLabel: 'Próxima',

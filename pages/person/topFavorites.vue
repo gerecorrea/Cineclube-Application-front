@@ -159,7 +159,7 @@ export default {
 				enabled: true,
 				perPage: 100,
 				position: 'top',
-				perPageDropdown: [10, 15, 20, 50, 100],
+				perPageDropdown: [10],
 				dropdownAllowAll: false,
 				setCurrentPage: 1,
 				nextLabel: 'Próxima',
