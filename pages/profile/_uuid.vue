@@ -64,7 +64,7 @@
 											name="email"
 											:error-state="$v.userEmail.$error"
 											:validator="$v.userEmail"
-											:disabled="user.uuid"
+											:disabled="user.uuid != null"
 											@change="fieldsValidationUser"
 										>
 										</ScInput>
@@ -141,6 +141,16 @@
 										</v-row>
 									</div>
 								</div>
+								<div v-if="loggedUserObject && loggedUserObject.uuid && uuidUser">
+									<div v-if="uuidUser != loggedUserObject.uuid">
+										<button v-if="notFollowed" class="sc-button sc-button-primary mdi mdi-account-multiple-plus" @click="follow()">
+											Seguir
+										</button>
+										<button v-if="!notFollowed" class="sc-button sc-button-primary mdi mdi-account-multiple-minus" @click="unfollow()">
+											Parar de seguir
+										</button>
+									</div>
+								</div>
 							</div>
 						</fieldset>
 						<div class="uk-margin-top uk-text-right">
@@ -177,6 +187,7 @@
 import ScInput from '~/components/Input';
 import UserService from "@/services/userService";
 import LoginService from '@/services/loginService';
+import UserUserRelationService from '@/services/userUserRelationService';
 import Title from '~/components/Title';
 
 import { validationMixin } from 'vuelidate';
@@ -200,6 +211,8 @@ export default {
 	mixins: [validationMixin],
 	data () {
 		return {
+			loggedUserObject: {},
+			userLoaded:false,
 			user: {
 				name: '',
 				email: '',
@@ -209,6 +222,13 @@ export default {
 					password: null,
 					active: true
 				},
+			},
+			userUserRelation: {
+				uuid: null,
+				followerUuid: null,
+				followerName: '',
+				followedUuid: null,
+				followedName: ''
 			},
 			resp: false,
 			waitingBillConfigtList: false,
@@ -225,6 +245,7 @@ export default {
 			userLoginPassword: '',
 			passwordFieldType: 'password',
 			showPasswordIcon: true,
+			notFollowed: true,
 		}
 	},
 	validations: {
@@ -256,6 +277,7 @@ export default {
 	mounted () {
 		this.uuidUser = this.$route.params.uuid;
 		this.findUserByUuid();
+		this.loggedUser();
 	},
 	methods: {
 		showNotification (text, pos, status, persistent) {
@@ -269,11 +291,57 @@ export default {
 			}
 			UIkit.notification(text, config);
 		},
+		loggedUser (){
+			LoginService.getActualLogin()
+				.then(response => {
+					UserService.findByLoginUuid(response.data.uuid)
+						.then(response => {
+							this.loggedUserObject = response.data;
+							this.userLoaded = true;
+							if(this.loggedUserObject && this.loggedUserObject.uuid != this.uuidUser){
+								this.userExists = true;
+								this.searchUserUserRelation(this.loggedUserObject.uuid, this.uuidUser);
+							}
+						})
+						.catch(e => {
+							var message = "Não foi possível buscar o usuário logado.";
+							if (e.response && e.response.status === 400) {
+								message = e.response.data.message;
+							}
+							this.showNotification(message, 'bottom-right', 'danger')
+						});
+				})
+				.catch(e => {
+					var message = "Não foi possível buscar o usuário logado.";
+					if (e.response && e.response.status === 400) {
+						message = e.response.data.message;
+					}
+					this.showNotification(message, 'bottom-right', 'danger')
+				});
+		},
+		searchUserUserRelation (follower, followed){
+			UserUserRelationService.findFollowersByFollowedUuid(follower, followed)
+				.then(response => {
+					if (response.data == [] || response.data.length == 0){
+						this.notFollowed = true;
+					} else {
+						this.notFollowed = false;
+						this.userUserRelation = response.data[0];
+					}
+				})
+				.catch(e => {
+					var message = "Não foi possível obter a relação entre os usuários.";
+					if (e.response && e.response.status === 400) {
+						message = e.response.data.message;
+					}
+					this.showNotification(message, 'bottom-right', 'danger');
+				});
+		},
 		findUserByUuid () {
 			if (this.uuidUser) {
 				UserService.findByUuid(this.uuidUser)
 					.then(response => {
-						this.user = response.data; 
+						this.user = response.data;
 					})
 					.catch(e => {
 						var message = "Não foi possível encontrar o usuário específico.";
@@ -330,6 +398,42 @@ export default {
 				this.enableSave = true;
 			}else{
 				this.enableSave = false
+			}
+		},
+		follow (){
+			this.userUserRelation.followerUuid = this.loggedUserObject.uuid;
+			this.userUserRelation.followerName = this.loggedUserObject.name;
+			this.userUserRelation.followedUuid = this.user.uuid;
+			this.userUserRelation.followedName = this.user.name;
+			UserUserRelationService.save(this.userUserRelation)
+				.then(response => {
+					if (response.data && response.data.uuid){
+						this.notFollowed = false;
+						this.userUserRelation = response.data;
+					}
+				})
+				.catch(e => {
+					var message = "Não foi possível seguir o usuário";
+					if (e.response && e.response.status === 400) {
+						message = e.response.data.message;
+					}
+					this.showNotification(message, 'bottom-right', 'danger');
+				});
+		},
+		unfollow (){
+			if (this.userUserRelation.uuid){
+				UserUserRelationService.removeByUuid(this.userUserRelation.uuid)
+					.then(response => {
+						this.notFollowed = true;
+						this.userUserRelation = {};
+					})
+					.catch(e => {
+						var message = "Não foi possível parar de seguir o usuário";
+						if (e.response && e.response.status === 400) {
+							message = e.response.data.message;
+						}
+						this.showNotification(message, 'bottom-right', 'danger');
+					});
 			}
 		},
 	}
