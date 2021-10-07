@@ -373,14 +373,14 @@ export default {
 						const token = resp.data.token;
 						this.$store.commit("setToken", token);
 						Cookie.set("token", token);
-						this.notification.title = "Acesso realizado. Aguarde ...";
-						this.showNotification(this.notification.title, 'top-center', 'success')
+						this.notification.title = "Acesso realizado! Por favor, aguarde.";
+						this.showNotification(this.notification.title, 'top-center', 'success');
 						this.$router.push("/");
 						window.location.reload();
 					})
 					.catch(err => {
-						this.notification.title = "Erro. Verifique as suas credenciais";
-						this.showNotification(this.notification.title, 'top-center', 'danger')
+						this.notification.title = "Erro. Verifique as suas credenciais.";
+						this.showNotification(this.notification.title, 'top-center', 'danger');
 					});
 			} else {
 				this.notification.title = "Aviso. As credenciais devem ser informadas";
