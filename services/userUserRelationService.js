@@ -8,12 +8,12 @@ export default {
 		return client.post('userUserRelation', userUserRelation);
 	},
 
-	removeByUuid: (uuid) => {
-		return client.delete('userUserRelation/' + uuid)
+	removeByUuid: (follower, followed) => {
+		return client.delete('userUserRelation/' + follower + '/' + followed);
 	},
 
 	removeByEntity: (userUserRelation) => {
-		return client.delete('userUserRelation/', userUserRelation)
+		return client.delete('userUserRelation/removeByRelation', userUserRelation);
 	},
 
 	findFollowersByFollowed: (uuid) => {
