@@ -12,7 +12,10 @@
 			<div>
 				<ScCard>
 					<ScCardBody>
-						<div class="uk-flex uk-flex-bottom uk-grid uk-grid-divider" data-uk-grid>
+						<div v-if="user && user.uuid && user.name" class="sc-padding-bottom" style="size: 5vh">
+							Usuário: {{ user.name }} 
+						</div>
+						<div class="uk-flex uk-flex-top uk-grid uk-grid-divider" data-uk-grid>
 							<div class="uk-width-1-2@m" style="vertical-align: middle">
 								<div class="uk-text-center">
 									Seguidos
@@ -20,8 +23,8 @@
 								<fieldset class="uk-fieldset md-bg-grey-50 sc-padding uk-margin-top">
 									<VueGoodTable
 										ref="Table-User"
-										:is-loading="waitingUsersList"
-										:columns="columns"
+										:is-loading="waitingFollowedsList"
+										:columns="columnsFolloweds"
 										:rows="rowsFolloweds"
 										style-class="uk-table uk-table-divider scutum-vgt"
 										:search-options="{
@@ -32,8 +35,8 @@
 										:sort-options="sort"
 									>
 										<template slot="table-row" slot-scope="props">
-											<span v-if="props.column.field == 'action'">
-												<button class="mdi mdi-close-circle-outline md-color-red-700" data-uk-tooltip="Parar de seguir" @click="unfollow(props.row.uuid)"></button>
+											<span v-if="props.column.field == 'action' && ownUser">
+												<button class="mdi mdi-close-circle-outline md-color-red-700" data-uk-tooltip="Parar de seguir" @click="unfollow(props.row)"></button>
 											</span>
 											<span v-else>
 												{{ props.formattedRow[props.column.field] }}
@@ -52,8 +55,8 @@
 								<fieldset class="uk-fieldset md-bg-grey-50 sc-padding uk-margin-top">
 									<VueGoodTable
 										ref="Table-User"
-										:is-loading="waitingUsersList"
-										:columns="columns"
+										:is-loading="waitingFollowersList"
+										:columns="columnsFollowers"
 										:rows="rowsFollowers"
 										style-class="uk-table uk-table-divider scutum-vgt"
 										:search-options="{
@@ -64,8 +67,8 @@
 										:sort-options="sort"
 									>
 										<template slot="table-row" slot-scope="props">
-											<span v-if="props.column.field == 'action'">
-												<button class="mdi mdi-close-circle-outline md-color-red-700" data-uk-tooltip="Bloquear seguidor"></button>
+											<span v-if="props.column.field == 'action' && ownUser">
+												<button class="mdi mdi-close-circle-outline md-color-red-700" data-uk-tooltip="Remover seguidor" @click="unfollow(props.row)"></button>
 											</span>
 											<span v-else>
 												{{ props.formattedRow[props.column.field] }}
@@ -106,11 +109,26 @@ export default {
 	data () {
 		return {
 			loggedUserObject: {},
+			user: {},
 			msgAlert: '',
 			typeAlert: '',
 			titleAlert: '',
-			snackbar: '', 
-			columns: [
+			snackbar: '',
+			columnsFolloweds: [
+				{
+					label: "Nome",
+					field: "followedName",
+					hidden: false,
+				},
+				{
+					label: "",
+					field: "action",
+					hidden: false,
+					thClass: 'text-right',
+					tdClass: 'text-right'
+				},
+			], 
+			columnsFollowers: [
 				{
 					label: "Nome",
 					field: "followerName",
@@ -126,7 +144,8 @@ export default {
 			],
 			rowsFolloweds: [],
 			rowsFollowers: [],
-			waitingUsersList: false,
+			waitingFollowersList: false,
+			waitingFollowedsList: false,
 			users: [],
 			notification: {
 				title: '',
@@ -136,7 +155,7 @@ export default {
 				enabled: true,
 				mode: 'remote',
 				//mode: 'pages',
-				perPage: 10,
+				perPage: 50,
 				position: 'top',
 				perPageDropdown: [10, 15, 20, 50, 100],
 				dropdownAllowAll: true,
@@ -144,7 +163,7 @@ export default {
 				nextLabel: 'Próxima',
 				prevLabel: 'Anterior',
 				rowsPerPageLabel: 'Linhas por página',
-				ofLabel: 'of',
+				ofLabel: 'de',
 				//pageLabel: 'page', // for 'pages' mode
 				allLabel: 'Todos'
 			},
@@ -156,25 +175,46 @@ export default {
 				name: '',
 			},
 			uuidUser: null,
+			ownUser: false,
 		}
 	},
 	mounted () {
 		this.uuidUser = this.$route.params.uuid;
 		if (this.uuidUser){
-			this.listFollowedsByFollower(this.uuidUser);
-			this.listFollowersByFollowed(this.uuidUser);
+			this.findUserByUuid(this.uuidUser);
 		} else {
+			this.ownUser = true;
 			this.loggedUser();
 		}
 		
 	},
 	methods: {
+		findUserByUuid (uuid) {
+			if (uuid) {
+				UserService.findByUuid(uuid)
+					.then(response => {
+						this.user = response.data;
+						console.log(this.user);
+						this.listFollowedsByFollower(uuid);
+						this.listFollowersByFollowed(uuid);
+					})
+					.catch(e => {
+						var message = "Não foi possível encontrar o usuário específico.";
+						if (e.response && e.response.status === 400) {
+							message = e.response.data.message;
+						}
+						this.showNotification(message, 'bottom-right', 'danger')
+					});
+			} 
+		},
 		loggedUser (){
 			LoginService.getActualLogin()
 				.then(response => {
 					UserService.findByLoginUuid(response.data.uuid)
 						.then(response => {
 							this.loggedUserObject = response.data;
+							this.user = this.loggedUserObject;
+							console.log(this.user);
 							this.listFollowedsByFollower(this.loggedUserObject.uuid);
 							this.listFollowersByFollowed(this.loggedUserObject.uuid);
 						})
@@ -195,41 +235,44 @@ export default {
 				});
 		},
 		listFollowedsByFollower (uuid) {
-			this.waitingUsersList = true;
+			this.waitingFollowedsList = true;
 			UserUserRelationService.findFollowedsByFollower(uuid)
 				.then(response => {
 					this.rowsFolloweds = response.data;
-					this.waitingUsersList = false;
+					this.waitingFollowedsList = false;
 				})
 				.catch(e => {
 					var message = "Não foi possível realizar a buscado dos usuários.";
 					if (e.response && e.response.status === 400) {
 						message = e.response.data.message;
 					}
-					this.waitingUsersList = false ; 
+					this.waitingFollowedsList = false ; 
 					this.showNotification(message, 'bottom-right', 'danger')
 				});
 		},
 		listFollowersByFollowed (uuid) {
-			this.waitingUsersList = true;
+			this.waitingFollowersList = true;
 			UserUserRelationService.findFollowersByFollowed(uuid)
 				.then(response => {
 					this.rowsFollowers = response.data;
-					this.waitingUsersList = false;
+					this.waitingFollowersList = false;
 				})
 				.catch(e => {
 					var message = "Não foi possível realizar a buscado dos usuários.";
 					if (e.response && e.response.status === 400) {
 						message = e.response.data.message;
 					}
-					this.waitingUsersList = false ; 
+					this.waitingFollowersList = false ; 
 					this.showNotification(message, 'bottom-right', 'danger')
 				});
 		},
-		unfollow (uuid){
-			if (uuid){
-				UserUserRelationService.removeByUuid(uuid)
+		unfollow (obj){
+			console.log(obj)
+			if (obj){
+				console.log(obj)
+				UserUserRelationService.removeByUuid(obj.followerUuid, obj.followedUuid)
 					.then(response => {
+						this.showNotification("Você deixou de seguir o usuário", 'bottom-right', 'success');
 						if (this.uuidUser){
 							this.listFollowedsByFollower(this.uuidUser);
 							this.listFollowersByFollowed(this.uuidUser);
