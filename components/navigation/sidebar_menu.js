@@ -134,7 +134,7 @@ export const menuEntries = [
 			},
 			{
 				id: uniqueID(),
-				title: "Seguidos e seguidores",
+				title: "Seguidos e Seguidores",
 				page: "/profile/following",
 				icon: "mdi mdi-face-profile md-color-brown-500",
 			},
