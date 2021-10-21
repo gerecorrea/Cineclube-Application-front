@@ -125,16 +125,15 @@ export default {
 			// update locale on page load
 			this.$store.commit('updateLocale', this.$i18n.locale);
 		});
-		
 		// DESCOMENTAR E SETAR AQUI O TEMA:
-		 this.HTMLClasses.activeTheme = 'sc-theme-user'; // Grená escuro com verde no hover
+		 //this.HTMLClasses.activeTheme = 'sc-theme-user'; // Grená escuro com verde no hover
 		 //this.HTMLClasses.activeTheme = 'sc-theme-user-md'; // Roxo com verde no hover
 		 //this.HTMLClasses.activeTheme = 'sc-theme-a'; //Azul meio termo com hover verde claro
 		 //this.HTMLClasses.activeTheme = 'sc-theme-b'; //Azul escuro com hover rosa
 		 //this.HTMLClasses.activeTheme = 'sc-theme-c'; //Preto/cinza escuro com hover com azul bebê
 		 //this.HTMLClasses.activeTheme = 'sc-theme-d'; //Roxo claro com hover amarelo forte
 		 //this.HTMLClasses.activeTheme = 'sc-theme-e'; //Vermelho com roxo quase cinza nos hovers
-		 this.HTMLClasses.activeTheme = 'sc-theme-f'; //CInza tbm com hover laranja claro
+		 //this.HTMLClasses.activeTheme = 'sc-theme-f'; //CInza tbm com hover laranja claro
 		 //this.HTMLClasses.activeTheme = 'sc-theme-g'; //roxo again com hover bege
 		 //this.HTMLClasses.activeTheme = 'sc-theme-h'; // marrom com ciano nos hovers
 		 //this.HTMLClasses.activeTheme = 'sc-theme-dark'; // header verde normal com sidebar preto, péssimo

@@ -292,8 +292,6 @@ export default {
 				PersonService.findById(uuid)
 					.then(response => {
 						this.person = response.data;
-						console.log("person")
-						console.log(this.person)
 						this.personUser.personUuid = uuid;
 						this.personUser.personName = this.person.name;
 						this.personUser.imageLink = this.person.imagelink;
@@ -338,8 +336,6 @@ export default {
 					UserService.findByLoginUuid(response.data.uuid)
 						.then(response => {
 							this.loggedUserObject = response.data;
-							console.log("logged")
-							console.log(this.loggedUserObject);
 							this.personUser.userUuid = this.loggedUserObject.uuid;
 							this.personUser.userName = this.loggedUserObject.name;
 							this.findPersonUserRelation(); 
@@ -363,11 +359,8 @@ export default {
 		findPersonUserRelation (){
 			UserPersonRelationService.findByUserUuidAndPersonUuid(this.personUser.userUuid, this.personUser.personUuid)
 				.then(response => {
-					console.log(response)
-					console.log(response.data)
 					if (response.data){
 						this.personUser = response.data;
-						console.log(this.personUser)
 					}
 				})
 				.catch(e => {
@@ -379,17 +372,10 @@ export default {
 				});
 		},
 		saveUserPerson (){
-			console.log("obj atual")
-			console.log(this.personUser);
 			if (this.personUser.uuid == null) this.personUser.favorite = true;
-
-			console.log("obj atual")
-			console.log(this.personUser);
 			UserPersonRelationService.save(this.personUser)
 				.then(response => {
 					this.personUser = response.data;
-					console.log("retorno:")
-					console.log(this.personUser);
 					this.showNotification("Favorito modificado com sucesso!", 'bottom-right', 'success');
 					//this.findByUuid(this.uuidPerson);
 				})
