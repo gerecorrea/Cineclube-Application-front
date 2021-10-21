@@ -17,6 +17,12 @@ export const menuEntries = [
 		submenu: [
 			{
 				id: uniqueID(),
+				title: "Perfil",
+				page: "/profile/dashboard/",
+				icon: "mdi mdi-face md-color-grey-700"
+			},
+			{
+				id: uniqueID(),
 				title: "Watchlist",
 				page: "/profile/watchlist",
 				icon: "mdi mdi-bookmark-plus md-color-yellow-900"
@@ -136,7 +142,7 @@ export const menuEntries = [
 				id: uniqueID(),
 				title: "Seguidos e Seguidores",
 				page: "/profile/following",
-				icon: "mdi mdi-face-profile md-color-brown-500",
+				icon: "mdi mdi-account-multiple md-color-brown-500",
 			},
 		]
 	},
