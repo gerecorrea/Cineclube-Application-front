@@ -178,9 +178,6 @@ export default {
 		return {
 			user: {
 				uuid: null,
-				tenant: {
-					uuid: null
-				},
 				login: {
 					username: null,
 					password: null
@@ -415,7 +412,6 @@ export default {
 			this.userEditDialog = false;
 			this.user= {};
 			this.user.login = {};
-			this.user.tenant = {};
 			this.showConfirmChangeAdmin = false;
 			this.showConfirmChangeActivate = false;
 			this.list();
