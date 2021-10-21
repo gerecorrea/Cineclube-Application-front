@@ -1,6 +1,6 @@
 <template>
 	<div class="uk-flex-1">
-		<h1 class="uk-text-center uk-flex-1" style="font-size:30px;padding-top:20px;font-weight: 400; color:#00737f">
+		<h1 class="uk-text-center uk-flex-1" style="font-size:30px;padding-top:20px;font-weight: 400; color:#37474f">
 			{{ title }}
 		</h1>
 	</div>
