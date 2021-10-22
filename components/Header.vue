@@ -1,7 +1,7 @@
 <template>
 	<header id="sc-header" ref="header">
 		<nav class="uk-navbar uk-navbar-container" data-uk-navbar="mode: click; duration: 360">
-			<div class="uk-navbar-left nav-overlay-small uk-margin-right uk-navbar-aside">
+			<div class="uk-navbar-left">
 				<a v-if="!vxSidebarMiniActive"
 					id="sc-sidebar-main-toggle"
 					href="javascript:void(0)"
@@ -10,21 +10,20 @@
 					<i v-if="sidebarMainExpanded" class="mdi mdi-backburger" />
 					<i v-if="!sidebarMainExpanded" class="mdi mdi-menu" />
 				</a>
-				<!-- <div class="sc-brand uk-visible@m" style="display: block;margin-left: auto;margin-right: auto;">
-					<nuxt-link to="/">
-						<img :src="appLogo" width="40px">
-					</nuxt-link>
-				</div> -->
 			</div>
 			<div class="uk-navbar-item uk-width-expand md-color-grey-50 uk-text-large"
-				style="font-family: Trebuchet MS"
+				style="font-family: fantasy; font-size: 32px"
 			>
-				<nuxt-link to="/" class="md-color-grey-50">
+				<!-- <nuxt-link to="/" class="md-color-grey-50">
 					<img src="~/assets/img/movie.png" width="60px" class="sc-padding-right">
 					CINECLUBE APP
 					<img src="~/assets/img/movie.png" width="60px" class="sc-padding-left">
-					<!-- require('~/assets/img/trophy.png') -->
-				</nuxt-link>
+				</nuxt-link> -->
+				<div class="md-color-white" style="font-family: fantasy; font-size: 24px; padding-top: 5px; padding-left: 180px">
+					<button title="Link para o website" @click="redirectPage('/')">
+						CINECLUBE APP
+					</button>
+				</div>
 				
 				<nuxt-link to="/" class="sc-padding-left">
 				</nuxt-link>
@@ -67,7 +66,7 @@
 						<ScFullscreen id="sc-js-fullscreen-toggle" />
 					</li>
 					 
-					<li title="Perfil">
+					<li title="Perfil do usuário">
 						<!-- <button
 							v-if="userLoaded"
 							class="mdi mdi-account-circle md-color-grey-50"
@@ -75,8 +74,14 @@
 							@click="redirectPage('/profile/' + loggedUserObject.uuid)"
 						>
 						</button> -->
-						<nuxt-link v-if="userLoaded" :to="'/profile/' + loggedUserObject.uuid">
+						<nuxt-link v-if="userLoaded" :to="'/profile/dashboard/'">
 							<span class="mdi mdi-account-circle">
+							</span>
+						</nuxt-link>
+					</li>
+					<li title="Configurações da conta">
+						<nuxt-link v-if="userLoaded" :to="'/profile/settings'">
+							<span class="mdi mdi-settings">
 							</span>
 						</nuxt-link>
 					</li>
@@ -315,9 +320,6 @@ export default {
 					}
 					this.showNotification(message, 'bottom-right', 'danger')
 				});
-		},
-		editUser (){
-			this.redirectPage('/userpages/users/manual/' + this.loggedUserObject.uuid)
 		},
 		showNotification (text, pos, status, persistent) {
 			var config = {};
