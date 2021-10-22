@@ -238,6 +238,14 @@ export default {
 					hidden: false,
 				},
 				{
+					label: "Favoritos",
+					field: "person.numFavorites",
+					hidden: false,
+					tdClass: 'uk-text-center',
+					thClass: 'uk-text-center',
+					type: 'number',
+				},
+				{
 					label: "País",
 					field: "person.country",
 					hidden: false,
@@ -249,14 +257,6 @@ export default {
 					hidden: false,
 					thClass: 'text-center',
 					tdClass: 'text-center',
-				},
-				{
-					label: "Favoritos",
-					field: "person.numFavorites",
-					hidden: false,
-					tdClass: 'uk-text-center',
-					thClass: 'uk-text-center',
-					type: 'number',
 				},
 				{
 					label: "",
@@ -377,10 +377,8 @@ export default {
 			this.waitingPersonList = true ; 
 			UserPersonRelation.findFavoritesUser(this.loggedUserObject.uuid)
 				.then(response => {
-					this.rows = response.data; 
-					//this.totalElements = response.data.totalElements;
-					this.waitingPersonList = false ; 
-					console.log(response.data);
+					this.rows = response.data;
+					this.waitingPersonList = false;
 				})
 				.catch(e => {
 					var message = "Não foi possível listar os artistas favoritos do usuário.";

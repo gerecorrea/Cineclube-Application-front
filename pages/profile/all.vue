@@ -43,7 +43,16 @@
 								@on-sort-change="onSortChange"
 							>
 								<template slot="table-row" slot-scope="props">
-									<span v-if="props.column.field == 'login.admin'">
+									<span v-if="props.column.field == 'name'">
+										<button 
+											uk-tooltip="Visitar perfil do usuário" 
+											class="md-color-blue-700"
+											@click="redirectPage('/profile/dashboard/' + props.row.uuid)"
+										>
+											{{ props.row.name }}
+										</button>
+									</span>
+									<span v-else-if="props.column.field == 'login.admin'">
 										<span v-if="props.row.login.admin" class="mdi mdi-checkbox-marked-circle-outline md-color-green-700" title="É administrador"></span>
 										<span v-if="!props.row.login.admin" class="mdi mdi-checkbox-blank-circle-outline md-color-red-700" title="Não é administrador"></span>
 									</span>
@@ -51,7 +60,7 @@
 										<span v-if="props.row.login.active" class="mdi mdi-checkbox-marked-circle-outline md-color-green-700" title="Ativo"></span>
 										<span v-if="!props.row.login.active" class="mdi mdi-checkbox-blank-circle-outline md-color-red-700" title="Não ativo"></span>
 									</span>
-									<span v-else-if="props.column.field == 'action'">
+									<span v-else-if="props.column.field == 'action' && loggedUserObject && loggedUserObject.admin">
 										<v-row style="padding-top: 12px">
 											<button v-if="props.row.login.admin"
 												class="sc-button sc-button-danger sc-button-small mdi mdi-key-minus"

@@ -298,6 +298,14 @@ export default {
 					type: 'number',
 				},
 				{
+					label: "Favoritos",
+					field: "movie.numFavorites",
+					hidden: false,
+					tdClass: 'uk-text-center',
+					thClass: 'uk-text-center',
+					type: 'number',
+				},
+				{
 					label: "País",
 					field: "movie.country",
 					hidden: false,
@@ -334,14 +342,7 @@ export default {
 				// 	thClass: 'uk-text-right',
 				// 	type: 'number',
 				// },
-				// {
-				// 	label: "Favoritos",
-				// 	field: "movie.numFavorites",
-				// 	hidden: false,
-				// 	tdClass: 'uk-text-center',
-				// 	thClass: 'uk-text-center',
-				// 	type: 'number',
-				// },
+				
 				{
 					label: "Watchlist",
 					field: "watchlist",
@@ -469,10 +470,8 @@ export default {
 			this.waitingMoviesList = true ; 
 			UserMovieRelation.findFavoritesUserByMovieType(this.loggedUserObject.uuid, 'DOCUMENTARY')
 				.then(response => {
-					this.rows = response.data; 
-					//this.totalElements = response.data.totalElements;
-					this.waitingMoviesList = false ; 
-					console.log(response.data);
+					this.rows = response.data;
+					this.waitingMoviesList = false;
 				})
 				.catch(e => {
 					var message = "Não foi possível listar os filmes favoritos do usuário.";

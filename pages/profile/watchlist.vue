@@ -276,6 +276,30 @@ export default {
 					hidden: false,
 				},
 				{
+					label: "Nota usuário",
+					field: "rating",
+					hidden: false,
+					tdClass: 'uk-text-center',
+					thClass: 'uk-text-center',
+					type: 'number',
+				},
+				{
+					label: "Média",
+					field: "movie.avgRating",
+					hidden: false,
+					tdClass: 'uk-text-right',
+					thClass: 'uk-text-right',
+					type: 'number',
+				},
+				{
+					label: "Qtd votos",
+					field: "movie.numVotes",
+					hidden: false,
+					tdClass: 'uk-text-right',
+					thClass: 'uk-text-right',
+					type: 'number',
+				},
+				{
 					label: "País",
 					field: "movie.country",
 					hidden: false,
@@ -308,38 +332,6 @@ export default {
 					tdClass: 'uk-text-center',
 					thClass: 'uk-text-center',
 					sortable: false,
-				},
-				{
-					label: "Nota usuário",
-					field: "rating",
-					hidden: false,
-					tdClass: 'uk-text-center',
-					thClass: 'uk-text-center',
-					type: 'number',
-				},
-				{
-					label: "Média",
-					field: "movie.avgRating",
-					hidden: false,
-					tdClass: 'uk-text-right',
-					thClass: 'uk-text-right',
-					type: 'number',
-				},
-				{
-					label: "Qtd votos",
-					field: "movie.numVotes",
-					hidden: false,
-					tdClass: 'uk-text-right',
-					thClass: 'uk-text-right',
-					type: 'number',
-				},
-				{
-					label: "Favoritos",
-					field: "movie.numFavorites",
-					hidden: false,
-					tdClass: 'uk-text-center',
-					thClass: 'uk-text-center',
-					type: 'number',
 				},
 				{
 					label: "",
@@ -459,10 +451,8 @@ export default {
 			this.waitingMoviesList = true ; 
 			UserMovieRelation.findWatchlistUser(this.loggedUserObject.uuid)
 				.then(response => {
-					this.rows = response.data; 
-					//this.totalElements = response.data.totalElements;
-					this.waitingMoviesList = false ; 
-					console.log(response.data);
+					this.rows = response.data;
+					this.waitingMoviesList = false;
 				})
 				.catch(e => {
 					var message = "Não foi possível listar os filmes favoritos do usuário.";
