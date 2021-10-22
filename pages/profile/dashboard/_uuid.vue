@@ -4,9 +4,9 @@
 			<div style="vertical-align: middle">
 				<v-row v-if="user && user.login">
 					<v-col cols="4" class="uk-text-left" style="padding-top: 25px">
-						{{ user.name }} <span style="font-weight: 300">({{ user.login.username }})</span>
+						{{ user.name }} <span style="font-weight: 300">({{ user.login.username }})</span><br>
+						<span style="font-weight: 300" class="md-color-grey-600">Usuário desde: {{ toLocaleDate(user.createdDate) }}</span>
 					</v-col>
-					<!-- OS LINKS PARA VISITAÇÃO DEVEM SER FEITO EM UMA LISTAGEM PARA VISITAÇÃO!! --> 
 					<v-col cols="2" class="uk-text-right" style="padding-top: 25px">
 						<div>
 							<!-- v-if="uuidUser != loggedUserObject.uuid" -->
@@ -23,7 +23,7 @@
 							:class="classMoviesHover"
 							style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px"
 							uk-tooltip="Ver filmes com notas atribuídas"
-							@click="redirectPage('/profile/ratings')"
+							@click="verifyIfOwnUserToAllRatings()"
 							@mouseover="classMoviesHover = 'md-bg-blue-grey-50 border-radius: 20px'"
 							@mouseout="classMoviesHover = ''"
 						>
@@ -35,7 +35,7 @@
 							:class="classWatchlistHover"
 							style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px"
 							uk-tooltip="Ver filmes do usuário adicionados à watchlist"
-							@click="redirectPage('/profile/watchlist')"
+							@click="verifyIfOwnUserToWatchlist()"
 							@mouseover="classWatchlistHover = 'md-bg-blue-grey-50 border-radius: 20px'"
 							@mouseout="classWatchlistHover = ''"
 						>
@@ -47,7 +47,7 @@
 							:class="classFavoriteMoviesHover"
 							style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px"
 							uk-tooltip="Ver filmes do usuário favoritados"
-							@click="redirectPage('/profile/favoritesMovies')"
+							@click="verifyIfOwnUserToFavoriteMovies()"
 							@mouseover="classFavoriteMoviesHover = 'md-bg-blue-grey-50 border-radius: 20px'"
 							@mouseout="classFavoriteMoviesHover = ''"
 						>
@@ -59,7 +59,7 @@
 							:class="classFavoriteArtistsHover"
 							style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px"
 							uk-tooltip="Ver artistas do usuário favoritados"
-							@click="redirectPage('/profile/favoritesPersons')"
+							@click="verifyIfOwnUserToFavoritePersons()"
 							@mouseover="classFavoriteArtistsHover = 'md-bg-blue-grey-50 border-radius: 20px'"
 							@mouseout="classFavoriteArtistsHover = ''"
 						>
@@ -71,7 +71,7 @@
 							:class="classFollowedsHover"
 							style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px"
 							uk-tooltip="Ver quem este usuário segue"
-							@click="redirectPage('profile/following')"
+							@click="verifyIfOwnUserToFollowersAndFollowed()"
 							@mouseover="classFollowedsHover = 'md-bg-blue-grey-50 border-radius: 20px'"
 							@mouseout="classFollowedsHover = ''"
 						>
@@ -83,7 +83,7 @@
 							:class="classFollowersHover"
 							style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px"
 							uk-tooltip="Ver quem segue este usuário"
-							@click="redirectPage('/profile/following')"
+							@click="verifyIfOwnUserToFollowersAndFollowed()"
 							@mouseover="classFollowersHover = 'md-bg-blue-grey-50 border-radius: 20px'"
 							@mouseout="classFollowersHover = ''"
 						>
@@ -107,14 +107,14 @@
 				<div class="uk-child-width-1-5@l sc-padding" data-uk-grid style="">
 					<div v-for="index in 5" :key="index" class="tag">
 						<v-card 
-							v-if="rowsMovies[index] && rowsMovies[index].movie" 
-							:uk-tooltip="rowsMovies[index].movie.title" 
-							@click="redirectPage('/movies/view/' + rowsMovies[index].movie.uuid)"
+							v-if="rowsMovies[index-1] && rowsMovies[index-1].movie" 
+							:uk-tooltip="rowsMovies[index-1].movie.title" 
+							@click="redirectPage('/movies/view/' + rowsMovies[index-1].movie.uuid)"
 						>
 							<v-img
-								v-if="rowsMovies[index] && rowsMovies[index].movie && rowsMovies[index].movie.imageLink && rowsMovies[index].imageLink != ''"
+								v-if="rowsMovies[index-1] && rowsMovies[index-1].movie && rowsMovies[index-1].movie.imageLink && rowsMovies[index-1].movie.imageLink != ''"
 								height="125px" 
-								:src="rowsMovies[index].movie.imageLink"
+								:src="rowsMovies[index-1].movie.imageLink"
 							>
 							</v-img>
 							<v-img v-else
@@ -122,17 +122,146 @@
 								src="~/assets/img/question.png"
 							>
 							</v-img>
-							<v-card-text v-if="rowsMovies[index] && rowsMovies[index].movie">
+							<v-card-text v-if="rowsMovies[index-1] && rowsMovies[index-1].movie">
 								<v-list-item class="grow">
 									<v-list-item-content>
-										<v-list-item-title>{{ rowsMovies[index].movie.title }}</v-list-item-title>
+										<v-list-item-title>{{ rowsMovies[index-1].movie.title }}</v-list-item-title>
 									</v-list-item-content>
 									<v-row
 										align="center"
 										justify="end"
 									>
-										{{ rowsMovies[index].rating }}/10
+										{{ rowsMovies[index-1].rating }}/10
 									</v-row>
+								</v-list-item>
+							</v-card-text>
+						</v-card>
+					</div>
+				</div>
+			</div>
+
+			<div class="md-bg-blue-grey-50 uk-margin-top">
+				<v-row class="sc-padding-left sc-padding-top sc-padding-right">
+					<v-col cols="6">
+						Últimos itens adicionados à lista de desejos (Watchlist)
+					</v-col>
+					<v-col cols="6" class="uk-text-right">
+						<button class="mdi mdi-playlist-plus" style="vertical-align:middle" @click="verifyIfOwnUserToWatchlist()">
+							Ver todos os filmes adicionados à Watchlist
+						</button>
+					</v-col>
+				</v-row>
+				<div class="uk-child-width-1-5@l sc-padding" data-uk-grid style="">
+					<div v-for="index in 5" :key="index" class="tag">
+						<v-card 
+							v-if="rowsWatchlist[index-1] && rowsWatchlist[index-1].movie" 
+							:uk-tooltip="rowsWatchlist[index-1].movie.title" 
+							@click="redirectPage('/movies/view/' + rowsWatchlist[index-1].movie.uuid)"
+						>
+							<v-img
+								v-if="rowsWatchlist[index-1] && rowsWatchlist[index-1].movie && rowsWatchlist[index-1].movie.imageLink && rowsWatchlist[index-1].movie.imageLink != ''"
+								height="125px" 
+								:src="rowsWatchlist[index-1].movie.imageLink"
+							>
+							</v-img>
+							<v-img v-else
+								height="100px"
+								src="~/assets/img/question.png"
+							>
+							</v-img>
+							<v-card-text v-if="rowsWatchlist[index-1] && rowsWatchlist[index-1].movie">
+								<v-list-item class="grow">
+									<v-list-item-content>
+										<v-list-item-title>{{ rowsWatchlist[index-1].movie.title }}</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
+							</v-card-text>
+						</v-card>
+					</div>
+				</div>
+			</div>
+
+			<div class="md-bg-blue-grey-50 uk-margin-top">
+				<v-row class="sc-padding-left sc-padding-top sc-padding-right">
+					<v-col cols="6">
+						Últimos filmes favoritados
+					</v-col>
+					<v-col cols="6" class="uk-text-right">
+						<button class="mdi mdi-playlist-plus" style="vertical-align:middle" @click="verifyIfOwnUserToFavoriteMovies()">
+							Ver todos os filmes favoritos
+						</button>
+					</v-col>
+				</v-row>
+				<div class="uk-child-width-1-5@l sc-padding" data-uk-grid style="">
+					<div v-for="index in 5" :key="index" class="tag">
+						<v-card 
+							v-if="rowsFavoriteMovies[index-1] && rowsFavoriteMovies[index-1].movie" 
+							:uk-tooltip="rowsFavoriteMovies[index-1].movie.title" 
+							@click="redirectPage('/movies/view/' + rowsFavoriteMovies[index-1].movie.uuid)"
+						>
+							<v-img
+								v-if="rowsFavoriteMovies[index-1] && rowsFavoriteMovies[index-1].movie && rowsFavoriteMovies[index-1].movie.imageLink && rowsFavoriteMovies[index-1].movie.imageLink != ''"
+								height="125px" 
+								:src="rowsFavoriteMovies[index-1].movie.imageLink"
+							>
+							</v-img>
+							<v-img v-else
+								height="100px"
+								src="~/assets/img/question.png"
+							>
+							</v-img>
+							<v-card-text v-if="rowsFavoriteMovies[index-1] && rowsFavoriteMovies[index-1].movie">
+								<v-list-item class="grow">
+									<v-list-item-content>
+										<v-list-item-title>{{ rowsFavoriteMovies[index-1].movie.title }}</v-list-item-title>
+									</v-list-item-content>
+									<v-row
+										align="center"
+										justify="end"
+									>
+										{{ rowsFavoriteMovies[index-1].rating }}/10
+									</v-row>
+								</v-list-item>
+							</v-card-text>
+						</v-card>
+					</div>
+				</div>
+			</div>
+
+			<div class="md-bg-blue-grey-50 uk-margin-top">
+				<v-row class="sc-padding-left sc-padding-top sc-padding-right">
+					<v-col cols="6">
+						Últimos artistas favoritados
+					</v-col>
+					<v-col cols="6" class="uk-text-right">
+						<button class="mdi mdi-playlist-plus" style="vertical-align:middle" @click="verifyIfOwnUserToFavoritePersons()">
+							Ver todos os artistas favoritos
+						</button>
+					</v-col>
+				</v-row>
+				<div class="uk-child-width-1-5@l sc-padding" data-uk-grid style="">
+					<div v-for="index in 5" :key="index" class="tag">
+						<v-card 
+							v-if="rowsFavoritePersons[index-1] && rowsFavoritePersons[index-1].person" 
+							:uk-tooltip="rowsFavoritePersons[index-1].person.name" 
+							@click="redirectPage('/movies/view/' + rowsFavoritePersons[index-1].movie.uuid)"
+						>
+							<v-img
+								v-if="rowsFavoritePersons[index-1] && rowsFavoritePersons[index-1].person && rowsFavoritePersons[index-1].person.imageLink && rowsFavoritePersons[index-1].person.imageLink != ''"
+								height="125px" 
+								:src="rowsFavoritePersons[index-1].person.imageLink"
+							>
+							</v-img>
+							<v-img v-else
+								height="100px"
+								src="~/assets/img/question.png"
+							>
+							</v-img>
+							<v-card-text v-if="rowsFavoritePersons[index-1] && rowsFavoritePersons[index-1].person">
+								<v-list-item class="grow">
+									<v-list-item-content>
+										<v-list-item-title>{{ rowsFavoritePersons[index-1].person.name }}</v-list-item-title>
+									</v-list-item-content>
 								</v-list-item>
 							</v-card-text>
 						</v-card>
@@ -195,8 +324,9 @@ export default {
 			this.findUserByUuid(this.uuidUser);
 		} else {
 			this.ownUser = true;
+			this.loggedUser();
 		}
-		this.loggedUser();
+		
 	},
 	methods: {
 		findUserByUuid (uuid) {
@@ -204,14 +334,15 @@ export default {
 				UserService.findByUuid(uuid)
 					.then(response => {
 						this.user = response.data;
-						if (this.user)
+						if (this.user){
 						    this.callEverythingAfterTakeUser();
-						if (this.loggedUserObject){
-							this.searchUserUserRelation(this.loggedUserObject.uuid, this.uuidUser);
+							this.loggedUser();
+						} else {
+							this.showNotification("Não foi possível encontrar o usuário.", 'bottom-right', 'danger');
 						}
 					})
 					.catch(e => {
-						var message = "Não foi possível encontrar o usuário específico.";
+						var message = "Não foi possível encontrar o usuário.";
 						if (e.response && e.response.status === 400) {
 							message = e.response.data.message;
 						}
@@ -223,22 +354,22 @@ export default {
 			LoginService.getActualLogin()
 				.then(response => {
 					UserService.findByLoginUuid(response.data.uuid)
-						.then(response => {
-							this.loggedUserObject = response.data;
+						.then(response2 => {
+							this.loggedUserObject = response2.data;
 							if (this.ownUser){
-							    this.user = response.data;
+							    this.user = response2.data;
 								if (this.user)
 						            this.callEverythingAfterTakeUser();
 							} else {
-								if (this.user && this.loggedUserObject.uuid){
+								if (this.user && this.loggedUserObject && this.user != this.loggedUserObject){
 									this.searchUserUserRelation(this.loggedUserObject.uuid, this.uuidUser);
 								}
 							}
 						})
-						.catch(e => {
+						.catch(e2 => {
 							var message = "Não foi possível buscar o usuário logado.";
-							if (e.response && e.response.status === 400) {
-								message = e.response.data.message;
+							if (e2.response && e2.response.status === 400) {
+								message = e2.response.data.message;
 							}
 							this.showNotification(message, 'bottom-right', 'danger')
 						});
@@ -362,7 +493,6 @@ export default {
 				});
 		},
 		searchUserUserRelation (follower, followed){
-			console.log(follwer, followed);
 			UserUserRelationService.findFollowersByFollowedUuid(follower, followed)
 				.then(response => {
 					if (response.data == [] || response.data.length == 0){
@@ -392,6 +522,9 @@ export default {
 						if (response.data && response.data.uuid){
 							this.notFollowed = false;
 							this.userUserRelation = response.data;
+							this.showNotification("Agora você segue este usuário!", 'bottom-right', 'success');
+							this.listFollowedsByFollower(this.uuidUser);
+							this.listFollowersByFollowed(this.uuidUser);
 						}
 					})
 					.catch(e => {
@@ -407,7 +540,8 @@ export default {
 			if (this.user && this.loggedUserObject){
 				UserUserRelationService.removeByUuid(this.loggedUserObject.uuid, this.user.uuid)
 					.then(response => {
-						this.showNotification("Você deixou de seguir o usuário", 'bottom-right', 'success');
+						this.notFollowed = true;
+						this.showNotification("Você deixou de seguir o usuário!", 'bottom-right', 'success');
 						this.listFollowedsByFollower(this.uuidUser);
 						this.listFollowersByFollowed(this.uuidUser);
 					})
@@ -424,7 +558,35 @@ export default {
 			if (this.ownUser){
 				this.redirectPage('/profile/ratings/');
 			} else {
-				this.redirectPage('/visitor/ratings/' + this.uuidUser);
+				this.redirectPage('/visitor/movieRatings/' + this.uuidUser);
+			}
+		},
+		verifyIfOwnUserToWatchlist (){
+			if (this.ownUser){
+				this.redirectPage('/profile/watchlist/');
+			} else {
+				this.redirectPage('/visitor/watchlist/' + this.uuidUser);
+			}
+		},
+		verifyIfOwnUserToFavoriteMovies (){
+			if (this.ownUser){
+				this.redirectPage('/profile/favoritesMovies/');
+			} else {
+				this.redirectPage('/visitor/movieFavorites/' + this.uuidUser);
+			}
+		},
+		verifyIfOwnUserToFavoritePersons (){
+			if (this.ownUser){
+				this.redirectPage('/profile/favoritesPersons/');
+			} else {
+				this.redirectPage('/visitor/artistFavorites/' + this.uuidUser);
+			}
+		},
+		verifyIfOwnUserToFollowersAndFollowed (){	
+			if (this.ownUser){
+				this.redirectPage('/profile/following/');
+			} else {
+				this.redirectPage('/visitor/following/' + this.uuidUser);
 			}
 		},
 		redirectPage (page) {
@@ -432,6 +594,10 @@ export default {
 		},
 		openTab (url) {
 			window.open(url, '_blank').focus();
+		},
+		toLocaleDate (date){
+			let s = date.split("-").join(" ").split(" ");
+			return s[0] + "/" + s[1] + "/" + s[2];
 		},
 		showDetails (object){
 			this.showObjectDetails = object;
