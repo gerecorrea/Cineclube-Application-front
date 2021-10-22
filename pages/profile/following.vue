@@ -3,7 +3,7 @@
 		<div id="sc-page-top-bar" class="sc-top-bar">
 			<div class="sc-top-bar-content uk-flex uk-flex-1">
 				<div class="sc-top-bar-title uk-flex-1">
-					<Title title="SEGUIDOS E SEGUIDORES"></Title>
+					<Title title="SEGUINDO E SEGUIDORES"></Title>
 				</div>
 			</div>
 		</div>
@@ -12,14 +12,17 @@
 			<div>
 				<ScCard>
 					<ScCardBody>
-						<div v-if="user && user.uuid && user.name" class="sc-padding-bottom" style="size: 5vh">
-							Usuário: {{ user.name }} 
-						</div>
+						<ScCardTitle v-if="user && user.uuid && user.name" class="sc-padding-bottom">
+							Usuário: 
+							<button class="md-color-blue-700" uk-tooltip="Visitar perfil do usuário" @click="redirectPage('/profile/dashboard/' + user.uuid);">
+								{{ user.name }}
+							</button>
+						</ScCardTitle>
 						<div class="uk-flex uk-flex-top uk-grid uk-grid-divider" data-uk-grid>
 							<div class="uk-width-1-2@m" style="vertical-align: middle">
-								<div class="uk-text-center">
-									Seguidos
-								</div>
+								<ScCardTitle class="uk-text-center">
+									Seguindo
+								</ScCardTitle>
 								<fieldset class="uk-fieldset md-bg-grey-50 sc-padding uk-margin-top">
 									<VueGoodTable
 										ref="Table-User"
@@ -35,7 +38,16 @@
 										:sort-options="sort"
 									>
 										<template slot="table-row" slot-scope="props">
-											<span v-if="props.column.field == 'action' && ownUser">
+											<ScCardTitle v-if="props.column.field == 'followedName'">
+												<button 
+													class="md-color-blue-700" 
+													data-uk-tooltip="Visitar perfil do usuário" 
+													@click="redirectPage('/profile/dashboard/' + props.row.followedUuid)"
+												>
+													{{ props.row.followedName }}
+												</button>
+											</ScCardTitle>
+											<span v-else-if="props.column.field == 'action'">
 												<button class="mdi mdi-close-circle-outline md-color-red-700" data-uk-tooltip="Parar de seguir" @click="unfollow(props.row)"></button>
 											</span>
 											<span v-else>
@@ -49,9 +61,9 @@
 								</fieldset>
 							</div>
 							<div class="uk-width-1-2@m">
-								<div class="uk-text-center">
+								<ScCardTitle class="uk-text-center">
 									Seguidores
-								</div>
+								</ScCardTitle>
 								<fieldset class="uk-fieldset md-bg-grey-50 sc-padding uk-margin-top">
 									<VueGoodTable
 										ref="Table-User"
@@ -67,7 +79,16 @@
 										:sort-options="sort"
 									>
 										<template slot="table-row" slot-scope="props">
-											<span v-if="props.column.field == 'action' && ownUser">
+											<ScCardTitle v-if="props.column.field == 'followerName'">
+												<button 
+													class="md-color-blue-700" 
+													data-uk-tooltip="Visitar perfil do usuário" 
+													@click="redirectPage('/profile/dashboard/' + props.row.followerUuid)"
+												>
+													{{ props.row.followerName }}
+												</button>
+											</ScCardTitle>
+											<span v-else-if="props.column.field == 'action'">
 												<button class="mdi mdi-close-circle-outline md-color-red-700" data-uk-tooltip="Remover seguidor" @click="unfollow(props.row)"></button>
 											</span>
 											<span v-else>
@@ -175,38 +196,12 @@ export default {
 				name: '',
 			},
 			uuidUser: null,
-			ownUser: false,
 		}
 	},
 	mounted () {
-		this.uuidUser = this.$route.params.uuid;
-		if (this.uuidUser){
-			this.findUserByUuid(this.uuidUser);
-		} else {
-			this.ownUser = true;
-			this.loggedUser();
-		}
-		
+		this.loggedUser();
 	},
 	methods: {
-		findUserByUuid (uuid) {
-			if (uuid) {
-				UserService.findByUuid(uuid)
-					.then(response => {
-						this.user = response.data;
-						console.log(this.user);
-						this.listFollowedsByFollower(uuid);
-						this.listFollowersByFollowed(uuid);
-					})
-					.catch(e => {
-						var message = "Não foi possível encontrar o usuário específico.";
-						if (e.response && e.response.status === 400) {
-							message = e.response.data.message;
-						}
-						this.showNotification(message, 'bottom-right', 'danger')
-					});
-			} 
-		},
 		loggedUser (){
 			LoginService.getActualLogin()
 				.then(response => {
@@ -214,7 +209,7 @@ export default {
 						.then(response => {
 							this.loggedUserObject = response.data;
 							this.user = this.loggedUserObject;
-							console.log(this.user);
+                            
 							this.listFollowedsByFollower(this.loggedUserObject.uuid);
 							this.listFollowersByFollowed(this.loggedUserObject.uuid);
 						})
@@ -267,9 +262,7 @@ export default {
 				});
 		},
 		unfollow (obj){
-			console.log(obj)
 			if (obj){
-				console.log(obj)
 				UserUserRelationService.removeByUuid(obj.followerUuid, obj.followedUuid)
 					.then(response => {
 						this.showNotification("Você deixou de seguir o usuário", 'bottom-right', 'success');
