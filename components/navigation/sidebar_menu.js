@@ -10,17 +10,18 @@ export const menuEntries = [
 	},
 	{
 		id: uniqueID(),
-		title: "USUÁRIO",
+		title: "Usuários",
+		page: "/profile/all",
+		icon: "mdi mdi-account-multiple md-color-blue-grey-500",
+	},
+	{
+		id: uniqueID(),
+		title: "Seu Usuário",
 		page: "/pages",
+		icon: "mdi mdi-face md-color-brown-600",
 		isOpen: false,
 		level: 0,
 		submenu: [
-			{
-				id: uniqueID(),
-				title: "Perfil",
-				page: "/profile/dashboard/",
-				icon: "mdi mdi-face md-color-grey-700"
-			},
 			{
 				id: uniqueID(),
 				title: "Watchlist",
@@ -29,7 +30,7 @@ export const menuEntries = [
 			},
 			{
 				id: uniqueID(),
-				title: "Suas Avaliações",
+				title: "Avaliações",
 				page: "/profile/ratings",
 				icon: "mdi mdi-star-half md-color-yellow-900"
 			},
@@ -57,12 +58,19 @@ export const menuEntries = [
 				page: "/profile/favoritesPersons",
 				icon: "mdi mdi-heart-half-full md-color-blue-700"
 			},
+			{
+				id: uniqueID(),
+				title: "Seguindo e Seguidores",
+				page: "/profile/following",
+				icon: "mdi mdi-account-multiple md-color-brown-500",
+			},
 		]
 	},
 	{
 		id: uniqueID(),
-		title: "FILMES",
+		title: "Filmes",
 		page: "/pages",
+		icon: "mdi mdi-movie md-color-red-700",
 		isOpen: false,
 		level: 0,
 		submenu: [
@@ -106,8 +114,9 @@ export const menuEntries = [
 	},
 	{
 		id: uniqueID(),
-		title: "ARTISTAS",
+		title: "Artistas",
 		page: "/pages",
+		icon: "mdi mdi-star md-color-blue-700",
 		isOpen: false,
 		level: 0,
 		submenu: [
@@ -122,27 +131,6 @@ export const menuEntries = [
 				title: "Top 10 Artistas",
 				page: "/person/topFavorites",
 				icon: "mdi mdi-heart-box md-color-blue-700",
-			},
-		]
-	},
-	{
-		id: uniqueID(),
-		title: "CONFIGURAÇÃO",
-		page: "/pages",
-		isOpen: false,
-		level: 0,
-		submenu: [
-			{
-				id: uniqueID(),
-				title: "Listar usuários",
-				page: "/profile/all",
-				icon: "mdi mdi-face-profile md-color-brown-500",
-			},
-			{
-				id: uniqueID(),
-				title: "Seguidos e Seguidores",
-				page: "/profile/following",
-				icon: "mdi mdi-account-multiple md-color-brown-500",
 			},
 		]
 	},
