@@ -10,7 +10,7 @@
 								alt=""
 							>
 						</div>
-						<div class="md-color-white title-custom" style="">
+						<div class="md-color-white" style="font-size: 42px">
 							{{ person.name }}
 						</div>
 					</div>
@@ -56,174 +56,230 @@
 						</div>
 					</div>
                 
-				
 					<v-spacer />
 				</div>
-				<v-spacer />
+			</div>
 
-				<div class="uk-child-width-1-1@m uk-grid" data-uk-grid>
-					<div class="sc-padding-left">
-						<div v-if="actors.length > 0" class="md-color-white border-style sc-padding-left">
-							<div class="title-custom4-5">
-								Atuou em
-							</div>
-							<span v-for="i in actors"
-								:key="i"
-								class="md-color-blue-200"
-								style="margin-right: 5px;"
+			<div v-if="actors.length > 0" class="md-bg-blue-grey-300 uk-margin-top">
+				<v-row class="sc-padding-left sc-padding-right" style="font-size: 22px">
+					<v-col cols="6">
+						Atuou
+					</v-col>
+					<v-col cols="6" class="uk-text-right">
+						<button class="mdi mdi-playlist-plus" style="vertical-align:middle" @click="showDialog(actors, 'ACTORS')">
+							Ver todos os filmes em que atuou
+						</button>
+					</v-col>
+				</v-row>
+				<div class="uk-child-width-1-5@l sc-padding" data-uk-grid style="">
+					<div v-for="i in 5" :key="i" class="tag">
+						<v-card 
+							v-if="actors[i-1]" 
+							:uk-tooltip="actors[i-1].movieName" 
+							@click="redirectPage('/movies/view/' + actors[i-1].movieUuid)"
+						>
+							<v-img
+								v-if="actors[i-1].imageLinkMovie && actors[i-1].imageLinkMovie.length > 0"
+								height="125px"
+								:src="actors[i-1].imageLinkMovie"
 							>
-								<button @click="redirectPage('/movies/view/' + i.movieUuid)">
-									<v-card class="sc-padding-top sc-padding-bottom sc-padding-right md-color-blue-200" style="background-color: black; color: white">
-										<v-img v-if="i.imageLinkMovie && i.imageLinkMovie.length > 0" width="125px" :src="i.imageLinkMovie">
-										</v-img>
-										<v-img v-else
-											height="100px"
-											src="~/assets/img/question.png"
-										>
-										</v-img>
-										<span v-if="i.movieName.length < 17">
-											{{ i.movieName }} 
-										</span>
-										<span v-else :data-uk-tooltip="i.movieName">
-											{{ i.movieName.slice(0, 17) }}
-										</span>
-									</v-card>
-								</button>
-							</span>
-						</div>
-					</div>
-					<div class="sc-padding-left">
-						<div v-if="directors.length > 0" class="md-color-white border-style sc-padding-left">
-							<div class="title-custom4-5">
-								Dirigiu
-							</div>
-							<span v-for="i in directors"
-								:key="i"
-								class="md-color-blue-200"
-								style="margin-right: 5px;"
+							</v-img>
+							<v-img v-else
+								height="100px"
+								src="~/assets/img/question.png"
 							>
-								<button @click="redirectPage('/movies/view/' + i.movieUuid)">
-									<v-card class="sc-padding-top sc-padding-bottom sc-padding-right md-color-blue-200" style="background-color: black; color: white">
-										<v-img v-if="i.imageLinkMovie && i.imageLinkMovie.length > 0" width="125px" :src="i.imageLinkMovie">
-										</v-img>
-										<v-img v-else
-											height="100px"
-											src="~/assets/img/question.png"
-										>
-										</v-img>
-										<span v-if="i.movieName.length < 17">
-											{{ i.movieName }} 
-										</span>
-										<span v-else :data-uk-tooltip="i.movieName">
-											{{ i.movieName.slice(0, 17) }}
-										</span>
-									</v-card>
-								</button>
-							</span>
-						</div>
+							</v-img>
+
+							<v-card-text>
+								<v-list-item class="grow">
+									<v-list-item-content>
+										<v-list-item-title>{{ actors[i-1].movieName }}</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
+							</v-card-text>
+						</v-card>
 					</div>
-					<div class="sc-padding-left">
-						<div v-if="writers.length > 0" class="md-color-white border-style sc-padding-left">
-							<div class="title-custom4-5">
-								Escreveu
-							</div>
-							<span v-for="i in writers"
-								:key="i"
-								class="md-color-blue-200"
-								style="margin-right: 5px;"
-							>
-								<button @click="redirectPage('/movies/view/' + i.movieUuid)">
-									<v-card class="sc-padding-top sc-padding-bottom sc-padding-right md-color-blue-200" style="background-color: black; color: white">
-										<v-img v-if="i.imageLinkMovie && i.imageLinkMovie.length > 0" width="125px" :src="i.imageLinkMovie">
-										</v-img>
-										<v-img v-else
-											height="100px"
-											src="~/assets/img/question.png"
-										>
-										</v-img>
-										<span v-if="i.movieName.length < 17">
-											{{ i.movieName }} 
-										</span>
-										<span v-else :data-uk-tooltip="i.movieName">
-											{{ i.movieName.slice(0, 17) }}
-										</span>
-									</v-card>
-								</button>
-							</span>
-						</div>
-					</div>
-					<div class="sc-padding-left">
-						<div v-if="producers.length > 0" class="md-color-white border-style sc-padding-left">
-							<div class="title-custom4-5">
-								Produziu
-							</div>
-							<span v-for="i in producers"
-								:key="i"
-								class="md-color-blue-200"
-								style="margin-right: 5px;"
-							>
-								<button @click="redirectPage('/movies/view/' + i.movieUuid)">
-									<v-card class="sc-padding-top sc-padding-bottom sc-padding-right md-color-blue-200" style="background-color: black; color: white">
-										<v-img v-if="i.imageLinkMovie && i.imageLinkMovie.length > 0" width="125px" :src="i.imageLinkMovie">
-										</v-img>
-										<v-img v-else
-											height="100px"
-											src="~/assets/img/question.png"
-										>
-										</v-img>
-										<span v-if="i.movieName.length < 17">
-											{{ i.movieName }} 
-										</span>
-										<span v-else :data-uk-tooltip="i.movieName">
-											{{ i.movieName.slice(0, 17) }}
-										</span>
-									</v-card>
-								</button>
-							</span>
-						</div>
-					</div>
-					<div class="sc-padding-left">
-						<div v-if="selfs.length > 0" class="md-color-white border-style sc-padding-left">
-							<div class="title-custom4-5">
-								A si mesmo em
-							</div>
-							<span v-for="i in selfs"
-								:key="i"
-								class="md-color-blue-200"
-								style="margin-right: 5px;"
-							>
-								<button @click="redirectPage('/movies/view/' + i.movieUuid)">
-									<v-card class="sc-padding-top sc-padding-bottom sc-padding-right md-color-blue-200" style="background-color: black; color: white">
-										<v-img v-if="i.imageLinkMovie && i.imageLinkMovie.length > 0" width="125px" :src="i.imageLinkMovie">
-										</v-img>
-										<v-img v-else
-											height="100px"
-											src="~/assets/img/question.png"
-										>
-										</v-img>
-										<span v-if="i.movieName.length < 17">
-											{{ i.movieName }} 
-										</span>
-										<span v-else :data-uk-tooltip="i.movieName">
-											{{ i.movieName.slice(0, 17) }}
-										</span>
-									</v-card>
-								</button>
-							</span>
-						</div>
-					</div>
-					<!-- <div class="sc-padding-left">
-						<div v-if="directors.length > 0" class="md-color-white border-style">
-							<div class="title-custom4-5">
-								Diretor(a) em
-							</div>
-							<div>
-								Filme 1; Filme 2
-							</div>
-						</div>
-					</div> -->
 				</div>
 			</div>
+
+			<div v-if="directors.length > 0" class="md-bg-blue-grey-300 uk-margin-top">
+				<v-row class="sc-padding-left sc-padding-right" style="font-size: 22px">
+					<v-col cols="6">
+						Dirigiu
+					</v-col>
+					<v-col cols="6" class="uk-text-right">
+						<button class="mdi mdi-playlist-plus" style="vertical-align:middle" @click="showDialog(directors, 'DIRECTORS')">
+							Ver todos os filmes dirigidos
+						</button>
+					</v-col>
+				</v-row>
+				<div class="uk-child-width-1-5@l sc-padding" data-uk-grid style="">
+					<div v-for="i in 5" :key="i" class="tag">
+						<v-card 
+							v-if="directors[i-1]" 
+							:uk-tooltip="directors[i-1].movieName" 
+							@click="redirectPage('/movies/view/' + directors[i-1].movieUuid)"
+						>
+							<v-img
+								v-if="directors[i-1].imageLinkMovie && directors[i-1].imageLinkMovie.length > 0"
+								height="125px"
+								:src="directors[i-1].imageLinkMovie"
+							>
+							</v-img>
+							<v-img v-else
+								height="100px"
+								src="~/assets/img/question.png"
+							>
+							</v-img>
+
+							<v-card-text>
+								<v-list-item class="grow">
+									<v-list-item-content>
+										<v-list-item-title>{{ directors[i-1].movieName }}</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
+							</v-card-text>
+						</v-card>
+					</div>
+				</div>
+			</div>
+
+			<div v-if="writers.length > 0" class="md-bg-blue-grey-300 uk-margin-top">
+				<v-row class="sc-padding-left sc-padding-right" style="font-size: 22px">
+					<v-col cols="6">
+						Escreveu
+					</v-col>
+					<v-col cols="6" class="uk-text-right">
+						<button class="mdi mdi-playlist-plus" style="vertical-align:middle" @click="showDialog(writers, 'WRITERS')">
+							Ver todos os filmes escritos
+						</button>
+					</v-col>
+				</v-row>
+				<div class="uk-child-width-1-5@l sc-padding" data-uk-grid style="">
+					<div v-for="i in 5" :key="i" class="tag">
+						<v-card 
+							v-if="writers[i-1]" 
+							:uk-tooltip="writers[i-1].movieName" 
+							@click="redirectPage('/movies/view/' + writers[i-1].movieUuid)"
+						>
+							<v-img
+								v-if="writers[i-1].imageLinkMovie && writers[i-1].imageLinkMovie.length > 0"
+								height="125px"
+								:src="writers[i-1].imageLinkMovie"
+							>
+							</v-img>
+							<v-img v-else
+								height="100px"
+								src="~/assets/img/question.png"
+							>
+							</v-img>
+
+							<v-card-text>
+								<v-list-item class="grow">
+									<v-list-item-content>
+										<v-list-item-title>{{ writers[i-1].movieName }}</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
+							</v-card-text>
+						</v-card>
+					</div>
+				</div>
+			</div>
+
+			<div v-if="producers.length > 0" class="md-bg-blue-grey-300 uk-margin-top">
+				<v-row class="sc-padding-left sc-padding-right" style="font-size: 22px">
+					<v-col cols="6">
+						Produziu
+					</v-col>
+					<v-col cols="6" class="uk-text-right">
+						<button class="mdi mdi-playlist-plus" style="vertical-align:middle" @click="showDialog(producers, 'PRODUCERS')">
+							Ver todos os filmes produzidos
+						</button>
+					</v-col>
+				</v-row>
+				<div class="uk-child-width-1-5@l sc-padding" data-uk-grid style="">
+					<div v-for="i in 5" :key="i" class="tag">
+						<v-card 
+							v-if="producers[i-1]" 
+							:uk-tooltip="producers[i-1].movieName" 
+							@click="redirectPage('/movies/view/' + producers[i-1].movieUuid)"
+						>
+							<v-img
+								v-if="producers[i-1].imageLinkMovie && producers[i-1].imageLinkMovie.length > 0"
+								height="125px"
+								:src="producers[i-1].imageLinkMovie"
+							>
+							</v-img>
+							<v-img v-else
+								height="100px"
+								src="~/assets/img/question.png"
+							>
+							</v-img>
+
+							<v-card-text>
+								<v-list-item class="grow">
+									<v-list-item-content>
+										<v-list-item-title>{{ producers[i-1].movieName }}</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
+							</v-card-text>
+						</v-card>
+					</div>
+				</div>
+			</div>
+
+			<v-dialog
+				v-model="dialogAllMovies"
+				max-width="800"
+				persistent
+			>
+				<v-card>
+					<v-card-title class="uk-modal-title">
+						{{ dialogTitle }} 
+					</v-card-title>
+
+					<v-card-text>
+						<div class="uk-child-width-1-3@l sc-padding" data-uk-grid style="">
+							<div v-for="i in dialogObject" :key="i" class="tag">
+								<v-card 
+									v-if="i.movieName" 
+									:uk-tooltip="i.movieName" 
+									@click="redirectPage('/movies/view/' + i.movieUuid)"
+								>
+									<v-img
+										v-if="i.imageLinkMovie && i.imageLinkMovie.length > 0"
+										height="125px"
+										:src="i.imageLinkMovie"
+									>
+									</v-img>
+									<v-img v-else
+										height="100px"
+										src="~/assets/img/question.png"
+									>
+									</v-img>
+
+									<v-card-text>
+										<v-list-item class="grow">
+											<v-list-item-content>
+												<v-list-item-title>{{ i.movieName }}</v-list-item-title>
+											</v-list-item-content>
+										</v-list-item>
+									</v-card-text>
+								</v-card>
+							</div>
+						</div>
+					</v-card-text>
+
+					<v-card-actions>
+						<v-spacer></v-spacer>
+						<div class="uk-margin-top uk-text-right">
+							<button class="sc-button uk-modal-close md-color-grey-700" type="button" @click="dialogAllMovies = false">
+								Fechar
+							</button>
+						</div>
+					</v-card-actions>
+				</v-card>
+			</v-dialog>
 		</div>
 	</div>
 </template>
@@ -279,7 +335,10 @@ export default {
 				favorite: false,
 				personName: '',
 				imageLink: '',
-			}
+			},
+			dialogAllMovies: false,
+			dialogObject: {},
+			dialogTitle: '',
 		}
 	},
 	mounted () {
@@ -386,6 +445,19 @@ export default {
 					}
 					this.showNotification(message, 'bottom-right', 'danger')
 				});
+		},
+		showDialog (obj, type){
+			this.dialogObject = obj;
+			if (type == 'ACTORS') this.dialogTitle = "Filmes Atuados";
+			else if (type == 'DIRECTORS') this.dialogTitle = "Filmes Dirigidos";
+			else if (type == 'WRITERS') this.dialogTitle = "Filmes Escritos";
+			else if (type == 'PRODUCERS') this.dialogTitle = "Filmes Produzidos";
+			this.dialogAllMovies = true;
+		},
+		hideDialog (){
+			this.dialogAllMovies = false;
+			this.dialogTitle = "";
+			this.dialogObject = {};
 		},
 		showNotification (text, pos, status, persistent) {
 			var config = {};
