@@ -93,7 +93,7 @@
 				</v-row>
 			</div>
 
-			<div class="md-bg-blue-grey-50 uk-margin-top">
+			<div class="md-bg-blue-grey-100 uk-margin-top">
 				<v-row class="sc-padding-left sc-padding-top sc-padding-right">
 					<v-col cols="6">
 						Últimas avaliações
@@ -140,7 +140,7 @@
 				</div>
 			</div>
 
-			<div class="md-bg-blue-grey-50 uk-margin-top">
+			<div class="md-bg-blue-grey-100 uk-margin-top">
 				<v-row class="sc-padding-left sc-padding-top sc-padding-right">
 					<v-col cols="6">
 						Últimos itens adicionados à lista de desejos (Watchlist)
@@ -181,7 +181,7 @@
 				</div>
 			</div>
 
-			<div class="md-bg-blue-grey-50 uk-margin-top">
+			<div class="md-bg-blue-grey-100 uk-margin-top">
 				<v-row class="sc-padding-left sc-padding-top sc-padding-right">
 					<v-col cols="6">
 						Últimos filmes favoritados
@@ -228,7 +228,7 @@
 				</div>
 			</div>
 
-			<div class="md-bg-blue-grey-50 uk-margin-top">
+			<div class="md-bg-blue-grey-200 uk-margin-top">
 				<v-row class="sc-padding-left sc-padding-top sc-padding-right">
 					<v-col cols="6">
 						Últimos artistas favoritados
@@ -244,7 +244,7 @@
 						<v-card 
 							v-if="rowsFavoritePersons[index-1] && rowsFavoritePersons[index-1].person" 
 							:uk-tooltip="rowsFavoritePersons[index-1].person.name" 
-							@click="redirectPage('/movies/view/' + rowsFavoritePersons[index-1].movie.uuid)"
+							@click="redirectPage('/person/view/' + rowsFavoritePersons[index-1].person.uuid)"
 						>
 							<v-img
 								v-if="rowsFavoritePersons[index-1] && rowsFavoritePersons[index-1].person && rowsFavoritePersons[index-1].person.imageLink && rowsFavoritePersons[index-1].person.imageLink != ''"
