@@ -24,6 +24,12 @@ export const menuEntries = [
 		submenu: [
 			{
 				id: uniqueID(),
+				title: "Perfil",
+				page: "/profile/dashboard/",
+				icon: "mdi mdi-face-profile md-color-black"
+			},
+			{
+				id: uniqueID(),
 				title: "Watchlist",
 				page: "/profile/watchlist",
 				icon: "mdi mdi-bookmark-plus md-color-yellow-900"
