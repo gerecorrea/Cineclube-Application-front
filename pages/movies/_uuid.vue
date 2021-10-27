@@ -165,6 +165,7 @@
 												chips
 												deletable-chips
 												clearable
+												no-data-text="Não há dados disponíveis"
 												filled
 											>
 											</v-autocomplete>
@@ -179,6 +180,7 @@
 												label="Selecione o tipo de filme"
 												style="z-index:11;"
 												chips
+												no-data-text="Não há dados disponíveis"
 												deletable-chips
 												clearable
 												filled
@@ -244,6 +246,7 @@
 												chips
 												deletable-chips
 												clearable
+												no-data-text="Não há dados disponíveis"
 												filled
 												@change="printtt(movie.directors)"
 											>
@@ -262,6 +265,7 @@
 												chips
 												deletable-chips
 												clearable
+												no-data-text="Não há dados disponíveis"
 												filled
 												@change="printtt(movie.actors)"
 											>
@@ -279,6 +283,7 @@
 												multiple
 												chips
 												deletable-chips
+												no-data-text="Não há dados disponíveis"
 												clearable
 												filled
 												@change="printtt(movie.writers)"
@@ -290,6 +295,7 @@
 												v-model="movie.producers"
 												:items="producers"
 												name="producers"
+												no-data-text="Não há dados disponíveis"
 												item-value="id"
 												item-text="text"
 												label="Selecione os produtores e/ou produtoras"
@@ -314,6 +320,7 @@
 												style="z-index:11;"
 												multiple
 												chips
+												no-data-text="Não há dados disponíveis"
 												deletable-chips
 												clearable
 												filled
