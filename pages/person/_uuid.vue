@@ -135,17 +135,6 @@
 											</v-textarea>
 										</div>
 									</div>
-									<div class="uk-margin-top uk-text-right" style="float: right">
-										<button 
-											class="sc-button sc-button-custom md-bg-grey-600" 
-											type="button" 
-											data-uk-tooltip="Avançar para a próxima aba"
-											@click="advanceTab('tab2')"
-										>
-											Avançar
-											<i class="mdi mdi-arrow-right"></i>
-										</button>
-									</div>
 								</fieldset>
 							</li>
 						</ul>
