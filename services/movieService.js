@@ -52,4 +52,8 @@ export default {
 	findAllShort: () => {
 		return client.get('movie/findAllShort');
 	},
+
+	findFirst25MoviesByDateReleasedDesc: () => {
+		return client.get('movie/findFirst25MoviesByDateReleasedDesc');
+	}
 }
