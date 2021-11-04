@@ -44,6 +44,9 @@ export default {
 	findWatchlistUser: (userUuid) => {
 		return client.get('userMovie/findWatchlist/' + userUuid);
 	},
+	findFirst25WatchlistUser: (userUuid) => {
+		return client.get('userMovie/findFirst25Watchlist/' + userUuid);
+	},
 	findRatingsUser: (userUuid) => {
 		return client.get('userMovie/findRatings/' + userUuid);
 	}
