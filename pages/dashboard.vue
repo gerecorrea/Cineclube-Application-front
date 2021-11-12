@@ -202,6 +202,103 @@
 			</div>
 
 			<div>
+				<div class="md-bg-blue-grey-100 uk-margin-top">
+					<v-row class="sc-padding-left sc-padding-top sc-padding-right">
+						<v-col cols="6">
+							<h4>
+								Filmes com melhores notas
+							</h4>
+						</v-col>
+						<v-col cols="6" class="uk-text-right">
+							<button class="mdi mdi-playlist-plus" style="vertical-align:middle" @click="redirectPage('/movies/topRatingMovie')">
+								Ver todos os filmes com melhores notas
+							</button>
+						</v-col>
+					</v-row>
+					<div class="uk-child-width-1-5@l sc-padding" data-uk-grid style="">
+						<div v-for="(item, index) in actual5bestMoviesShowed" :key="item" class="tag">
+							<v-card 
+								v-if="item && item.title" 
+								:uk-tooltip="item.title" 
+								type="button"
+								@dblclick="redirectPage('/movies/view/' + item.movie.uuid)"
+							>	
+								<v-img
+									v-if="item && item.imageLink && item.imageLink != ''"
+									height="125px" 
+									:src="item.imageLink"
+								>
+									<div v-if="index == 0 && best25moviesRatingBegin > 0" style="padding-top: 55px">
+										<button 
+											class="uk-text-left mdi mdi-arrow-left-drop-circle-outline mdi-48px md-color-black" 
+											style="opacity: 0.55" 
+											uk-tooltip="Voltar"
+											@click="moviesByBestRatingDescToLeft()"
+										>
+										</button>
+									</div>
+									<div v-if="index == 4 && best25moviesRatingEnd < best25moviesRating.length" style="padding-top: 55px" class="uk-text-right">
+										<button 
+											class="mdi mdi-arrow-right-drop-circle-outline mdi-48px md-color-black" 
+											style="opacity: 0.55" 
+											uk-tooltip="Avançar"
+											@click="moviesByBestRatingDescToRight()"
+										>
+										</button>
+									</div>
+								</v-img>
+								<v-img v-else
+									height="100px"
+									src="~/assets/img/question.png"
+								>
+									<div v-if="index == 0 && last25WatchlistBegin > 0" style="padding-top: 55px">
+										<button 
+											class="uk-text-left mdi mdi-arrow-left-drop-circle-outline mdi-48px md-color-black" 
+											style="opacity: 0.55" 
+											uk-tooltip="Voltar"
+											@click="moviesByBestRatingDescToLeft()"
+										>
+										</button>
+									</div>
+									<div v-if="index == 4 && last25WatchlistEnd < last25Watchlist.length" style="padding-top: 55px" class="uk-text-right">
+										<button 
+											class="mdi mdi-arrow-right-drop-circle-outline mdi-48px md-color-black" 
+											style="opacity: 0.55" 
+											uk-tooltip="Avançar"
+											:disabled="changingWatchlistPage"
+											@click="moviesByBestRatingDescToRight()"
+										>
+										</button>
+									</div>
+								</v-img>
+								<v-card-text>
+									<v-list-item class="grow">
+										<v-list-item-content>
+											<v-list-item-title>{{ item.title }}</v-list-item-title>
+										</v-list-item-content>
+										<v-row
+											v-if="item.avgRating"
+											align="center"
+											justify="end"
+										>
+											{{ item.avgRating }}/10
+										</v-row>
+									</v-list-item>
+								</v-card-text>
+							</v-card>
+						</div>
+					</div>
+				</div>
+			</div>
+			<br>
+			FILMES MAIS FAVORITADOS (FALTA)
+			<br>							
+			ARTISTAS MAIS FAVORITADOS (FALTA)
+			<br>						
+			ACESSOS ESPECIAIS (FALTA)
+					
+
+			<div>
 			</div>
 		</div>
 	</div>
@@ -228,18 +325,22 @@ export default {
 		actual5WatchlistShowed: [],
 		last25WatchlistBegin: 0,
 		last25WatchlistEnd: 0,
+		best25moviesRating: [],
+		best25moviesRatingBegin: 0,
+		best25moviesRatingEnd: 0,
+		actual5bestMoviesShowed: [],
 	}),
 	computed: {
 	},
 	mounted () {
 		this.loggedUser();
 		this.findFirst25MoviesByDateReleasedDesc();
+		this.best25MoviesByRating();
 	},
 	methods: {
 		loggedUser (){
 			LoginService.getActualLogin()
 				.then(response => {
-					console.log(response.data);
 					this.loggedUserObject = response.data.user;
 					this.userLoaded = true;
 					if(this.loggedUserObject){
@@ -276,7 +377,6 @@ export default {
 		moviesByDateReleasedDescToRight (){
 			this.last25moviesBegin += 5;
 			this.last25moviesEnd += 5;
-			console.log(this.last25moviesEnd, this.last25movies.length)
 			if (this.last25moviesEnd > this.last25movies.length){
 				this.last25moviesEnd = this.last25movies.length;
 				this.last25moviesBegin = this.last25moviesEnd - 5;
@@ -299,10 +399,57 @@ export default {
 				this.actual5moviesShowed.push(this.last25movies[i]);
 			}
 		},
+		best25MoviesByRating () {
+			MovieService.findTopBestRatedByLimit(25)
+				.then(response => {
+					this.best25moviesRating = response.data;
+					console.log(this.best25moviesRating)
+					this.best25moviesRatingBegin = 0;
+					if (this.best25moviesRating.length > 5)
+						this.best25moviesRatingEnd = 5;
+					else
+						this.best25moviesRatingEnd = this.best25moviesRating.length;
+					this.actual5bestMoviesShowed = [];
+					this.updateVectorBest25Movies();
+				})
+				.catch(e => {
+					var message = "Não foi possível listar os 25 melhores filmes ranqueados.";
+					if (e.response && e.response.status === 400) {
+						message = e.response.data.message;
+					}
+					this.showNotification(message, 'bottom-right', 'danger');
+				});
+		},
+		moviesByBestRatingDescToRight (){
+			this.best25moviesRatingBegin += 5;
+			this.best25moviesRatingEnd += 5;
+			if (this.best25moviesRatingEnd > this.best25moviesRating.length){
+				this.best25moviesRatingEnd = this.best25moviesRating.length;
+				this.best25moviesRatingBegin = this.best25moviesRatingEnd - 5;
+			}
+			this.updateVectorBest25Movies();
+		},
+		moviesByBestRatingDescToLeft (){
+			this.best25moviesRatingBegin -= 5;
+			this.best25moviesRatingEnd -= 5;
+			if (this.best25moviesRatingBegin < 0){
+				this.best25moviesRatingBegin = 0;
+				this.best25moviesRatingEnd = 5;
+			}
+			this.updateVectorBest25Movies();
+			
+		},
+		updateVectorBest25Movies (){
+			this.actual5bestMoviesShowed = [];
+			for(let i = this.best25moviesRatingBegin; i < this.best25moviesRatingEnd; i++){
+				this.actual5bestMoviesShowed.push(this.best25moviesRating[i]);
+			}
+			console.log("Atuais 5:")
+			console.log(this.actual5bestMoviesShowed)
+		},
 		findFirst25WatchlistByDateReleasedDesc (uuid){
 			UserMovieRelationService.findFirst25WatchlistUser(uuid)
 				.then(response => {
-					console.log(response.data);
 					this.last25Watchlist = response.data;
 					this.last25WatchlistBegin = 0;
 					if (this.last25Watchlist.length > 5)
@@ -322,7 +469,6 @@ export default {
 		watchlistByDateReleasedDescToRight (){
 			this.last25WatchlistBegin += 5;
 			this.last25WatchlistEnd += 5;
-			console.log(this.last25WatchlistEnd, this.last25Watchlist.length)
 			if (this.last25WatchlistEnd > this.last25Watchlist.length){
 				this.last25WatchlistEnd = this.last25Watchlist.length;
 				this.last25WatchlistBegin = this.last25WatchlistEnd - 5;
@@ -344,7 +490,6 @@ export default {
 			for(let i = this.last25WatchlistBegin; i < this.last25WatchlistEnd; i++){
 				this.actual5WatchlistShowed.push(this.last25Watchlist[i]);
 			}
-			console.log(this.actual5WatchlistShowed);
 			this.changingWatchlistPage = false;
 		},
 		redirectPage (page) {
