@@ -295,7 +295,7 @@ export default {
 		},
 		list () {
 			this.waitingMoviesList = true ; 
-			MovieService.findTop10()
+			MovieService.findTopBestRatedByLimit(10)
 				.then(response => {
 					//this.rows = response.data.content; 
 					this.rows = response.data; 
