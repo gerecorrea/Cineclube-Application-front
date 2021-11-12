@@ -37,6 +37,10 @@ export default {
 		return client.get('movie/findTop10');
 	},
 
+	findTopBestRatedByLimit: (limit) => {
+		return client.get('movie/findTopByLimit?limit=' + limit);
+	},
+
 	findTopFavoriteAll: () => {
 		return client.get('/movie/findTopFavoriteAll');
 	},
