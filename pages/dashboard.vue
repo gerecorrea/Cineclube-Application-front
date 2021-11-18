@@ -98,13 +98,13 @@
 						<button class="sc-button sc-button-primary sc-button-large sc-button-block waves-effect waves-button waves-light" @click="redirectPage('/profile/dashboard/')">
 							Perfil
 						</button>
-						<button class="sc-button sc-button-primary sc-button-large sc-button-block waves-effect waves-button waves-light" @click="redirectPage('/profile/dashboard/')">
+						<button class="sc-button sc-button-primary sc-button-large sc-button-block waves-effect waves-button waves-light" @click="redirectPage('/profile/watchlist/')">
 							Watchlist
 						</button>
-						<button class="sc-button sc-button-primary sc-button-large sc-button-block waves-effect waves-button waves-light" @click="redirectPage('/profile/dashboard/')">
+						<button class="sc-button sc-button-primary sc-button-large sc-button-block waves-effect waves-button waves-light" @click="redirectPage('/profile/ratings/')">
 							Avaliações
 						</button>
-						<button class="sc-button sc-button-primary sc-button-large sc-button-block waves-effect waves-button waves-light" @click="redirectPage('/profile/dashboard/')">
+						<button class="sc-button sc-button-primary sc-button-large sc-button-block waves-effect waves-button waves-light" @click="redirectPage('/profile/following/')">
 							Seguidores
 						</button>
 					</v-col>
