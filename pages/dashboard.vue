@@ -17,7 +17,7 @@
 									</button>
 								</v-col>
 							</v-row>
-							<div class="uk-child-width-1-5@l sc-padding" data-uk-grid style="">
+							<div class="uk-child-width-1-5@l uk-child-width-1-5@m uk-child-width-1-1@s sc-padding" data-uk-grid style="">
 								<div v-for="(item, index) in actual5moviesShowed" :key="item" class="tag">
 									<v-card 
 										v-if="item" 
@@ -125,7 +125,7 @@
 							</button>
 						</v-col>
 					</v-row>
-					<div class="uk-child-width-1-5@l sc-padding" data-uk-grid style="">
+					<div class="uk-child-width-1-5@l uk-child-width-1-5@m uk-child-width-1-1@s sc-padding" data-uk-grid style="">
 						<div v-for="(item, index) in actual5WatchlistShowed" :key="item" class="tag">
 							<v-card 
 								v-if="item && item.movie" 
@@ -215,7 +215,7 @@
 							</button>
 						</v-col>
 					</v-row>
-					<div class="uk-child-width-1-5@l sc-padding" data-uk-grid style="">
+					<div class="uk-child-width-1-5@l uk-child-width-1-5@m uk-child-width-1-1@s sc-padding" data-uk-grid style="">
 						<div v-for="(item, index) in actual5bestMoviesShowed" :key="item" class="tag">
 							<v-card 
 								v-if="item && item.title" 
@@ -248,10 +248,10 @@
 									</div>
 								</v-img>
 								<v-img v-else
-									height="100px"
+									height="125px"
 									src="~/assets/img/question.png"
 								>
-									<div v-if="index == 0 && last25WatchlistBegin > 0" style="padding-top: 55px">
+									<div v-if="index == 0 && best25moviesRatingBegin > 0" style="padding-top: 55px">
 										<button 
 											class="uk-text-left mdi mdi-arrow-left-drop-circle-outline mdi-48px md-color-black" 
 											style="opacity: 0.55" 
@@ -260,12 +260,11 @@
 										>
 										</button>
 									</div>
-									<div v-if="index == 4 && last25WatchlistEnd < last25Watchlist.length" style="padding-top: 55px" class="uk-text-right">
+									<div v-if="index == 4 && best25moviesRatingEnd < best25moviesRating.length" style="padding-top: 55px" class="uk-text-right">
 										<button 
 											class="mdi mdi-arrow-right-drop-circle-outline mdi-48px md-color-black" 
 											style="opacity: 0.55" 
 											uk-tooltip="Avançar"
-											:disabled="changingWatchlistPage"
 											@click="moviesByBestRatingDescToRight()"
 										>
 										</button>
@@ -290,12 +289,124 @@
 					</div>
 				</div>
 			</div>
-			<br>
-			FILMES MAIS FAVORITADOS (FALTA)
-			<br>							
-			ARTISTAS MAIS FAVORITADOS (FALTA)
-			<br>						
-			ACESSOS ESPECIAIS (FALTA)
+
+			<div>
+				<div class="md-bg-blue-grey-100 uk-margin-top">
+					<v-row class="sc-padding-left sc-padding-top sc-padding-right">
+						<v-col cols="6">
+							<h4>
+								Artistas mais favoritados
+							</h4>
+						</v-col>
+						<v-col cols="6" class="uk-text-right">
+							<button class="mdi mdi-playlist-plus" style="vertical-align:middle" @click="redirectPage('/person/topFavorites')">
+								Ver todos os artistas mais favoritados
+							</button>
+						</v-col>
+					</v-row>
+					<div class="uk-child-width-1-5@l uk-child-width-1-5@m uk-child-width-1-1@s sc-padding" data-uk-grid style="">
+						<div v-for="(item, index) in actual5BestArtistsShowed" :key="item" class="tag">
+							<v-card 
+								v-if="item && item.name" 
+								:uk-tooltip="item.name" 
+								type="button"
+								@dblclick="redirectPage('/person/view/' + item.uuid)"
+							>	
+								<v-img
+									v-if="item && item.imageLink && item.imageLink != ''"
+									height="125px" 
+									:src="item.imageLink"
+								>
+									<div v-if="index == 0 && best25ArtistsRatingBegin > 0" style="padding-top: 55px">
+										<button 
+											class="uk-text-left mdi mdi-arrow-left-drop-circle-outline mdi-48px md-color-black" 
+											style="opacity: 0.55" 
+											uk-tooltip="Voltar"
+											@click="artistsByFavoritationsDescToLeft()"
+										>
+										</button>
+									</div>
+									<div v-if="index == 4 && best25ArtistsRatingEnd < best25ArtistsRating.length" style="padding-top: 55px" class="uk-text-right">
+										<button 
+											class="mdi mdi-arrow-right-drop-circle-outline mdi-48px md-color-black" 
+											style="opacity: 0.55" 
+											uk-tooltip="Avançar"
+											@click="artistsByFavoritationsDescToRight()"
+										>
+										</button>
+									</div>
+								</v-img>
+								<v-img v-else
+									height="100px"
+									src="~/assets/img/question.png"
+								>
+									<div v-if="index == 0 && best25ArtistsRatingBegin > 0" style="padding-top: 55px">
+										<button 
+											class="uk-text-left mdi mdi-arrow-left-drop-circle-outline mdi-48px md-color-black" 
+											style="opacity: 0.55" 
+											uk-tooltip="Voltar"
+											@click="artistsByFavoritationsDescToLeft()"
+										>
+										</button>
+									</div>
+									<div v-if="index == 4 && best25ArtistsRatingEnd < best25ArtistsRating.length" style="padding-top: 55px" class="uk-text-right">
+										<button 
+											class="mdi mdi-arrow-right-drop-circle-outline mdi-48px md-color-black" 
+											style="opacity: 0.55" 
+											uk-tooltip="Avançar"
+											@click="artistsByFavoritationsDescToRight()"
+										>
+										</button>
+									</div>
+								</v-img>
+								<v-card-text>
+									<v-list-item class="grow">
+										<v-list-item-content>
+											<v-list-item-title>{{ item.name }}</v-list-item-title>
+										</v-list-item-content>
+										<v-row
+											v-if="item.numFavorites"
+											align="center"
+											justify="end"
+										>
+											{{ item.numFavorites }}
+										</v-row>
+									</v-list-item>
+								</v-card-text>
+							</v-card>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div>
+				<div class="md-bg-blue-grey-100 uk-margin-top">
+					<v-row class="sc-padding-left sc-padding-top sc-padding-right">
+						<v-col cols="6">
+							<h4>
+								Parcerias e divulgações
+							</h4>
+						</v-col>
+					</v-row>
+					<div class="uk-child-width-1-4@l uk-child-width-1-4@m uk-child-width-1-4@s sc-padding uk-text-center" data-uk-grid style="">
+						<div v-for="(item) in specialAccess" :key="item" class="tag">
+							<button 
+								v-if="item && item.name" 
+								:uk-tooltip="item.name" 
+								type="button"
+								@click="openTab(item.link)"
+							>	
+								<v-img
+									height="100px"
+									width="100px"
+									:src="require(`@/assets/img/${item.src}`)"
+								>
+								</v-img>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
 					
 
 			<div>
@@ -309,6 +420,7 @@ import 'vue-good-table/dist/vue-good-table.css'
 import LoginService from "@/services/loginService"
 import MovieService from '@/services/movieService';
 import UserMovieRelationService from "@/services/userMovieRelationService";
+import PersonService from '@/services/personService';
 
 export default {
 	middleware: "authenticated",
@@ -329,6 +441,16 @@ export default {
 		best25moviesRatingBegin: 0,
 		best25moviesRatingEnd: 0,
 		actual5bestMoviesShowed: [],
+		best25ArtistsRating: [],
+		best25ArtistsRatingBegin: 0,
+		best25ArtistsRatingEnd: 0,
+		actual5BestArtistsShowed: [],
+		specialAccess: [
+			{name: 'Github do criador', src: 'github.png', link: 'https://github.com/gerecorrea'},
+			{name: 'Linkedin do criador', src: 'linkedin.png', link: 'https://www.linkedin.com/in/geremias-corr%C3%AAa-6474341bb/'},
+			{name: 'Cineclube CCT', src: 'logoCine.png', link: 'https://www.instagram.com/cineclubecct/'},
+			{name: 'UDESC', src: 'udesc.png', link: 'https://www.udesc.br/'},
+		],
 	}),
 	computed: {
 	},
@@ -336,6 +458,7 @@ export default {
 		this.loggedUser();
 		this.findFirst25MoviesByDateReleasedDesc();
 		this.best25MoviesByRating();
+		this.most25ArtistsByFavoritations();
 	},
 	methods: {
 		loggedUser (){
@@ -403,7 +526,6 @@ export default {
 			MovieService.findTopBestRatedByLimit(25)
 				.then(response => {
 					this.best25moviesRating = response.data;
-					console.log(this.best25moviesRating)
 					this.best25moviesRatingBegin = 0;
 					if (this.best25moviesRating.length > 5)
 						this.best25moviesRatingEnd = 5;
@@ -444,8 +566,6 @@ export default {
 			for(let i = this.best25moviesRatingBegin; i < this.best25moviesRatingEnd; i++){
 				this.actual5bestMoviesShowed.push(this.best25moviesRating[i]);
 			}
-			console.log("Atuais 5:")
-			console.log(this.actual5bestMoviesShowed)
 		},
 		findFirst25WatchlistByDateReleasedDesc (uuid){
 			UserMovieRelationService.findFirst25WatchlistUser(uuid)
@@ -491,6 +611,49 @@ export default {
 				this.actual5WatchlistShowed.push(this.last25Watchlist[i]);
 			}
 			this.changingWatchlistPage = false;
+		},
+		most25ArtistsByFavoritations () {
+			PersonService.findTopArtists(25)
+				.then(response => {
+					this.best25ArtistsRating = response.data;
+					this.best25ArtistsRatingBegin = 0;
+					if (this.best25ArtistsRating.length > 5)
+						this.best25ArtistsRatingBegin = 5;
+					else
+						this.best25ArtistsRatingEnd = this.best25ArtistsRating.length;
+					this.updateVector25Artists();
+				})
+				.catch(e => {
+					var message = "Não foi possível listar os 25 artistas mais favoritados.";
+					if (e.response && e.response.status === 400) {
+						message = e.response.data.message;
+					}
+					this.showNotification(message, 'bottom-right', 'danger');
+				});
+		},
+		artistsByFavoritationsDescToRight (){
+			this.best25ArtistsRatingBegin += 5;
+			this.best25ArtistsRatingEnd += 5;
+			if (this.best25ArtistsRatingEnd > this.best25ArtistsRating.length){
+				this.best25ArtistsRatingEnd = this.best25ArtistsRating.length;
+				this.best25ArtistsRatingBegin = this.best25ArtistsRatingEnd - 5;
+			}
+			this.updateVector25Artists();
+		},
+		artistsByFavoritationsDescToLeft (){
+			this.best25ArtistsRatingBegin -= 5;
+			this.best25ArtistsRatingEnd -= 5;
+			if (this.best25ArtistsRatingBegin < 0){
+				this.best25ArtistsRatingBegin = 0;
+				this.best25ArtistsRatingEnd = 5;
+			}
+			this.updateVector25Artists();
+		},
+		updateVector25Artists (){
+			this.actual5BestArtistsShowed = [];
+			for(let i = this.best25ArtistsRatingBegin; i < this.best25ArtistsRatingEnd; i++){
+				this.actual5BestArtistsShowed.push(this.best25ArtistsRating[i]);
+			}
 		},
 		redirectPage (page) {
 			this.$router.push({ path: page });
