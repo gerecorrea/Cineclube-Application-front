@@ -112,7 +112,7 @@ export const menuEntries = [
 			},
 			{
 				id: uniqueID(),
-				title: "Top 10 Notas Filmes",
+				title: "Top 25 Notas Filmes",
 				page: "/movies/topRatingMovie",
 				icon: "mdi mdi-movie md-color-red-700",
 			},
@@ -134,7 +134,7 @@ export const menuEntries = [
 			},
 			{
 				id: uniqueID(),
-				title: "Top 10 Artistas",
+				title: "Top 25 Artistas",
 				page: "/person/topFavorites",
 				icon: "mdi mdi-heart-box md-color-blue-700",
 			},
