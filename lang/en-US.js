@@ -1,5 +1,5 @@
 export default {
-	'version': 'version',
+	'version': 'Versão',
 	'Applications': 'Applications',
 	'Menu': 'Menu',
 	'WYSIWYG Editors': 'WYSIWYG Editors',
