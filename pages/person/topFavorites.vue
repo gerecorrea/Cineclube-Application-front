@@ -3,7 +3,7 @@
 		<div id="sc-page-top-bar" class="sc-top-bar">
 			<div class="sc-top-bar-content uk-flex uk-flex-1">
 				<h1 class="sc-top-bar-title uk-flex-1">
-					<Title title="TOP 10 - ESTRELAS"></Title>
+					<Title title="TOP 25 - ESTRELAS"></Title>
 				</h1>
 			</div>
 		</div>
@@ -197,7 +197,7 @@ export default {
 		},
 		findTopArtists () {
 			this.waitingPersonsList = true ; 
-			PersonService.findTopArtists()
+			PersonService.findTopArtists(25)
 				.then(response => {
 					this.rows = response.data;
 					this.waitingPersonsList = false; 

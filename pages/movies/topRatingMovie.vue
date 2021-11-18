@@ -3,7 +3,7 @@
 		<div id="sc-page-top-bar" class="sc-top-bar">
 			<div class="sc-top-bar-content uk-flex uk-flex-1">
 				<h1 class="sc-top-bar-title uk-flex-1">
-					<Title title="TOP 10 - FILMES"></Title>
+					<Title title="TOP 25 - FILMES"></Title>
 				</h1>
 			</div>
 		</div>
@@ -295,12 +295,10 @@ export default {
 		},
 		list () {
 			this.waitingMoviesList = true ; 
-			MovieService.findTopBestRatedByLimit(10)
+			MovieService.findTopBestRatedByLimit(25)
 				.then(response => {
-					//this.rows = response.data.content; 
 					this.rows = response.data; 
-					//this.totalElements = response.data.totalElements;
-					this.waitingMoviesList = false ; 
+					this.waitingMoviesList = false; 
 				})
 				.catch(e => {
 					var message = "Não foi possível listar os filmes cadastrados.";
