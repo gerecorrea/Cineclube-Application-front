@@ -228,7 +228,7 @@
 				</div>
 			</div>
 
-			<div class="md-bg-blue-grey-200 uk-margin-top">
+			<div class="md-bg-blue-grey-100 uk-margin-top">
 				<v-row class="sc-padding-left sc-padding-top sc-padding-right">
 					<v-col cols="6">
 						Últimos artistas favoritados
