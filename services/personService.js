@@ -28,7 +28,7 @@ export default {
 		return client.get('person/findById/' +uuid);
 	},
 
-	findTopArtists: () => {
-		return client.get('person/findTopArtists');
+	findTopArtists: (limit) => {
+		return client.get('person/findTopArtistsByLimit?limit=' + limit);
 	}
 }
